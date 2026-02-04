@@ -17,6 +17,28 @@ class ProfileSelectionScreen extends StatelessWidget {
         title: const Text('Who is playing?'),
         backgroundColor: Colors.teal,
         foregroundColor: Colors.white,
+        actions: [
+          Consumer<QuizProvider>(
+            builder: (context, provider, _) {
+              if (provider.isSignedIn) {
+                return IconButton(
+                  icon: const Icon(Icons.logout),
+                  tooltip: 'Sign Out',
+                  onPressed: () {
+                    provider.signOut();
+                  },
+                );
+              }
+              return IconButton(
+                icon: const Icon(Icons.login), // Or Google Icon if available
+                tooltip: 'Sign in with Google',
+                onPressed: () {
+                  provider.signInWithGoogle();
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: Consumer<QuizProvider>(
         builder: (context, provider, child) {

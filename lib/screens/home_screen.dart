@@ -39,7 +39,7 @@ class HomeScreen extends StatelessWidget {
                         final color =
                             Color.lerp(
                               Colors.teal.shade300,
-                              Colors.teal.shade900,
+                              Colors.deepPurple.shade900,
                               index / (provider.allLevels.length - 1),
                             ) ??
                             Colors.teal;

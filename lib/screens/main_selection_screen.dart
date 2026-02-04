@@ -44,7 +44,7 @@ class MainSelectionScreen extends StatelessWidget {
                       _FeatureCard(
                         title: 'Bird Identification',
                         icon: Icons.visibility_rounded,
-                        color: Colors.teal.shade700,
+                        color: Colors.orangeAccent.shade700,
                         description: 'Identify birds from pictures!',
                         onTap: () {
                           // TODO: Implement ID mode
@@ -62,7 +62,7 @@ class MainSelectionScreen extends StatelessWidget {
                       _FeatureCard(
                         title: 'Bird Sounds',
                         icon: Icons.music_note_rounded,
-                        color: Colors.tealAccent.shade700,
+                        color: Colors.indigoAccent.shade200,
                         description: 'Guess the bird by its call!',
                         onTap: () {
                           // TODO: Implement Sound mode
@@ -71,6 +71,75 @@ class MainSelectionScreen extends StatelessWidget {
                             MaterialPageRoute(
                               builder: (_) =>
                                   const ComingSoonScreen(title: 'Bird Sounds'),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      _FeatureCard(
+                        title: 'Bird Word Games',
+                        icon: Icons.spellcheck_rounded,
+                        color: Colors.deepPurpleAccent,
+                        description: 'Unscramble and guess the bird words!',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const ComingSoonScreen(
+                                title: 'Bird Word Games',
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      _FeatureCard(
+                        title: 'Quiz Challenge',
+                        icon: Icons.psychology_rounded,
+                        color: Colors.amber.shade700,
+                        description: 'Fast-paced trivia challenge!',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const ComingSoonScreen(
+                                title: 'Quiz Challenge',
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      _FeatureCard(
+                        title: 'Order the Birds',
+                        icon: Icons.sort_rounded,
+                        color: Colors.lightBlue.shade600,
+                        description: 'Sort birds by size, speed, and more!',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const ComingSoonScreen(
+                                title: 'Order the Birds',
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      _FeatureCard(
+                        title: 'Identify the Eggs',
+                        icon: Icons
+                            .egg_rounded, // Assuming egg_rounded is available, if not fallback to circle
+                        color: Colors.pinkAccent.shade200,
+                        description: 'Match the egg to the bird!',
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const ComingSoonScreen(
+                                title: 'Identify the Eggs',
+                              ),
                             ),
                           );
                         },

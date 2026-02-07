@@ -9,6 +9,7 @@ import 'profile_selection_screen.dart';
 import '../widgets/navigation_utils.dart';
 import '../services/audio_service.dart';
 import 'bird_id_selection_screen.dart';
+import 'word_games_selection_screen.dart';
 
 class MainSelectionScreen extends StatefulWidget {
   const MainSelectionScreen({super.key});
@@ -99,9 +100,7 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => const ComingSoonScreen(
-                                title: 'Bird Word Games',
-                              ),
+                              builder: (_) => const WordGamesSelectionScreen(),
                             ),
                           );
                         },

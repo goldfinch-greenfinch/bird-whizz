@@ -246,6 +246,7 @@ class QuizProvider with ChangeNotifier {
     int? totalCorrectAnswers,
     Map<String, int>? categoryCorrectAnswers,
     int? birdIdHighScore,
+    Map<String, int>? wordGameHighScores,
   }) {
     if (_currentProfile == null) return;
 
@@ -256,10 +257,26 @@ class QuizProvider with ChangeNotifier {
         totalCorrectAnswers: totalCorrectAnswers,
         categoryCorrectAnswers: categoryCorrectAnswers,
         birdIdHighScore: birdIdHighScore,
+        wordGameHighScores: wordGameHighScores,
       );
       _currentProfile = _profiles[index];
       _saveProfiles(); // Save on every update
       notifyListeners();
+    }
+  }
+
+  // --- Word Games ---
+  int get unscrambleHighScore =>
+      _currentProfile?.wordGameHighScores['unscramble'] ?? 0;
+
+  void updateUnscrambleHighScore(int score) {
+    if (_currentProfile == null) return;
+    if (score > unscrambleHighScore) {
+      final newHighScores = Map<String, int>.from(
+        _currentProfile?.wordGameHighScores ?? {},
+      );
+      newHighScores['unscramble'] = score;
+      _updateCurrentProfile(wordGameHighScores: newHighScores);
     }
   }
 

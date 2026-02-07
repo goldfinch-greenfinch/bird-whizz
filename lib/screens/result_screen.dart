@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
+import '../services/audio_service.dart';
 
 import '../widgets/navigation_utils.dart';
 import '../data/result_messages.dart';
@@ -25,6 +26,14 @@ class _ResultScreenState extends State<ResultScreen> {
     if (!_initialized) {
       final provider = Provider.of<QuizProvider>(context, listen: false);
       _calculateResult(provider);
+
+      // Play sound effects and ensure menu music
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final audioService = context.read<AudioService>();
+        audioService.playMenuMusic();
+        audioService.playQuizCompleteSound();
+      });
+
       _initialized = true;
     }
   }

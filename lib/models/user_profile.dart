@@ -4,7 +4,8 @@ class UserProfile {
   final String companionBirdId;
   final Map<String, int> levelStars;
   final int totalCorrectAnswers;
-  final Map<String, int> categoryCorrectAnswers; // New field
+  final Map<String, int> categoryCorrectAnswers;
+  final int birdIdHighScore; // New field for Bird ID Quiz High Score
 
   UserProfile({
     required this.id,
@@ -13,6 +14,7 @@ class UserProfile {
     this.levelStars = const {},
     this.totalCorrectAnswers = 0,
     this.categoryCorrectAnswers = const <String, int>{},
+    this.birdIdHighScore = 0,
   });
 
   Map<String, dynamic> toJson() {
@@ -23,6 +25,7 @@ class UserProfile {
       'levelStars': levelStars,
       'totalCorrectAnswers': totalCorrectAnswers,
       'categoryCorrectAnswers': categoryCorrectAnswers,
+      'birdIdHighScore': birdIdHighScore,
     };
   }
 
@@ -42,6 +45,7 @@ class UserProfile {
             (k, v) => MapEntry(k, v as int),
           ) ??
           const <String, int>{},
+      birdIdHighScore: json['birdIdHighScore'] as int? ?? 0,
     );
   }
 
@@ -52,6 +56,7 @@ class UserProfile {
     Map<String, int>? levelStars,
     int? totalCorrectAnswers,
     Map<String, int>? categoryCorrectAnswers,
+    int? birdIdHighScore,
   }) {
     return UserProfile(
       id: id ?? this.id,
@@ -61,6 +66,7 @@ class UserProfile {
       totalCorrectAnswers: totalCorrectAnswers ?? this.totalCorrectAnswers,
       categoryCorrectAnswers:
           categoryCorrectAnswers ?? this.categoryCorrectAnswers,
+      birdIdHighScore: birdIdHighScore ?? this.birdIdHighScore,
     );
   }
 }

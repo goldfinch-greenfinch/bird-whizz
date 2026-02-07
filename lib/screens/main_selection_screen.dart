@@ -3,12 +3,28 @@ import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../models/bird.dart';
 import 'text_quiz_selection_screen.dart';
+
 import 'coming_soon_screen.dart';
 import 'profile_selection_screen.dart';
 import '../widgets/navigation_utils.dart';
+import '../services/audio_service.dart';
+import 'bird_id_selection_screen.dart';
 
-class MainSelectionScreen extends StatelessWidget {
+class MainSelectionScreen extends StatefulWidget {
   const MainSelectionScreen({super.key});
+
+  @override
+  State<MainSelectionScreen> createState() => _MainSelectionScreenState();
+}
+
+class _MainSelectionScreenState extends State<MainSelectionScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AudioService>().playMenuMusic();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,15 +61,13 @@ class MainSelectionScreen extends StatelessWidget {
                         title: 'Bird Identification',
                         icon: Icons.visibility_rounded,
                         color: Colors.orangeAccent.shade700,
-                        description: 'Identify birds from pictures!',
+                        description:
+                            'High Score: ${context.watch<QuizProvider>().birdIdHighScore}/10\nIdentify birds from pictures!',
                         onTap: () {
-                          // TODO: Implement ID mode
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => const ComingSoonScreen(
-                                title: 'Bird Identification',
-                              ),
+                              builder: (_) => const BirdIdSelectionScreen(),
                             ),
                           );
                         },

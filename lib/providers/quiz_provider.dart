@@ -15,6 +15,7 @@ import '../data/sections/behaviour_data.dart';
 import '../data/sections/families_data.dart';
 import '../data/sections/migration_data.dart';
 import '../data/sections/colours_data.dart';
+import '../services/bird_image_service.dart';
 
 class QuizProvider with ChangeNotifier {
   List<UserProfile> _profiles = [];
@@ -244,6 +245,7 @@ class QuizProvider with ChangeNotifier {
     Map<String, int>? levelStars,
     int? totalCorrectAnswers,
     Map<String, int>? categoryCorrectAnswers,
+    int? birdIdHighScore,
   }) {
     if (_currentProfile == null) return;
 
@@ -253,6 +255,7 @@ class QuizProvider with ChangeNotifier {
         levelStars: levelStars,
         totalCorrectAnswers: totalCorrectAnswers,
         categoryCorrectAnswers: categoryCorrectAnswers,
+        birdIdHighScore: birdIdHighScore,
       );
       _currentProfile = _profiles[index];
       _saveProfiles(); // Save on every update
@@ -264,9 +267,11 @@ class QuizProvider with ChangeNotifier {
 
   // Stats
   int get totalCorrectAnswers => _currentProfile?.totalCorrectAnswers ?? 0;
+  int get birdIdHighScore => _currentProfile?.birdIdHighScore ?? 0;
 
   int get categoryTotalCorrectAnswers {
     if (_currentProfile == null) return 0;
+    // For Bird ID, we store it under 'bird_id' key
     return _currentProfile!.categoryCorrectAnswers[_currentCategory] ?? 0;
   }
 
@@ -376,7 +381,28 @@ class QuizProvider with ChangeNotifier {
   }
 
   // Actions
-  void startLevel(Level level) {
+  Future<void> startBirdIdQuiz() async {
+    // Initialize service if not already
+    await BirdImageService().initialize();
+
+    // Generate questions
+    final questions = BirdImageService().generateQuestions(count: 10);
+    print('QuizProvider: Generated ${questions.length} questions for Bird ID.');
+
+    // Create dummy level
+    final birdIdLevel = Level(
+      id: 'bird_id_session',
+      name: 'Bird ID Challenge',
+      // description: 'Identify the birds!', // Not in Level model
+      questions: questions,
+      requiredScoreToUnlock: 0,
+    );
+
+    _currentCategory = 'bird_id';
+    startLevel(birdIdLevel, isBirdIdMode: true);
+  }
+
+  void startLevel(Level level, {bool isBirdIdMode = false}) {
     _currentLevel = level;
     _currentQuestionIndex = 0;
     _score = 0;
@@ -386,31 +412,24 @@ class QuizProvider with ChangeNotifier {
     _newLevelTitle = null;
 
     // 1. Shuffle all questions from the level
-    var shuffledQuestions = List<Question>.from(level.questions)..shuffle();
+    // If Bird ID mode, questions are already randomized by the service
+    var questionsToUse = level.questions;
+    if (!isBirdIdMode) {
+      questionsToUse = List<Question>.from(level.questions)..shuffle();
+    }
 
     // 2. Take top 10 (or less if not enough exist, though we should have 15)
-    var sampledQuestions = shuffledQuestions.take(10).toList();
+    var sampledQuestions = questionsToUse.take(10).toList();
 
-    // 3. For each sampled question, shuffle its options and update correctOptionIndex
+    // 3. For each sampled question, we MUST preserve the order of options so audio matches buttons.
+    // (We formerly shuffled options here, but static combined audio requires fixed order)
     _activeQuestions = sampledQuestions.map((q) {
-      // Create a list of indices [0, 1, 2, 3]
-      List<int> indices = List.generate(q.options.length, (i) => i);
-      indices.shuffle();
-
-      // New options list based on shuffled indices
-      List<String> newOptions = indices.map((i) => q.options[i]).toList();
-
-      // Find where the correct answer moved to
-      // The original correct index was q.correctOptionIndex
-      // We need to find the index 'k' in 'indices' such that indices[k] == q.correctOptionIndex
-      int newCorrectIndex = indices.indexOf(q.correctOptionIndex);
-
       return Question(
         id: q.id,
         text: q.text,
         imagePath: q.imagePath,
-        options: newOptions,
-        correctOptionIndex: newCorrectIndex,
+        options: q.options,
+        correctOptionIndex: q.correctOptionIndex,
       );
     }).toList();
 
@@ -429,8 +448,13 @@ class QuizProvider with ChangeNotifier {
       Map<String, int> newCategoryCorrect = Map<String, int>.from(
         _currentProfile?.categoryCorrectAnswers ?? {},
       );
-      newCategoryCorrect[_currentCategory] =
-          (newCategoryCorrect[_currentCategory] ?? 0) + 1;
+
+      // Update global total and category total
+      // Use 'bird_id' as category key for Bird ID mode
+      String categoryKey = _currentCategory; // 'bird_id' or others
+
+      newCategoryCorrect[categoryKey] =
+          (newCategoryCorrect[categoryKey] ?? 0) + 1;
 
       _updateCurrentProfile(
         totalCorrectAnswers: totalCorrectAnswers + 1,
@@ -461,51 +485,54 @@ class QuizProvider with ChangeNotifier {
 
   void _handleLevelCompletion() {
     if (_currentLevel != null) {
-      int totalCurrentQuestions = _activeQuestions.length;
-      int stars;
-
-      if (_score == totalCurrentQuestions) {
-        stars = 3;
-      } else if (_score >= 8) {
-        stars = 2;
-      } else if (_score >= 6) {
-        stars = 1;
+      if (_currentCategory == 'bird_id') {
+        // Handle Bird ID High Score
+        if (_score > birdIdHighScore) {
+          _updateCurrentProfile(birdIdHighScore: _score);
+        }
       } else {
-        stars = 0;
-      }
+        // Handle Standard Levels
+        int totalCurrentQuestions = _activeQuestions.length;
+        int stars;
 
-      int currentStars = _levelStars[_currentLevel!.id] ?? 0;
-      if (stars > currentStars) {
-        // Capture old status
-        int oldTotalStars = totalStars;
-        String oldTitle = _getStatusTitleForStars(oldTotalStars);
+        if (_score == totalCurrentQuestions) {
+          stars = 3;
+        } else if (_score >= 8) {
+          stars = 2;
+        } else if (_score >= 6) {
+          stars = 1;
+        } else {
+          stars = 0;
+        }
 
-        // Update stars
-        // Create new copy of map
-        final newStars = Map<String, int>.from(_levelStars);
-        newStars[_currentLevel!.id] = stars;
-        _updateCurrentProfile(levelStars: newStars);
+        int currentStars = _levelStars[_currentLevel!.id] ?? 0;
+        if (stars > currentStars) {
+          // Capture old status
+          int oldTotalStars = totalStars;
+          String oldTitle = _getStatusTitleForStars(oldTotalStars);
 
-        // Check for Level Up
-        // We need to fetch totalStars again as it's a computed property based on the updated profile
-        int newTotalStars = totalStars;
-        String newTitle = _getStatusTitleForStars(newTotalStars);
+          // Update stars
+          // Create new copy of map
+          final newStars = Map<String, int>.from(_levelStars);
+          newStars[_currentLevel!.id] = stars;
+          _updateCurrentProfile(levelStars: newStars);
 
-        if (newTitle != oldTitle) {
-          _oldLevelTitle = oldTitle;
-          _newLevelTitle = newTitle;
-          // Notify listeners is called by _updateCurrentProfile...
-          // ...but we can set these fields safely because notifyListeners isn't truly async,
-          // just likely batching updates if using microtasks.
-          // However, we rely on the final notifyListeners() to propagate all state.
-          // Wait, _updateCurrentProfile calls notifyListeners immediately.
-          // We can recalculate locally.
-          int projectedTotal = oldTotalStars - currentStars + stars;
-          String projectedTitle = _getStatusTitleForStars(projectedTotal);
+          // Check for Level Up
+          // We need to fetch totalStars again as it's a computed property based on the updated profile
+          int newTotalStars = totalStars;
+          String newTitle = _getStatusTitleForStars(newTotalStars);
 
-          if (projectedTitle != oldTitle) {
+          if (newTitle != oldTitle) {
             _oldLevelTitle = oldTitle;
-            _newLevelTitle = projectedTitle;
+            _newLevelTitle = newTitle;
+
+            int projectedTotal = oldTotalStars - currentStars + stars;
+            String projectedTitle = _getStatusTitleForStars(projectedTotal);
+
+            if (projectedTitle != oldTitle) {
+              _oldLevelTitle = oldTitle;
+              _newLevelTitle = projectedTitle;
+            }
           }
         }
       }

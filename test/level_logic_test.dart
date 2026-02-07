@@ -25,6 +25,8 @@ void main() {
   test('Unlocking next level works', () {
     fakeAsync((async) {
       final provider = QuizProvider();
+      // provider.init() is async, but we can just create a profile directly
+      provider.createProfile('Test', 'bird1');
 
       // Start level 1
       final level1 = triviaLevels.firstWhere((l) => l.id == 'level1');

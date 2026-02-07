@@ -4,10 +4,25 @@ import '../providers/quiz_provider.dart';
 import '../models/user_profile.dart';
 import '../models/bird.dart';
 import 'bird_selection_screen.dart';
-import 'main_selection_screen.dart'; // Changed from category_selection_screen.dart
+import 'main_selection_screen.dart';
+import '../services/audio_service.dart';
 
-class ProfileSelectionScreen extends StatelessWidget {
+class ProfileSelectionScreen extends StatefulWidget {
   const ProfileSelectionScreen({super.key});
+
+  @override
+  State<ProfileSelectionScreen> createState() => _ProfileSelectionScreenState();
+}
+
+class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Ensure menu music is playing whenever we return here
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AudioService>().playMenuMusic();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,28 +32,7 @@ class ProfileSelectionScreen extends StatelessWidget {
         title: const Text('Who is playing?'),
         backgroundColor: Colors.teal,
         foregroundColor: Colors.white,
-        actions: [
-          Consumer<QuizProvider>(
-            builder: (context, provider, _) {
-              if (provider.isSignedIn) {
-                return IconButton(
-                  icon: const Icon(Icons.logout),
-                  tooltip: 'Sign Out',
-                  onPressed: () {
-                    provider.signOut();
-                  },
-                );
-              }
-              return IconButton(
-                icon: const Icon(Icons.login), // Or Google Icon if available
-                tooltip: 'Sign in with Google',
-                onPressed: () {
-                  provider.signInWithGoogle();
-                },
-              );
-            },
-          ),
-        ],
+        // REMOVED: actions block containing Google Sign-In logic
       ),
       body: Consumer<QuizProvider>(
         builder: (context, provider, child) {
@@ -128,7 +122,6 @@ class _ProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Find bird for icon
     Bird? bird;
     try {
       bird = availableBirds.firstWhere((b) => b.id == profile.companionBirdId);

@@ -5,7 +5,9 @@ import 'result_screen.dart';
 import '../widgets/navigation_utils.dart';
 import '../widgets/success_background.dart';
 
-class LevelUpScreen extends StatelessWidget {
+import '../services/audio_service.dart';
+
+class LevelUpScreen extends StatefulWidget {
   final String oldRank;
   final String newRank;
 
@@ -14,6 +16,21 @@ class LevelUpScreen extends StatelessWidget {
     required this.oldRank,
     required this.newRank,
   });
+
+  @override
+  State<LevelUpScreen> createState() => _LevelUpScreenState();
+}
+
+class _LevelUpScreenState extends State<LevelUpScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final audioService = context.read<AudioService>();
+      audioService.playMenuMusic();
+      audioService.playLevelUpSound();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +73,7 @@ class LevelUpScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  oldRank,
+                  widget.oldRank,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 24,
@@ -76,7 +93,7 @@ class LevelUpScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  newRank,
+                  widget.newRank,
                   style: const TextStyle(
                     color: Colors.amberAccent,
                     fontSize: 36,

@@ -6,6 +6,7 @@ import 'result_screen.dart';
 import 'level_up_screen.dart';
 import '../widgets/navigation_utils.dart';
 import '../widgets/quiz_animations.dart';
+import '../services/audio_service.dart';
 
 class QuizScreen extends StatefulWidget {
   const QuizScreen({super.key});
@@ -20,6 +21,14 @@ class _QuizScreenState extends State<QuizScreen> {
 
   // Track previous state to trigger animations only once per question/answer
   int? _lastSelectedQuestionIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AudioService>().playQuizMusic();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,14 +67,17 @@ class _QuizScreenState extends State<QuizScreen> {
           if (_lastSelectedQuestionIndex != provider.currentQuestionIndex) {
             _lastSelectedQuestionIndex = provider.currentQuestionIndex;
             WidgetsBinding.instance.addPostFrameCallback((_) {
+              final audioService = context.read<AudioService>();
               if (provider.selectedAnswerIndex == question.correctOptionIndex) {
                 _confettiKey.currentState?.burst();
+                audioService.playCorrectSound();
               } else {
                 // Use a unique key based on index to find the correct widget to shake
                 final key = GlobalObjectKey<ShakeWidgetState>(
                   provider.currentQuestionIndex,
                 );
                 key.currentState?.shake();
+                audioService.playWrongSound();
               }
             });
           }
@@ -203,16 +215,50 @@ class _QuizScreenState extends State<QuizScreen> {
                                   ),
                                   const SizedBox(height: 20),
                                 ],
-                                Text(
-                                  question.text,
-                                  textAlign: TextAlign.center,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineSmall
-                                      ?.copyWith(
-                                        color: const Color(0xFF2C3E50),
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                Consumer<AudioService>(
+                                  builder: (context, audioService, _) {
+                                    return Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 40.0,
+                                          ),
+                                          child: Text(
+                                            question.text,
+                                            textAlign: TextAlign.center,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headlineSmall
+                                                ?.copyWith(
+                                                  color: const Color(
+                                                    0xFF2C3E50,
+                                                  ),
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          right: 0,
+                                          bottom: 0,
+                                          top: 0,
+                                          child: Center(
+                                            child: IconButton(
+                                              icon: const Icon(
+                                                Icons.volume_up_rounded,
+                                                color: Colors.teal,
+                                              ),
+                                              onPressed: () {
+                                                audioService.playVoiceOver(
+                                                  question.combinedAudioPath,
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 ),
                               ],
                             ),
@@ -308,14 +354,16 @@ class _QuizScreenState extends State<QuizScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
         ),
         onPressed: () => provider.selectAnswer(index),
-        child: Text(
-          question.options[index],
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-            color: textColor,
+        child: Center(
+          child: Text(
+            question.options[index],
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              color: textColor,
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
         ),
       ),
     );

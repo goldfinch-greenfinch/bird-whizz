@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../services/audio_service.dart';
 
 class LoadingScreen extends StatefulWidget {
   final bool isLoaded;
@@ -33,6 +35,17 @@ class _LoadingScreenState extends State<LoadingScreen>
     );
   }
 
+  void _handleStart() {
+    if (widget.onStart != null) {
+      widget.onStart!();
+      // Transition music
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        context.read<AudioService>().playMenuMusic();
+      });
+    }
+  }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -51,7 +64,7 @@ class _LoadingScreenState extends State<LoadingScreen>
           ),
         ),
         child: GestureDetector(
-          onTap: widget.isLoaded ? widget.onStart : null,
+          onTap: widget.isLoaded ? _handleStart : null,
           behavior: HitTestBehavior.opaque,
           child: Center(
             child: Column(

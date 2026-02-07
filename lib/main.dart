@@ -5,6 +5,7 @@ import 'package:device_preview/device_preview.dart';
 import 'providers/quiz_provider.dart';
 import 'screens/profile_selection_screen.dart';
 import 'screens/loading_screen.dart';
+import 'services/audio_service.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +28,7 @@ class BirdQuizApp extends StatefulWidget {
 
 class _BirdQuizAppState extends State<BirdQuizApp> {
   late final QuizProvider _quizProvider;
+  late final AudioService _audioService;
   late final Future<void> _initFuture;
   bool _hasStarted = false;
 
@@ -34,17 +36,28 @@ class _BirdQuizAppState extends State<BirdQuizApp> {
   void initState() {
     super.initState();
     _quizProvider = QuizProvider();
+    _audioService = AudioService();
     // Initialize provider and wait at least 3 seconds to show off the animation
     _initFuture = Future.wait([
       _quizProvider.init(),
+      _audioService.playIntroMusic(),
       Future.delayed(const Duration(seconds: 3)),
     ]);
   }
 
   @override
+  void dispose() {
+    _audioService.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider.value(value: _quizProvider)],
+      providers: [
+        ChangeNotifierProvider.value(value: _quizProvider),
+        ChangeNotifierProvider.value(value: _audioService),
+      ],
       child: MaterialApp(
         title: 'Bird Whizz',
         locale: DevicePreview.locale(context),

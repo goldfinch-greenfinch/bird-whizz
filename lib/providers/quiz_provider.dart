@@ -438,15 +438,18 @@ class QuizProvider with ChangeNotifier {
     // 2. Take top 10 (or less if not enough exist, though we should have 15)
     var sampledQuestions = questionsToUse.take(10).toList();
 
-    // 3. For each sampled question, we MUST preserve the order of options so audio matches buttons.
-    // (We formerly shuffled options here, but static combined audio requires fixed order)
+    // 3. For each sampled question, we randomize the options and track the correct answer
     _activeQuestions = sampledQuestions.map((q) {
+      final originalCorrectOption = q.options[q.correctOptionIndex];
+      final scrambledOptions = List<String>.from(q.options)..shuffle();
+      final newCorrectIndex = scrambledOptions.indexOf(originalCorrectOption);
+
       return Question(
         id: q.id,
         text: q.text,
         imagePath: q.imagePath,
-        options: q.options,
-        correctOptionIndex: q.correctOptionIndex,
+        options: scrambledOptions,
+        correctOptionIndex: newCorrectIndex,
       );
     }).toList();
 

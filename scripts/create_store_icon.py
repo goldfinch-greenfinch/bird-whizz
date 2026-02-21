@@ -4,9 +4,9 @@ from PIL import Image
 
 def create_store_icon():
     base_dir = r"c:\Users\adamw\.gemini\antigravity\scratch\bird_quiz\store_assets"
-    fg_path = os.path.join(base_dir, "bird-whizz-transparent-icon.png")
+    fg_path = os.path.join(base_dir, "bird-whizz-transparent-icon_v2.png")
     bg_path = os.path.join(base_dir, "adaptive_background.png")
-    output_path = os.path.join(base_dir, "play_store_512.png")
+    output_path = os.path.join(base_dir, "play_store_512_v2.png")
 
     try:
         print(f"Loading foreground: {fg_path}")

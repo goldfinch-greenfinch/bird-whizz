@@ -13,4 +13,4 @@ function m {
     git commit -m "$message"
 }
 
-function a { git add . }
+function all { git add . }

@@ -20,6 +20,7 @@ class AudioService extends ChangeNotifier {
   String? _currentMusicPath;
 
   Future<void>? _initFuture;
+  int _sequenceId = 0;
 
   AudioService() {
     _initFuture = _initSoLoud();
@@ -119,6 +120,7 @@ class AudioService extends ChangeNotifier {
   Future<void> playVoiceOver(String path) async {
     if (_isMuted) return;
     await _ensureInitialized();
+    _sequenceId++; // Cancel any playing sequence
     try {
       if (_voiceHandle != null &&
           SoLoud.instance.getIsValidVoiceHandle(_voiceHandle!)) {
@@ -179,8 +181,49 @@ class AudioService extends ChangeNotifier {
   }
 
   Future<void> playSequence(List<String> paths) async {
-    if (paths.isNotEmpty) {
-      playVoiceOver(paths.first);
+    if (_isMuted) return;
+    await _ensureInitialized();
+
+    final currentSequenceId = ++_sequenceId;
+
+    try {
+      if (_voiceHandle != null &&
+          SoLoud.instance.getIsValidVoiceHandle(_voiceHandle!)) {
+        SoLoud.instance.stop(_voiceHandle!);
+      }
+
+      for (int i = 0; i < paths.length; i++) {
+        if (_isMuted || currentSequenceId != _sequenceId) break;
+
+        if (_voiceSource != null) {
+          SoLoud.instance.disposeSource(_voiceSource!);
+          _voiceSource = null;
+        }
+
+        _voiceSource = await SoLoud.instance.loadAsset('assets/${paths[i]}');
+        if (currentSequenceId != _sequenceId) return;
+
+        _voiceHandle = await SoLoud.instance.play(_voiceSource!);
+
+        // Wait for the audio to finish playing
+        while (_voiceHandle != null &&
+            SoLoud.instance.getIsValidVoiceHandle(_voiceHandle!)) {
+          if (_isMuted || currentSequenceId != _sequenceId) {
+            SoLoud.instance.stop(_voiceHandle!);
+            break;
+          }
+          await Future.delayed(const Duration(milliseconds: 50));
+        }
+
+        // Add a small pause between files, 700ms for question->options, 300ms for option->option
+        if (i < paths.length - 1 &&
+            !_isMuted &&
+            currentSequenceId == _sequenceId) {
+          await Future.delayed(Duration(milliseconds: i == 0 ? 700 : 300));
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) print('Error playing sequence: $e');
     }
   }
 

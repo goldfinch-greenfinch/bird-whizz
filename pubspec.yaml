@@ -71,7 +71,8 @@ flutter:
     - assets/audio/
     - assets/audio/background_music/
     - assets/audio/sound_effects/
-    - assets/audio/question_answers/
+    - assets/audio/questions/
+    - assets/audio/answers/
     - assets/bird_photos/
 
   # An image asset can refer to one or more resolution-specific "variants", see

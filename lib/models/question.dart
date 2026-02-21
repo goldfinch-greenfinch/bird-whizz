@@ -13,9 +13,14 @@ class Question {
     required this.correctOptionIndex,
   });
 
-  String get combinedAudioPath {
+  String get questionAudioPath {
     final filename = _sanitizeFilename(text);
-    return 'audio/question_answers/$filename.mp3';
+    return 'audio/questions/$filename.mp3';
+  }
+
+  String getAnswerAudioPath(int index) {
+    final filename = _sanitizeFilename(options[index]);
+    return 'audio/answers/$filename.mp3';
   }
 
   String _sanitizeFilename(String text) {

@@ -249,8 +249,19 @@ class _QuizScreenState extends State<QuizScreen> {
                                                 color: Colors.teal,
                                               ),
                                               onPressed: () {
-                                                audioService.playVoiceOver(
-                                                  question.combinedAudioPath,
+                                                final sequence = [
+                                                  question.questionAudioPath,
+                                                  for (
+                                                    int i = 0;
+                                                    i < question.options.length;
+                                                    i++
+                                                  )
+                                                    question.getAnswerAudioPath(
+                                                      i,
+                                                    ),
+                                                ];
+                                                audioService.playSequence(
+                                                  sequence,
                                                 );
                                               },
                                             ),
@@ -354,16 +365,40 @@ class _QuizScreenState extends State<QuizScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
         ),
         onPressed: () => provider.selectAnswer(index),
-        child: Center(
-          child: Text(
-            question.options[index],
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: textColor,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Center(
+              child: Text(
+                question.options[index],
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  color: textColor,
+                ),
+                textAlign: TextAlign.center,
+              ),
             ),
-            textAlign: TextAlign.center,
-          ),
+            Positioned(
+              right: -8,
+              child: Consumer<AudioService>(
+                builder: (context, audioService, _) {
+                  return IconButton(
+                    icon: Icon(
+                      Icons.volume_up_rounded,
+                      color: textColor.withValues(alpha: 0.6),
+                      size: 20,
+                    ),
+                    onPressed: () {
+                      audioService.playVoiceOver(
+                        question.getAnswerAudioPath(index),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

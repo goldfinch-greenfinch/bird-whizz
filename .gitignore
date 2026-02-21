@@ -1,5 +1,6 @@
 .env
 assets/bird_photos_raw/
+assets/nuthatch_birds_raw/
 
 # Miscellaneous
 *.class

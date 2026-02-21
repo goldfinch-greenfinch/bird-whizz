@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/bird.dart';
@@ -22,6 +21,7 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
   List<String?> _userArrangement = [];
   int _score = 0;
   bool _isSuccess = false;
+  List<Bird> _birdQueue = [];
 
   @override
   void initState() {
@@ -44,8 +44,11 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
   void _startNewRound() {
     setState(() {
       _isSuccess = false;
-      // Pick a random bird
-      _currentBird = availableBirds[Random().nextInt(availableBirds.length)];
+
+      if (_birdQueue.isEmpty) {
+        _birdQueue = List.from(availableBirds)..shuffle();
+      }
+      _currentBird = _birdQueue.removeLast();
 
       // Prepare word (uppercase, remove spaces/hyphens for simplicity if needed, but let's keep them tricky?)
       // For simplicity, let's use the Name, not ID, as ID might be simple like 'penguin' but name 'Puddles'.
@@ -53,7 +56,7 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
       // Let's use `bird.id` or `bird.name`?
       // User request: "Show a scrambled bird name (e.g., "NIGNEPU") ... bird.id seems more appropriate for species name usually, but here ID is 'penguin', Name is 'Puddles'.
       // Let's use the ID (Species) as it's more educational for "Bird Word Games".
-      String word = _currentBird!.id.toUpperCase();
+      String word = _currentBird!.name.toUpperCase().replaceAll(' ', '');
 
       _targetLetters = word.split('');
       _scrambledLetters = List.from(_targetLetters)..shuffle();
@@ -129,9 +132,17 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         // Hint Section
-                        Text(
-                          _currentBird!.emoji,
-                          style: const TextStyle(fontSize: 80),
+                        SizedBox(
+                          height: 120,
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 500),
+                            child: Image.asset(
+                              _currentBird!.imagePath,
+                              key: ValueKey('$_isSuccess-${_currentBird!.id}'),
+                              color: _isSuccess ? null : Colors.black,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 16),
                         Container(

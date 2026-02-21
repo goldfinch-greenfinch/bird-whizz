@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
+import '../services/audio_service.dart';
 import '../widgets/navigation_utils.dart';
 import 'unscramble_game_screen.dart';
 import 'coming_soon_screen.dart';
@@ -54,7 +55,13 @@ class WordGamesSelectionScreen extends StatelessWidget {
                                       builder: (_) =>
                                           const UnscrambleGameScreen(),
                                     ),
-                                  );
+                                  ).then((_) {
+                                    if (context.mounted) {
+                                      context
+                                          .read<AudioService>()
+                                          .playMenuMusic();
+                                    }
+                                  });
                                 },
                               );
                             },

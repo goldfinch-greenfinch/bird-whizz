@@ -29,6 +29,9 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
     _confettiController = ConfettiController(
       duration: const Duration(seconds: 2),
     );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AudioService>().playQuizMusic();
+    });
     _startNewRound();
   }
 
@@ -58,23 +61,15 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
     });
   }
 
-  void _onLetterDropped(String letter, int index) {
+  void _onLetterTapped(String letter) {
     if (_isSuccess) return;
 
     setState(() {
-      // If slot is empty, fill it
-      if (_userArrangement[index] == null) {
-        _userArrangement[index] = letter;
-        _removeLetterFromPool(letter);
-      } else {
-        // Swap? Or return existing to pool?
-        // For simplicity: return existing to pool, place new one
-        String existing = _userArrangement[index]!;
-        _scrambledLetters.add(existing);
-        _userArrangement[index] = letter;
+      int emptyIndex = _userArrangement.indexOf(null);
+      if (emptyIndex != -1) {
+        _userArrangement[emptyIndex] = letter;
         _removeLetterFromPool(letter);
       }
-
       _checkWinCondition();
     });
   }
@@ -167,63 +162,63 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
                         const SizedBox(height: 40),
 
                         // Drop Zones
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          spacing: 8,
-                          runSpacing: 8,
-                          children: List.generate(_targetLetters.length, (
-                            index,
-                          ) {
-                            return DragTarget<String>(
-                              onAcceptWithDetails: (details) =>
-                                  _onLetterDropped(details.data, index),
-                              builder: (context, candidateData, rejectedData) {
+                        SizedBox(
+                          width: double.infinity,
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: List.generate(_targetLetters.length, (
+                                index,
+                              ) {
                                 final letter = _userArrangement[index];
-                                final isCandidate = candidateData.isNotEmpty;
 
-                                return GestureDetector(
-                                  onTap: () => _returnLetterToPool(index),
-                                  child: Container(
-                                    width: 45,
-                                    height: 55,
-                                    decoration: BoxDecoration(
-                                      color: letter != null
-                                          ? Colors.deepPurpleAccent
-                                          : (isCandidate
-                                                ? Colors.deepPurple.shade100
-                                                : Colors.white),
-                                      borderRadius: BorderRadius.circular(8),
-                                      border: Border.all(
-                                        color: _isSuccess
-                                            ? Colors.green
-                                            : Colors.deepPurpleAccent,
-                                        width: 2,
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withValues(
-                                            alpha: 0.1,
-                                          ),
-                                          blurRadius: 4,
-                                          offset: const Offset(0, 2),
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 4.0,
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () => _returnLetterToPool(index),
+                                    child: Container(
+                                      width: 45,
+                                      height: 55,
+                                      decoration: BoxDecoration(
+                                        color: letter != null
+                                            ? Colors.deepPurpleAccent
+                                            : Colors.white,
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(
+                                          color: _isSuccess
+                                              ? Colors.green
+                                              : Colors.deepPurpleAccent,
+                                          width: 2,
                                         ),
-                                      ],
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        letter ?? '',
-                                        style: const TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withValues(
+                                              alpha: 0.1,
+                                            ),
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          letter ?? '',
+                                          style: const TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
                                 );
-                              },
-                            );
-                          }),
+                              }),
+                            ),
+                          ),
                         ),
 
                         const Spacer(),
@@ -235,16 +230,8 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
                             spacing: 12,
                             runSpacing: 12,
                             children: _scrambledLetters.map((letter) {
-                              return Draggable<String>(
-                                data: letter,
-                                feedback: _buildLetterTile(
-                                  letter,
-                                  isFeedback: true,
-                                ),
-                                childWhenDragging: _buildLetterTile(
-                                  letter,
-                                  isGhost: true,
-                                ),
+                              return GestureDetector(
+                                onTap: () => _onLetterTapped(letter),
                                 child: _buildLetterTile(letter),
                               );
                             }).toList(),

@@ -4,7 +4,6 @@ import '../providers/quiz_provider.dart';
 import '../services/audio_service.dart';
 import '../widgets/navigation_utils.dart';
 import 'unscramble_game_screen.dart';
-import 'coming_soon_screen.dart';
 
 class WordGamesSelectionScreen extends StatelessWidget {
   const WordGamesSelectionScreen({super.key});
@@ -23,7 +22,7 @@ class WordGamesSelectionScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     const Text(
-                      'Bird Word Games',
+                      'Unscramble',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -42,44 +41,48 @@ class WordGamesSelectionScreen extends StatelessWidget {
                         children: [
                           Consumer<QuizProvider>(
                             builder: (context, provider, child) {
-                              return _GameCard(
-                                title: 'Word Scramble',
-                                subtitle:
-                                    'High Score: ${provider.unscrambleHighScore}',
-                                icon: Icons.spellcheck_rounded,
-                                color: Colors.deepPurpleAccent,
-                                onTap: () {
-                                  Navigator.push(
+                              return Column(
+                                children: [
+                                  _buildLevelCard(
                                     context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          const UnscrambleGameScreen(),
-                                    ),
-                                  ).then((_) {
-                                    if (context.mounted) {
-                                      context
-                                          .read<AudioService>()
-                                          .playMenuMusic();
-                                    }
-                                  });
-                                },
-                              );
-                            },
-                          ),
-                          const SizedBox(height: 16),
-                          _GameCard(
-                            title: 'Crossword',
-                            subtitle: 'Coming Soon',
-                            icon: Icons.grid_on_rounded,
-                            color: Colors.grey,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const ComingSoonScreen(
-                                    title: 'Crossword',
+                                    'Level 1: Short Words',
+                                    '3-4 Letters',
+                                    1,
+                                    4,
                                   ),
-                                ),
+                                  const SizedBox(height: 16),
+                                  _buildLevelCard(
+                                    context,
+                                    'Level 2: Fledglings',
+                                    '5-6 Letters',
+                                    5,
+                                    6,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  _buildLevelCard(
+                                    context,
+                                    'Level 3: Winging It',
+                                    '7-8 Letters',
+                                    7,
+                                    8,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  _buildLevelCard(
+                                    context,
+                                    'Level 4: High Flyer',
+                                    '9-10 Letters',
+                                    9,
+                                    10,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  _buildLevelCard(
+                                    context,
+                                    'Level 5: Master',
+                                    '11+ Letters',
+                                    11,
+                                    100,
+                                  ),
+                                ],
                               );
                             },
                           ),
@@ -93,6 +96,37 @@ class WordGamesSelectionScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildLevelCard(
+    BuildContext context,
+    String title,
+    String subtitle,
+    int minLength,
+    int maxLength,
+  ) {
+    return _GameCard(
+      title: title,
+      subtitle: subtitle,
+      icon: Icons.spellcheck_rounded,
+      color: Colors.deepPurpleAccent,
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => UnscrambleGameScreen(
+              title: title,
+              minLength: minLength,
+              maxLength: maxLength,
+            ),
+          ),
+        ).then((_) {
+          if (context.mounted) {
+            context.read<AudioService>().playMenuMusic();
+          }
+        });
+      },
     );
   }
 }
@@ -139,7 +173,7 @@ class _GameCard extends StatelessWidget {
                 color: color.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, color: color, size: 32),
+              child: Icon(icon, color: color, size: 48),
             ),
             const SizedBox(width: 20),
             Expanded(

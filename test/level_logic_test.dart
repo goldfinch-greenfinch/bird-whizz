@@ -33,8 +33,9 @@ void main() {
       provider.startLevel(level1);
 
       // Simulate answering all questions correctly
-      for (var i = 0; i < level1.questions.length; i++) {
-        provider.selectAnswer(level1.questions[i].correctOptionIndex);
+      int totalQuestions = provider.totalQuestions;
+      for (var i = 0; i < totalQuestions; i++) {
+        provider.selectAnswer(provider.currentQuestion.correctOptionIndex);
 
         // Fast forward time to trigger auto-advance
         async.elapse(const Duration(seconds: 1));

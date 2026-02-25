@@ -169,6 +169,7 @@ class _QuizScreenState extends State<QuizScreen> {
                         fit: StackFit.expand,
                         children: [
                           ...previousChildren,
+                          // ignore: use_null_aware_elements
                           if (currentChild != null) currentChild,
                         ],
                       );

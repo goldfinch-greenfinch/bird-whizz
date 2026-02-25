@@ -398,18 +398,25 @@ class QuizProvider with ChangeNotifier {
   }
 
   // Actions
-  Future<void> startBirdIdQuiz() async {
+  Future<void> startBirdIdQuiz([
+    String? theme,
+    String difficulty = 'medium',
+  ]) async {
     // Initialize service if not already
     await BirdImageService().initialize();
 
     // Generate questions
-    final questions = BirdImageService().generateQuestions(count: 10);
-    print('QuizProvider: Generated ${questions.length} questions for Bird ID.');
+    final questions = BirdImageService().generateQuestions(
+      count: 10,
+      theme: theme,
+      difficulty: difficulty,
+    );
+    // debugPrint('QuizProvider: Generated ${questions.length} questions for Bird ID (Theme: $theme, Diff: $difficulty).');
 
     // Create dummy level
     final birdIdLevel = Level(
-      id: 'bird_id_session',
-      name: 'Bird ID Challenge',
+      id: 'bird_id_session_${theme ?? "all"}_$difficulty',
+      name: '${theme ?? "Bird ID Challenge"} ($difficulty)',
       // description: 'Identify the birds!', // Not in Level model
       questions: questions,
       requiredScoreToUnlock: 0,

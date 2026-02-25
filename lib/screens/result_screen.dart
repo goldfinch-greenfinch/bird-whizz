@@ -175,7 +175,7 @@ class _ResultScreenState extends State<ResultScreen> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.3),
+            color: color.withValues(alpha: 0.3),
             blurRadius: 20,
             spreadRadius: 5,
           ),
@@ -238,9 +238,9 @@ class _ResultScreenState extends State<ResultScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
       decoration: BoxDecoration(
-        color: Colors.teal[100]?.withOpacity(0.5),
+        color: Colors.teal[100]?.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(15),
-        border: Border.all(color: Colors.teal.withOpacity(0.2)),
+        border: Border.all(color: Colors.teal.withValues(alpha: 0.2)),
       ),
       child: Text(
         _message,

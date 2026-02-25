@@ -7,7 +7,16 @@ import '../widgets/navigation_utils.dart';
 import 'package:confetti/confetti.dart';
 
 class UnscrambleGameScreen extends StatefulWidget {
-  const UnscrambleGameScreen({super.key});
+  final int minLength;
+  final int maxLength;
+  final String title;
+
+  const UnscrambleGameScreen({
+    super.key,
+    required this.minLength,
+    required this.maxLength,
+    required this.title,
+  });
 
   @override
   State<UnscrambleGameScreen> createState() => _UnscrambleGameScreenState();
@@ -20,6 +29,7 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
   List<String> _scrambledLetters = [];
   List<String?> _userArrangement = [];
   int _score = 0;
+  int _questionsAnswered = 0;
   bool _isSuccess = false;
   List<Bird> _birdQueue = [];
 
@@ -42,26 +52,87 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
   }
 
   void _startNewRound() {
+    if (_questionsAnswered >= 10) {
+      _showResultDialog();
+      return;
+    }
+
     setState(() {
       _isSuccess = false;
 
       if (_birdQueue.isEmpty) {
-        _birdQueue = List.from(availableBirds)..shuffle();
+        List<Bird> filtered = availableBirds.where((b) {
+          String w = b.name
+              .toUpperCase()
+              .replaceAll(' ', '')
+              .replaceAll('-', '');
+          return w.length >= widget.minLength && w.length <= widget.maxLength;
+        }).toList();
+
+        if (filtered.isEmpty) {
+          filtered = availableBirds; // Fallback
+        }
+
+        int needed = 10 - _questionsAnswered;
+        while (_birdQueue.length < needed) {
+          filtered.shuffle();
+          _birdQueue.addAll(filtered);
+        }
+
+        if (_birdQueue.length > needed) {
+          _birdQueue = _birdQueue.sublist(0, needed);
+        }
       }
+
       _currentBird = _birdQueue.removeLast();
 
-      // Prepare word (uppercase, remove spaces/hyphens for simplicity if needed, but let's keep them tricky?)
-      // For simplicity, let's use the Name, not ID, as ID might be simple like 'penguin' but name 'Puddles'.
-      // Wait, the requirement said "Bird Name (e.g. NIGNEPU -> PENGUIN)".
-      // Let's use `bird.id` or `bird.name`?
-      // User request: "Show a scrambled bird name (e.g., "NIGNEPU") ... bird.id seems more appropriate for species name usually, but here ID is 'penguin', Name is 'Puddles'.
-      // Let's use the ID (Species) as it's more educational for "Bird Word Games".
-      String word = _currentBird!.name.toUpperCase().replaceAll(' ', '');
+      String word = _currentBird!.name
+          .toUpperCase()
+          .replaceAll(' ', '')
+          .replaceAll('-', '');
 
       _targetLetters = word.split('');
       _scrambledLetters = List.from(_targetLetters)..shuffle();
       _userArrangement = List.filled(_targetLetters.length, null);
     });
+  }
+
+  void _showResultDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text(
+          'Level Complete!',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.deepPurple,
+          ),
+        ),
+        content: Text(
+          'You scored $_score out of 10!',
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 18),
+        ),
+        actions: [
+          Center(
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.deepPurpleAccent,
+                foregroundColor: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+              child: const Text('Back to Menu'),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void _onLetterTapped(String letter) {
@@ -105,6 +176,7 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
     if (currentWord == targetWord) {
       _isSuccess = true;
       _score++;
+      _questionsAnswered++;
       _confettiController.play();
       context.read<AudioService>().playCorrectSound();
 
@@ -369,6 +441,17 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           NavigationUtils.buildBackButton(context, color: Colors.black87),
+          Expanded(
+            child: Text(
+              widget.title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.deepPurple,
+              ),
+            ),
+          ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
@@ -390,7 +473,6 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
               ],
             ),
           ),
-          const SizedBox(width: 40), // Balance the back button
         ],
       ),
     );

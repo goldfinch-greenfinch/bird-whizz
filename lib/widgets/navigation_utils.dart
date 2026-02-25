@@ -46,7 +46,7 @@ class NavigationUtils {
             child: Row(
               children: [
                 Icon(Icons.people_outline, color: Colors.teal),
-                const SizedBox(width: 12),
+                SizedBox(width: 12),
                 Text('Back to Profiles'),
               ],
             ),

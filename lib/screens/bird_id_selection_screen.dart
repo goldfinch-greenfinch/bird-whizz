@@ -35,43 +35,62 @@ class BirdIdSelectionScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                     ),
                     const SizedBox(height: 32),
-                    // Single Level Card
-                    Consumer<QuizProvider>(
-                      builder: (context, provider, child) {
-                        final highScore = provider.birdIdHighScore;
-
-                        // Calculate stars
-                        int stars = 0;
-                        if (highScore == 10) {
-                          stars = 3;
-                        } else if (highScore >= 8) {
-                          stars = 2;
-                        } else if (highScore >= 5) {
-                          stars = 1;
-                        }
-
-                        return _LevelCard(
-                          title: 'Guess the Bird!',
-                          subtitle: 'High Score: $highScore/10',
-                          icon: Icons.camera_alt_rounded,
-                          color: Colors.orangeAccent.shade700,
-                          stars: stars,
-                          onTap: () async {
-                            final provider = context.read<QuizProvider>();
-                            await provider
-                                .startBirdIdQuiz(); // This sets _currentCategory to 'bird_id'
-
-                            if (context.mounted) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const QuizScreen(),
-                                ),
-                              );
-                            }
-                          },
-                        );
-                      },
+                    // Theme Levels
+                    Expanded(
+                      child: ListView(
+                        children: const [
+                          _ThemeCard(
+                            title: 'Waterfowl',
+                            icon: Icons.water_drop_rounded,
+                            color: Colors.blue,
+                          ),
+                          _ThemeCard(
+                            title: 'Birds of Prey',
+                            icon: Icons.bolt_rounded,
+                            color: Colors.redAccent,
+                          ),
+                          _ThemeCard(
+                            title: 'Owls',
+                            icon: Icons.nightlight_round,
+                            color: Colors.deepPurple,
+                          ),
+                          _ThemeCard(
+                            title: 'Waders & Shorebirds',
+                            icon: Icons.waves_rounded,
+                            color: Colors.cyan,
+                          ),
+                          _ThemeCard(
+                            title: 'Woodpeckers & Kingfishers',
+                            icon: Icons.forest_rounded,
+                            color: Colors.brown,
+                          ),
+                          _ThemeCard(
+                            title: 'Corvids',
+                            icon: Icons.dark_mode_rounded,
+                            color: Colors.blueGrey,
+                          ),
+                          _ThemeCard(
+                            title: 'Songbirds',
+                            icon: Icons.music_note_rounded,
+                            color: Colors.pinkAccent,
+                          ),
+                          _ThemeCard(
+                            title: 'Seabirds',
+                            icon: Icons.sailing_rounded,
+                            color: Colors.lightBlue,
+                          ),
+                          _ThemeCard(
+                            title: 'Pigeons & Doves',
+                            icon: Icons.favorite_rounded,
+                            color: Colors.grey,
+                          ),
+                          _ThemeCard(
+                            title: 'Exotic & Colorful',
+                            icon: Icons.palette_rounded,
+                            color: Colors.orange,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -84,91 +103,125 @@ class BirdIdSelectionScreen extends StatelessWidget {
   }
 }
 
-class _LevelCard extends StatelessWidget {
+class _ThemeCard extends StatelessWidget {
   final String title;
-  final String subtitle;
   final IconData icon;
   final Color color;
-  final int stars;
-  final VoidCallback onTap;
 
-  const _LevelCard({
+  const _ThemeCard({
     required this.title,
-    required this.subtitle,
     required this.icon,
     required this.color,
-    required this.stars,
-    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: color.withValues(alpha: 0.4),
-              blurRadius: 12,
-              offset: const Offset(0, 6),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.2),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+        border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
+      ),
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          iconColor: color,
+          collapsedIconColor: color,
+          leading: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: color.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
             ),
-          ],
-        ),
-        child: Column(
+            child: Icon(icon, color: color, size: 28),
+          ),
+          title: Text(
+            title,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
           children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(icon, color: Colors.white, size: 48),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              subtitle,
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white.withValues(alpha: 0.9),
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(3, (index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: Icon(
-                    index < stars
-                        ? Icons.star_rounded
-                        : Icons.star_outline_rounded,
-                    color: index < stars
-                        ? Colors.amber
-                        : Colors.white.withValues(alpha: 0.4),
-                    size: 32,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _DifficultyButton(
+                    title: title,
+                    difficulty: 'easy',
+                    label: 'Easy',
+                    color: Colors.green,
                   ),
-                );
-              }),
+                  _DifficultyButton(
+                    title: title,
+                    difficulty: 'medium',
+                    label: 'Medium',
+                    color: Colors.orange,
+                  ),
+                  _DifficultyButton(
+                    title: title,
+                    difficulty: 'hard',
+                    label: 'Hard',
+                    color: Colors.red,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _DifficultyButton extends StatelessWidget {
+  final String title;
+  final String difficulty;
+  final String label;
+  final Color color;
+
+  const _DifficultyButton({
+    required this.title,
+    required this.difficulty,
+    required this.label,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color.withValues(alpha: 0.1),
+        foregroundColor: color,
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: color.withValues(alpha: 0.5)),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      ),
+      onPressed: () async {
+        final provider = context.read<QuizProvider>();
+        await provider.startBirdIdQuiz(title, difficulty);
+        if (context.mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const QuizScreen()),
+          );
+        }
+      },
+      child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
     );
   }
 }

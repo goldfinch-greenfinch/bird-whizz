@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
-import 'result_screen.dart';
 import '../widgets/navigation_utils.dart';
 import '../widgets/success_background.dart';
 
@@ -10,11 +9,13 @@ import '../services/audio_service.dart';
 class LevelUpScreen extends StatefulWidget {
   final String oldRank;
   final String newRank;
+  final Widget? nextScreen;
 
   const LevelUpScreen({
     super.key,
     required this.oldRank,
     required this.newRank,
+    this.nextScreen,
   });
 
   @override
@@ -118,11 +119,16 @@ class _LevelUpScreenState extends State<LevelUpScreen> {
                     );
                     provider.consumeLevelUp();
 
-                    // Navigate to Result Screen to see quiz results
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (_) => const ResultScreen()),
-                    );
+                    // Navigate to the next appropriate screen
+                    if (widget.nextScreen != null) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => widget.nextScreen!),
+                      );
+                    } else {
+                      provider.resetQuiz();
+                      Navigator.pop(context);
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,

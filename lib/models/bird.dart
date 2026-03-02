@@ -7,6 +7,7 @@ class Bird {
   final Color color;
   final String description;
   final String imagePath;
+  final bool hasEvolution;
 
   const Bird({
     required this.id,
@@ -15,7 +16,14 @@ class Bird {
     required this.color,
     required this.description,
     required this.imagePath,
+    this.hasEvolution = false,
   });
+
+  String getEvolvedImagePath(int evolutionStage) {
+    if (!hasEvolution) return imagePath;
+    int stage = evolutionStage.clamp(1, 5);
+    return 'assets/bird_evolution/${id}_$stage.png';
+  }
 }
 
 const List<Bird> availableBirds = [
@@ -26,6 +34,7 @@ const List<Bird> availableBirds = [
     color: Colors.black87,
     description: 'Master of stealth.',
     imagePath: 'assets/bird_icons/blackbird.webp',
+    hasEvolution: true,
   ),
   Bird(
     id: 'blue_tit',
@@ -34,6 +43,7 @@ const List<Bird> availableBirds = [
     color: Colors.blueAccent,
     description: 'A colorful garden visitor.',
     imagePath: 'assets/bird_icons/blue_tit.webp',
+    hasEvolution: true,
   ),
   Bird(
     id: 'bullfinch',
@@ -114,6 +124,7 @@ const List<Bird> availableBirds = [
     color: Colors.red,
     description: 'Fiercely territorial and friendly.',
     imagePath: 'assets/bird_icons/robin.webp',
+    hasEvolution: true,
   ),
   Bird(
     id: 'woodpecker',
@@ -502,7 +513,7 @@ const List<Bird> availableBirds = [
   ),
   Bird(
     id: 'coot',
-    name: 'Cot',
+    name: 'Coot',
     emoji: '🦆',
     color: Colors.black,
     description:

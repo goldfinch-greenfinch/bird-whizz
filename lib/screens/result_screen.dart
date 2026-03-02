@@ -7,6 +7,8 @@ import '../services/audio_service.dart';
 import '../widgets/navigation_utils.dart';
 import '../data/result_messages.dart';
 import '../widgets/particle_overlay.dart';
+import 'level_up_screen.dart';
+import 'character_evolve_screen.dart';
 
 class ResultScreen extends StatefulWidget {
   const ResultScreen({super.key});
@@ -268,8 +270,26 @@ class _ResultScreenState extends State<ResultScreen> {
           elevation: 5,
         ),
         onPressed: () {
-          provider.resetQuiz();
-          Navigator.pop(context);
+          if (provider.hasLeveledUp) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (_) => LevelUpScreen(
+                  oldRank: provider.oldLevelTitle ?? 'Unknown',
+                  newRank: provider.newLevelTitle ?? 'Bird Wizard',
+                  nextScreen: provider.hasEvolved
+                      ? CharacterEvolveScreen(
+                          oldStage: provider.oldEvolutionStage!,
+                          newStage: provider.newEvolutionStage!,
+                        )
+                      : null,
+                ),
+              ),
+            );
+          } else {
+            provider.resetQuiz();
+            Navigator.pop(context);
+          }
         },
         child: const Text(
           'Return to Home',

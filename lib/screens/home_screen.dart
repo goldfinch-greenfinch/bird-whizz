@@ -5,6 +5,7 @@ import '../models/level.dart';
 import '../models/bird.dart';
 import 'quiz_screen.dart';
 import '../widgets/navigation_utils.dart';
+import '../widgets/user_level_badge.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -125,15 +126,20 @@ class _HomeHeader extends StatelessWidget {
                   const SizedBox(width: 4),
                   if (selectedBird != null) ...[
                     Container(
-                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.2),
                         shape: BoxShape.circle,
                         border: Border.all(color: selectedBird.color, width: 3),
                       ),
-                      child: Text(
-                        selectedBird.emoji,
-                        style: const TextStyle(fontSize: 40),
+                      child: ClipOval(
+                        child: Image.asset(
+                          selectedBird.getEvolvedImagePath(
+                            provider.userEvolutionStage,
+                          ),
+                          width: 68,
+                          height: 68,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -149,25 +155,8 @@ class _HomeHeader extends StatelessWidget {
                               fontSize: 20,
                             ),
                           ),
-                          const SizedBox(height: 4),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.2),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Text(
-                              provider.userStatusTitle,
-                              style: const TextStyle(
-                                color: Colors.yellowAccent,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                              ),
-                            ),
-                          ),
+                          const SizedBox(height: 6),
+                          const UserLevelBadge(),
                         ],
                       ),
                     ),

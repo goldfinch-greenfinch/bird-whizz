@@ -3,8 +3,10 @@ import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../models/bird.dart';
 import 'home_screen.dart';
+import 'stats_screen.dart';
 
 import '../widgets/navigation_utils.dart';
+import '../widgets/user_level_badge.dart';
 
 class TextQuizSelectionScreen extends StatelessWidget {
   const TextQuizSelectionScreen({super.key});
@@ -165,16 +167,34 @@ class _CategoryHeader extends StatelessWidget {
                   NavigationUtils.buildBackButton(context, color: Colors.white),
                   const SizedBox(width: 4),
                   if (selectedBird != null) ...[
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        shape: BoxShape.circle,
-                        border: Border.all(color: selectedBird.color, width: 2),
-                      ),
-                      child: Text(
-                        selectedBird.emoji,
-                        style: const TextStyle(fontSize: 28),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const StatsScreen(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: selectedBird.color,
+                            width: 2,
+                          ),
+                        ),
+                        child: ClipOval(
+                          child: Image.asset(
+                            selectedBird.getEvolvedImagePath(
+                              provider.userEvolutionStage,
+                            ),
+                            width: 48,
+                            height: 48,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -191,13 +211,8 @@ class _CategoryHeader extends StatelessWidget {
                             fontSize: 22,
                           ),
                         ),
-                        Text(
-                          'Choose a category!',
-                          style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.9),
-                            fontSize: 14,
-                          ),
-                        ),
+                        const SizedBox(height: 6),
+                        const UserLevelBadge(),
                       ],
                     ),
                   ),

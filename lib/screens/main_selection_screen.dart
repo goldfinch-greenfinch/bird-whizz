@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../models/bird.dart';
+import '../widgets/navigation_utils.dart';
+import '../widgets/user_level_badge.dart';
 import 'text_quiz_selection_screen.dart';
 
 import 'coming_soon_screen.dart';
 import 'profile_selection_screen.dart';
-import '../widgets/navigation_utils.dart';
 import '../services/audio_service.dart';
 import 'bird_id_selection_screen.dart';
 import 'word_games_selection_screen.dart';
+import 'stats_screen.dart';
 
 class MainSelectionScreen extends StatefulWidget {
   const MainSelectionScreen({super.key});
@@ -307,16 +309,34 @@ class _Header extends StatelessWidget {
                   ),
                   if (selectedBird != null) ...[
                     const SizedBox(width: 4),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        shape: BoxShape.circle,
-                        border: Border.all(color: selectedBird.color, width: 2),
-                      ),
-                      child: Text(
-                        selectedBird.emoji,
-                        style: const TextStyle(fontSize: 28),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const StatsScreen(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: selectedBird.color,
+                            width: 2,
+                          ),
+                        ),
+                        child: ClipOval(
+                          child: Image.asset(
+                            selectedBird.getEvolvedImagePath(
+                              provider.userEvolutionStage,
+                            ),
+                            width: 48,
+                            height: 48,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -325,21 +345,16 @@ class _Header extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Welcome Back!',
-                          style: TextStyle(
+                        Text(
+                          provider.currentProfile?.name ?? 'Adventurer',
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 22,
                           ),
                         ),
-                        Text(
-                          provider.currentProfile?.name ?? 'Adventurer',
-                          style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.9),
-                            fontSize: 16,
-                          ),
-                        ),
+                        const SizedBox(height: 6),
+                        const UserLevelBadge(),
                       ],
                     ),
                   ),

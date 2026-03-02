@@ -127,6 +127,12 @@ class _ProfileCard extends StatelessWidget {
       bird = availableBirds.firstWhere((b) => b.id == profile.companionBirdId);
     } catch (_) {}
 
+    int totalStars = _calculateTotalStars(profile);
+    int evolutionStage = Provider.of<QuizProvider>(
+      context,
+      listen: false,
+    ).getEvolutionStageForStars(totalStars);
+
     return Card(
       elevation: 3,
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -159,10 +165,16 @@ class _ProfileCard extends StatelessWidget {
                   ),
                 ),
                 child: Center(
-                  child: Text(
-                    bird?.emoji ?? '?',
-                    style: const TextStyle(fontSize: 30),
-                  ),
+                  child: bird != null
+                      ? ClipOval(
+                          child: Image.asset(
+                            bird.getEvolvedImagePath(evolutionStage),
+                            width: 60,
+                            height: 60,
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                      : const Text('?', style: TextStyle(fontSize: 30)),
                 ),
               ),
               const SizedBox(width: 16),

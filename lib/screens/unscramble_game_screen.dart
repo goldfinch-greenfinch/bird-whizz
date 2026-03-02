@@ -5,6 +5,8 @@ import '../providers/quiz_provider.dart';
 import '../services/audio_service.dart';
 import '../widgets/navigation_utils.dart';
 import 'package:confetti/confetti.dart';
+import 'level_up_screen.dart';
+import 'character_evolve_screen.dart';
 
 class UnscrambleGameScreen extends StatefulWidget {
   final int minLength;
@@ -33,12 +35,32 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
   bool _isSuccess = false;
   List<Bird> _birdQueue = [];
 
+  int _totalQuestions = 10;
+
   @override
   void initState() {
     super.initState();
     _confettiController = ConfettiController(
       duration: const Duration(seconds: 2),
     );
+
+    List<Bird> filtered = availableBirds.where((b) {
+      String w = b.name.toUpperCase().replaceAll(' ', '').replaceAll('-', '');
+      return w.length >= widget.minLength && w.length <= widget.maxLength;
+    }).toList();
+
+    if (filtered.isEmpty) {
+      filtered = List.from(availableBirds);
+    }
+
+    filtered.shuffle();
+    int needed = 10;
+    if (filtered.length < needed) {
+      needed = filtered.length;
+    }
+    _totalQuestions = needed;
+    _birdQueue = filtered.sublist(0, needed);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<AudioService>().playQuizMusic();
     });
@@ -52,37 +74,13 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
   }
 
   void _startNewRound() {
-    if (_questionsAnswered >= 10) {
+    if (_questionsAnswered >= _totalQuestions) {
       _showResultDialog();
       return;
     }
 
     setState(() {
       _isSuccess = false;
-
-      if (_birdQueue.isEmpty) {
-        List<Bird> filtered = availableBirds.where((b) {
-          String w = b.name
-              .toUpperCase()
-              .replaceAll(' ', '')
-              .replaceAll('-', '');
-          return w.length >= widget.minLength && w.length <= widget.maxLength;
-        }).toList();
-
-        if (filtered.isEmpty) {
-          filtered = availableBirds; // Fallback
-        }
-
-        int needed = 10 - _questionsAnswered;
-        while (_birdQueue.length < needed) {
-          filtered.shuffle();
-          _birdQueue.addAll(filtered);
-        }
-
-        if (_birdQueue.length > needed) {
-          _birdQueue = _birdQueue.sublist(0, needed);
-        }
-      }
 
       _currentBird = _birdQueue.removeLast();
 
@@ -98,6 +96,13 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
   }
 
   void _showResultDialog() {
+    final provider = context.read<QuizProvider>();
+    provider.saveWordGameStars(
+      widget.title,
+      _score,
+      totalQuestions: _totalQuestions,
+    );
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -112,7 +117,7 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
           ),
         ),
         content: Text(
-          'You scored $_score out of 10!',
+          'You scored $_score out of $_totalQuestions!',
           textAlign: TextAlign.center,
           style: const TextStyle(fontSize: 18),
         ),
@@ -124,8 +129,26 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
                 foregroundColor: Colors.white,
               ),
               onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // dismiss dialog
+                if (provider.hasLeveledUp) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => LevelUpScreen(
+                        oldRank: provider.oldLevelTitle ?? 'Unknown',
+                        newRank: provider.newLevelTitle ?? 'Bird Wizard',
+                        nextScreen: provider.hasEvolved
+                            ? CharacterEvolveScreen(
+                                oldStage: provider.oldEvolutionStage!,
+                                newStage: provider.newEvolutionStage!,
+                              )
+                            : null,
+                      ),
+                    ),
+                  );
+                } else {
+                  Navigator.of(context).pop(); // dismiss word game screen
+                }
               },
               child: const Text('Back to Menu'),
             ),
@@ -180,8 +203,9 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
       _confettiController.play();
       context.read<AudioService>().playCorrectSound();
 
-      // Update High Score
+      // Update High Score and Total Word count
       context.read<QuizProvider>().updateUnscrambleHighScore(_score);
+      context.read<QuizProvider>().incrementUnscrambledWords();
     }
   }
 
@@ -205,7 +229,7 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
                       children: [
                         // Hint Section
                         SizedBox(
-                          height: 120,
+                          height: 240,
                           child: AnimatedSwitcher(
                             duration: const Duration(milliseconds: 500),
                             child: Image.asset(
@@ -442,14 +466,26 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
         children: [
           NavigationUtils.buildBackButton(context, color: Colors.black87),
           Expanded(
-            child: Text(
-              widget.title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.deepPurple,
-              ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  widget.title,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.deepPurple,
+                  ),
+                ),
+                Text(
+                  'Word ${_questionsAnswered < _totalQuestions && !_isSuccess ? _questionsAnswered + 1 : _questionsAnswered} of $_totalQuestions',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.deepPurple,
+                  ),
+                ),
+              ],
             ),
           ),
           Container(
@@ -478,3 +514,5 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
     );
   }
 }
+
+// removed _ReturnToMenuPlaceholder

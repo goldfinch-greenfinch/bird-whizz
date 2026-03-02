@@ -8,6 +8,9 @@ class UserProfile {
   final int birdIdHighScore; // New field for Bird ID Quiz High Score
   final Map<String, int>
   wordGameHighScores; // New field for Word Games High Scores
+  final DateTime? firstPlayDate;
+  final int totalTimePlayingSeconds;
+  final int totalUnscrambledWords;
 
   UserProfile({
     required this.id,
@@ -18,6 +21,9 @@ class UserProfile {
     this.categoryCorrectAnswers = const <String, int>{},
     this.birdIdHighScore = 0,
     this.wordGameHighScores = const <String, int>{},
+    this.firstPlayDate,
+    this.totalTimePlayingSeconds = 0,
+    this.totalUnscrambledWords = 0,
   });
 
   Map<String, dynamic> toJson() {
@@ -30,6 +36,9 @@ class UserProfile {
       'categoryCorrectAnswers': categoryCorrectAnswers,
       'birdIdHighScore': birdIdHighScore,
       'wordGameHighScores': wordGameHighScores,
+      'firstPlayDate': firstPlayDate?.toIso8601String(),
+      'totalTimePlayingSeconds': totalTimePlayingSeconds,
+      'totalUnscrambledWords': totalUnscrambledWords,
     };
   }
 
@@ -55,6 +64,11 @@ class UserProfile {
             (k, v) => MapEntry(k, v as int),
           ) ??
           const <String, int>{},
+      firstPlayDate: json['firstPlayDate'] != null
+          ? DateTime.tryParse(json['firstPlayDate'] as String)
+          : null,
+      totalTimePlayingSeconds: json['totalTimePlayingSeconds'] as int? ?? 0,
+      totalUnscrambledWords: json['totalUnscrambledWords'] as int? ?? 0,
     );
   }
 
@@ -67,6 +81,9 @@ class UserProfile {
     Map<String, int>? categoryCorrectAnswers,
     int? birdIdHighScore,
     Map<String, int>? wordGameHighScores,
+    DateTime? firstPlayDate,
+    int? totalTimePlayingSeconds,
+    int? totalUnscrambledWords,
   }) {
     return UserProfile(
       id: id ?? this.id,
@@ -78,6 +95,11 @@ class UserProfile {
           categoryCorrectAnswers ?? this.categoryCorrectAnswers,
       birdIdHighScore: birdIdHighScore ?? this.birdIdHighScore,
       wordGameHighScores: wordGameHighScores ?? this.wordGameHighScores,
+      firstPlayDate: firstPlayDate ?? this.firstPlayDate,
+      totalTimePlayingSeconds:
+          totalTimePlayingSeconds ?? this.totalTimePlayingSeconds,
+      totalUnscrambledWords:
+          totalUnscrambledWords ?? this.totalUnscrambledWords,
     );
   }
 }

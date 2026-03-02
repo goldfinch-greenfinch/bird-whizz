@@ -3,7 +3,10 @@ import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../services/audio_service.dart';
 import '../widgets/navigation_utils.dart';
+import '../widgets/user_level_badge.dart';
+import '../models/bird.dart';
 import 'unscramble_game_screen.dart';
+import 'stats_screen.dart';
 
 class WordGamesSelectionScreen extends StatelessWidget {
   const WordGamesSelectionScreen({super.key});
@@ -211,8 +214,16 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<QuizProvider>(
       builder: (context, provider, child) {
-        // Calculate total word game score (currently just unscramble)
-        final totalWordScore = provider.unscrambleHighScore;
+        Bird? selectedBird;
+        if (provider.selectedBirdId != null) {
+          try {
+            selectedBird = availableBirds.firstWhere(
+              (b) => b.id == provider.selectedBirdId,
+            );
+          } catch (e) {
+            // Fallback
+          }
+        }
 
         return Container(
           padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
@@ -235,7 +246,40 @@ class _Header extends StatelessWidget {
               Row(
                 children: [
                   NavigationUtils.buildBackButton(context, color: Colors.white),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 4),
+                  if (selectedBird != null) ...[
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const StatsScreen(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: selectedBird.color,
+                            width: 2,
+                          ),
+                        ),
+                        child: ClipOval(
+                          child: Image.asset(
+                            selectedBird.getEvolvedImagePath(
+                              provider.userEvolutionStage,
+                            ),
+                            width: 48,
+                            height: 48,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                  ],
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -248,13 +292,8 @@ class _Header extends StatelessWidget {
                             fontSize: 22,
                           ),
                         ),
-                        Text(
-                          'Total Score: $totalWordScore',
-                          style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.9),
-                            fontSize: 14,
-                          ),
-                        ),
+                        const SizedBox(height: 6),
+                        const UserLevelBadge(),
                       ],
                     ),
                   ),
@@ -264,10 +303,73 @@ class _Header extends StatelessWidget {
                   ),
                 ],
               ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildStatItem(
+                    Icons.star_rounded,
+                    '${provider.unscrambleTotalStars}/${provider.unscrambleMaxStars}',
+                    'App Stats',
+                    Colors.amber,
+                  ),
+                  _buildContainerLine(),
+                  _buildStatItem(
+                    Icons.emoji_events_rounded,
+                    '${provider.unscrambleCompletedLevels}/5',
+                    'Levels Done',
+                    Colors.orangeAccent,
+                  ),
+                  _buildContainerLine(),
+                  _buildStatItem(
+                    Icons.spellcheck_rounded,
+                    '${provider.totalUnscrambledWords}',
+                    'Words Found',
+                    Colors.greenAccent,
+                  ),
+                ],
+              ),
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget _buildStatItem(
+    IconData icon,
+    String value,
+    String label,
+    Color color,
+  ) {
+    return Column(
+      children: [
+        Icon(icon, color: color, size: 28),
+        const SizedBox(height: 6),
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.white.withValues(alpha: 0.8),
+            fontSize: 11,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildContainerLine() {
+    return Container(
+      height: 30,
+      width: 1,
+      color: Colors.white.withValues(alpha: 0.2),
     );
   }
 }

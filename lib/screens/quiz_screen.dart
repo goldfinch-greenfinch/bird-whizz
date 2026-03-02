@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../models/question.dart';
 import 'result_screen.dart';
-import 'level_up_screen.dart';
 import '../widgets/navigation_utils.dart';
 import '../widgets/quiz_animations.dart';
 import '../services/audio_service.dart';
@@ -37,22 +36,10 @@ class _QuizScreenState extends State<QuizScreen> {
         // Handle Quiz Completion
         if (provider.isQuizFinished) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (provider.hasLeveledUp) {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => LevelUpScreen(
-                    oldRank: provider.oldLevelTitle ?? 'Unknown',
-                    newRank: provider.newLevelTitle ?? 'Bird Wizard',
-                  ),
-                ),
-              );
-            } else {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => const ResultScreen()),
-              );
-            }
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => const ResultScreen()),
+            );
           });
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),

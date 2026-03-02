@@ -100,14 +100,19 @@ class _BirdSelectionScreenState extends State<BirdSelectionScreen> {
                     return GridView.builder(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 4, // Changed to 4
+                            crossAxisCount: 3, // Changed to 3
                             crossAxisSpacing: 12,
                             mainAxisSpacing: 12,
                             childAspectRatio: 0.8,
                           ),
-                      itemCount: availableBirds.length,
+                      itemCount: availableBirds
+                          .where((b) => b.hasEvolution)
+                          .length,
                       itemBuilder: (context, index) {
-                        final bird = availableBirds[index];
+                        final evolvableBirds = availableBirds
+                            .where((b) => b.hasEvolution)
+                            .toList();
+                        final bird = evolvableBirds[index];
                         final isTaken = provider.isBirdTaken(bird.id);
                         final isSelected = _selectedId == bird.id;
                         final isEnabled = !isTaken;
@@ -155,11 +160,11 @@ class _BirdSelectionScreenState extends State<BirdSelectionScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Text(
-                                          bird.emoji,
-                                          style: const TextStyle(
-                                            fontSize: 32,
-                                          ), // Slightly smaller font
+                                        Image.asset(
+                                          bird.getEvolvedImagePath(1),
+                                          width: 48,
+                                          height: 48,
+                                          fit: BoxFit.contain,
                                         ),
                                         const SizedBox(height: 4),
                                         Padding(

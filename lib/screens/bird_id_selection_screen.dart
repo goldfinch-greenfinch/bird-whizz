@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../models/bird.dart';
 import 'quiz_screen.dart';
-import '../widgets/navigation_utils.dart'; // Ensure this exists or use logic from other screens
+import 'stats_screen.dart';
+import '../widgets/navigation_utils.dart';
+import '../widgets/user_level_badge.dart';
 
 class BirdIdSelectionScreen extends StatelessWidget {
   const BirdIdSelectionScreen({super.key});
@@ -267,16 +269,34 @@ class _Header extends StatelessWidget {
                   NavigationUtils.buildBackButton(context, color: Colors.white),
                   const SizedBox(width: 4),
                   if (selectedBird != null) ...[
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        shape: BoxShape.circle,
-                        border: Border.all(color: selectedBird.color, width: 2),
-                      ),
-                      child: Text(
-                        selectedBird.emoji,
-                        style: const TextStyle(fontSize: 28),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const StatsScreen(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: selectedBird.color,
+                            width: 2,
+                          ),
+                        ),
+                        child: ClipOval(
+                          child: Image.asset(
+                            selectedBird.getEvolvedImagePath(
+                              provider.userEvolutionStage,
+                            ),
+                            width: 48,
+                            height: 48,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -286,20 +306,15 @@ class _Header extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Stats',
+                          'Bird ID Stats',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 22,
                           ),
                         ),
-                        Text(
-                          'Keep going!',
-                          style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.9),
-                            fontSize: 14,
-                          ),
-                        ),
+                        const SizedBox(height: 6),
+                        const UserLevelBadge(),
                       ],
                     ),
                   ),
@@ -311,19 +326,26 @@ class _Header extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _buildStatItem(
-                    Icons.emoji_events_rounded,
-                    '${provider.birdIdHighScore}/10',
-                    'High Score',
+                    Icons.star_rounded,
+                    '${provider.birdIdTotalStars}/${provider.birdIdMaxStars}',
+                    'App Stats',
                     Colors.amber,
+                  ),
+                  _buildContainerLine(),
+                  _buildStatItem(
+                    Icons.emoji_events_rounded,
+                    '${provider.birdIdCompletedLevels}/30', // 10 themes x 3 difficulties
+                    'Levels Done',
+                    Colors.orangeAccent,
                   ),
                   _buildContainerLine(),
                   _buildStatItem(
                     Icons.check_circle_rounded,
                     '${provider.currentProfile?.categoryCorrectAnswers['bird_id'] ?? 0}',
-                    'Confidence',
+                    'Total Correct',
                     Colors.greenAccent,
                   ),
                 ],

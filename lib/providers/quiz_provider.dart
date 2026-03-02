@@ -17,13 +17,15 @@ import '../data/sections/migration_data.dart';
 import '../data/sections/colours_data.dart';
 import '../services/bird_image_service.dart';
 
-class QuizProvider with ChangeNotifier {
+class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
   List<UserProfile> _profiles = [];
   UserProfile? _currentProfile;
+  DateTime? _sessionStartTime;
 
-  // Level Up State
   String? _oldLevelTitle;
   String? _newLevelTitle;
+  int? _oldEvolutionStage;
+  int? _newEvolutionStage;
 
   // Game Session State
   String _currentCategory = 'trivia'; // Default category
@@ -36,7 +38,37 @@ class QuizProvider with ChangeNotifier {
   bool _isAnswerProcessing = false;
 
   // Initialize SharedPreferences
-  QuizProvider();
+  QuizProvider() {
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _sessionStartTime = DateTime.now();
+    } else if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
+      if (_sessionStartTime != null && _currentProfile != null) {
+        final diff = DateTime.now().difference(_sessionStartTime!).inSeconds;
+        int index = _profiles.indexWhere((p) => p.id == _currentProfile!.id);
+        if (index != -1) {
+          _profiles[index] = _currentProfile!.copyWith(
+            totalTimePlayingSeconds:
+                _currentProfile!.totalTimePlayingSeconds + diff,
+          );
+          _currentProfile = _profiles[index];
+          _saveProfiles();
+        }
+      }
+      _sessionStartTime = null;
+    }
+  }
 
   Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
@@ -52,6 +84,7 @@ class QuizProvider with ChangeNotifier {
     }
 
     // Attempt to restore last session if needed, but for now we start at profile selection
+    _sessionStartTime = DateTime.now();
     notifyListeners();
   }
 
@@ -82,6 +115,7 @@ class QuizProvider with ChangeNotifier {
       id: DateTime.now().millisecondsSinceEpoch.toString(), // Simple ID
       name: name,
       companionBirdId: birdId,
+      firstPlayDate: DateTime.now(),
     );
 
     _profiles.add(newProfile);
@@ -247,6 +281,8 @@ class QuizProvider with ChangeNotifier {
     Map<String, int>? categoryCorrectAnswers,
     int? birdIdHighScore,
     Map<String, int>? wordGameHighScores,
+    int? totalTimePlayingSeconds,
+    int? totalUnscrambledWords,
   }) {
     if (_currentProfile == null) return;
 
@@ -258,6 +294,8 @@ class QuizProvider with ChangeNotifier {
         categoryCorrectAnswers: categoryCorrectAnswers,
         birdIdHighScore: birdIdHighScore,
         wordGameHighScores: wordGameHighScores,
+        totalTimePlayingSeconds: totalTimePlayingSeconds,
+        totalUnscrambledWords: totalUnscrambledWords,
       );
       _currentProfile = _profiles[index];
       _saveProfiles(); // Save on every update
@@ -280,11 +318,106 @@ class QuizProvider with ChangeNotifier {
     }
   }
 
+  void incrementUnscrambledWords() {
+    if (_currentProfile == null) return;
+    _updateCurrentProfile(
+      totalUnscrambledWords: _currentProfile!.totalUnscrambledWords + 1,
+    );
+  }
+
+  int get unscrambleTotalStars {
+    int total = 0;
+    _levelStars.forEach((key, stars) {
+      if (key.startsWith('unscramble_')) total += stars;
+    });
+    return total;
+  }
+
+  int get unscrambleMaxStars => 5 * 3;
+
+  int get unscrambleCompletedLevels {
+    int count = 0;
+    _levelStars.forEach((key, stars) {
+      if (key.startsWith('unscramble_') && stars > 0) count++;
+    });
+    return count;
+  }
+
+  void saveWordGameStars(
+    String levelTitle,
+    int score, {
+    int totalQuestions = 10,
+  }) {
+    if (_currentProfile == null) return;
+    int stars = 0;
+    if (totalQuestions > 0) {
+      double pct = score / totalQuestions;
+      if (pct == 1.0) {
+        stars = 3;
+      } else if (pct >= 0.8) {
+        stars = 2;
+      } else if (pct >= 0.6) {
+        stars = 1;
+      }
+    }
+
+    String levelId = 'unscramble_$levelTitle';
+    int currentStars = _levelStars[levelId] ?? 0;
+    if (stars > currentStars) {
+      // Capture old status
+      int oldTotalStars = totalStars;
+      String oldTitle = _getStatusTitleForStars(oldTotalStars);
+      int oldEvo = getEvolutionStageForStars(oldTotalStars);
+
+      final newStars = Map<String, int>.from(_levelStars);
+      newStars[levelId] = stars;
+      _updateCurrentProfile(levelStars: newStars);
+
+      // Check for Level Up
+      int newTotalStars = totalStars;
+      String newTitle = _getStatusTitleForStars(newTotalStars);
+      int newEvo = getEvolutionStageForStars(newTotalStars);
+
+      if (newTitle != oldTitle) {
+        _oldLevelTitle = oldTitle;
+        _newLevelTitle = newTitle;
+      }
+      if (newEvo > oldEvo) {
+        _oldEvolutionStage = oldEvo;
+        _newEvolutionStage = newEvo;
+      }
+    }
+  }
+
+  // --- Bird ID Stars ---
+  int get birdIdTotalStars {
+    int total = 0;
+    _levelStars.forEach((key, stars) {
+      if (key.startsWith('bird_id_session_')) total += stars;
+    });
+    return total;
+  }
+
+  int get birdIdMaxStars =>
+      10 * 3 * 3; // 10 themes * 3 difficulties * 3 stars = 90
+
+  int get birdIdCompletedLevels {
+    int count = 0;
+    _levelStars.forEach((key, stars) {
+      if (key.startsWith('bird_id_session_') && stars > 0) count++;
+    });
+    return count;
+  }
+
   String? get selectedBirdId => _currentProfile?.companionBirdId;
 
   // Stats
   int get totalCorrectAnswers => _currentProfile?.totalCorrectAnswers ?? 0;
   int get birdIdHighScore => _currentProfile?.birdIdHighScore ?? 0;
+  int get totalTimePlayingSeconds =>
+      _currentProfile?.totalTimePlayingSeconds ?? 0;
+  DateTime? get firstPlayDate => _currentProfile?.firstPlayDate;
+  int get totalUnscrambledWords => _currentProfile?.totalUnscrambledWords ?? 0;
 
   int get categoryTotalCorrectAnswers {
     if (_currentProfile == null) return 0;
@@ -302,47 +435,135 @@ class QuizProvider with ChangeNotifier {
 
   int get totalStars {
     int total = 0;
-    _levelStars.forEach((_, stars) => total += stars);
+    _levelStars.forEach((_, stars) {
+      total += stars;
+    });
     return total;
   }
 
-  int get maxStars => _allLevelsGlobally.length * 3;
+  // To update this properly as the game expands you simply need to tally the individual maxes:
+  int get maxStars =>
+      (_allLevelsGlobally.length * 3) + unscrambleMaxStars + birdIdMaxStars;
 
   int get completedLevelsCount {
     int count = 0;
-    _levelStars.forEach((_, stars) {
-      if (stars > 0) count++;
-    });
+    for (var level in _allLevelsGlobally) {
+      if ((_levelStars[level.id] ?? 0) > 0) count++;
+    }
     return count;
   }
 
   String get userStatusTitle => _getStatusTitleForStars(totalStars);
 
   String _getStatusTitleForStars(int starCount) {
-    if (maxStars == 0) return 'Bird Newbie';
-    double percentage = starCount / maxStars;
-
-    if (percentage < 0.1) return 'Just Hatched';
-    if (percentage < 0.2) return 'Feather Weight';
-    if (percentage < 0.3) return 'Learning to Fly';
-    if (percentage < 0.4) return 'Wingin\' It';
-    if (percentage < 0.5) return 'Nest Builder';
-    if (percentage < 0.6) return 'High Flyer';
-    if (percentage < 0.7) return 'Eagle Eye';
-    if (percentage < 0.8) return 'Owl-some';
-    if (percentage < 0.9) return 'Hawk-wardly Good';
+    if (starCount < 3) return 'Just Hatched';
+    if (starCount < 8) return 'Bird Newbie';
+    if (starCount < 18) return 'Feather Weight';
+    if (starCount < 35) return 'Learning to Fly';
+    if (starCount < 60) return 'Nest Builder';
+    if (starCount < 95) return 'Winging It';
+    if (starCount < 140) return 'High Flyer';
+    if (starCount < 200) return 'Eagle Eye';
+    if (starCount < 275) return 'Owl-some';
+    if (starCount < 370) return 'Hawk-wardly Good';
     return 'Bird Wizard';
+  }
+
+  int get userLevelIndex => getLevelIndexForStars(totalStars);
+
+  int getLevelIndexForStars(int starCount) {
+    if (starCount < 3) return 0;
+    if (starCount < 8) return 1;
+    if (starCount < 18) return 2;
+    if (starCount < 35) return 3;
+    if (starCount < 60) return 4;
+    if (starCount < 95) return 5;
+    if (starCount < 140) return 6;
+    if (starCount < 200) return 7;
+    if (starCount < 275) return 8;
+    if (starCount < 370) return 9;
+    return 10;
+  }
+
+  int get userEvolutionStage => getEvolutionStageForStars(totalStars);
+
+  int getEvolutionStageForStars(int starCount) {
+    return (getLevelIndexForStars(starCount) ~/ 2) + 1;
+  }
+
+  double get nextLevelProgress {
+    int current = totalStars;
+    int nextThreshold = _getNextLevelThreshold(current);
+    int prevThreshold = _getPreviousLevelThreshold(current);
+
+    if (current >= 370) return 1.0; // Max Level
+
+    int range = nextThreshold - prevThreshold;
+    int earnedInLevel = current - prevThreshold;
+
+    return earnedInLevel / range;
+  }
+
+  int get currentStarsInLevel {
+    int current = totalStars;
+    if (current >= 370) return 0;
+    int prevThreshold = _getPreviousLevelThreshold(current);
+    return current - prevThreshold;
+  }
+
+  int get neededStarsForNextLevel {
+    int current = totalStars;
+    if (current >= 370) return 1; // Prevent 0/0 edgecase
+    int nextThreshold = _getNextLevelThreshold(current);
+    int prevThreshold = _getPreviousLevelThreshold(current);
+    return nextThreshold - prevThreshold;
+  }
+
+  int _getNextLevelThreshold(int starCount) {
+    if (starCount < 3) return 3;
+    if (starCount < 8) return 8;
+    if (starCount < 18) return 18;
+    if (starCount < 35) return 35;
+    if (starCount < 60) return 60;
+    if (starCount < 95) return 95;
+    if (starCount < 140) return 140;
+    if (starCount < 200) return 200;
+    if (starCount < 275) return 275;
+    if (starCount < 370) return 370;
+    return starCount; // Max
+  }
+
+  int _getPreviousLevelThreshold(int starCount) {
+    if (starCount < 3) return 0;
+    if (starCount < 8) return 3;
+    if (starCount < 18) return 8;
+    if (starCount < 35) return 18;
+    if (starCount < 60) return 35;
+    if (starCount < 95) return 60;
+    if (starCount < 140) return 95;
+    if (starCount < 200) return 140;
+    if (starCount < 275) return 200;
+    if (starCount < 370) return 275;
+    return 370; // Max
   }
 
   // Level Up Getters and Actions
   String? get oldLevelTitle => _oldLevelTitle;
   String? get newLevelTitle => _newLevelTitle;
+  int? get oldEvolutionStage => _oldEvolutionStage;
+  int? get newEvolutionStage => _newEvolutionStage;
 
   bool get hasLeveledUp => _newLevelTitle != null;
+  bool get hasEvolved =>
+      _newEvolutionStage != null &&
+      _oldEvolutionStage != null &&
+      _newEvolutionStage! > _oldEvolutionStage!;
 
   void consumeLevelUp() {
     _oldLevelTitle = null;
     _newLevelTitle = null;
+    _oldEvolutionStage = null;
+    _newEvolutionStage = null;
     notifyListeners();
   }
 
@@ -434,6 +655,8 @@ class QuizProvider with ChangeNotifier {
     _isAnswerProcessing = false;
     _oldLevelTitle = null; // Clear level up state on new level
     _newLevelTitle = null;
+    _oldEvolutionStage = null;
+    _newEvolutionStage = null;
 
     // 1. Shuffle all questions from the level
     // If Bird ID mode, questions are already randomized by the service
@@ -517,50 +740,48 @@ class QuizProvider with ChangeNotifier {
         if (_score > birdIdHighScore) {
           _updateCurrentProfile(birdIdHighScore: _score);
         }
+      }
+
+      // Handle Stars for all modes including Bird ID
+      int totalCurrentQuestions = _activeQuestions.length;
+      int stars;
+
+      if (_score == totalCurrentQuestions) {
+        stars = 3;
+      } else if (_score >= 8) {
+        stars = 2;
+      } else if (_score >= 6) {
+        stars = 1;
       } else {
-        // Handle Standard Levels
-        int totalCurrentQuestions = _activeQuestions.length;
-        int stars;
+        stars = 0;
+      }
 
-        if (_score == totalCurrentQuestions) {
-          stars = 3;
-        } else if (_score >= 8) {
-          stars = 2;
-        } else if (_score >= 6) {
-          stars = 1;
-        } else {
-          stars = 0;
+      int currentStars = _levelStars[_currentLevel!.id] ?? 0;
+      if (stars > currentStars) {
+        // Capture old status
+        int oldTotalStars = totalStars;
+        String oldTitle = _getStatusTitleForStars(oldTotalStars);
+        int oldEvo = getEvolutionStageForStars(oldTotalStars);
+
+        // Update stars
+        // Create new copy of map
+        final newStars = Map<String, int>.from(_levelStars);
+        newStars[_currentLevel!.id] = stars;
+        _updateCurrentProfile(levelStars: newStars);
+
+        // Check for Level Up
+        // We need to fetch totalStars again as it's a computed property based on the updated profile
+        int newTotalStars = totalStars;
+        String newTitle = _getStatusTitleForStars(newTotalStars);
+        int newEvo = getEvolutionStageForStars(newTotalStars);
+
+        if (newTitle != oldTitle) {
+          _oldLevelTitle = oldTitle;
+          _newLevelTitle = newTitle;
         }
-
-        int currentStars = _levelStars[_currentLevel!.id] ?? 0;
-        if (stars > currentStars) {
-          // Capture old status
-          int oldTotalStars = totalStars;
-          String oldTitle = _getStatusTitleForStars(oldTotalStars);
-
-          // Update stars
-          // Create new copy of map
-          final newStars = Map<String, int>.from(_levelStars);
-          newStars[_currentLevel!.id] = stars;
-          _updateCurrentProfile(levelStars: newStars);
-
-          // Check for Level Up
-          // We need to fetch totalStars again as it's a computed property based on the updated profile
-          int newTotalStars = totalStars;
-          String newTitle = _getStatusTitleForStars(newTotalStars);
-
-          if (newTitle != oldTitle) {
-            _oldLevelTitle = oldTitle;
-            _newLevelTitle = newTitle;
-
-            int projectedTotal = oldTotalStars - currentStars + stars;
-            String projectedTitle = _getStatusTitleForStars(projectedTotal);
-
-            if (projectedTitle != oldTitle) {
-              _oldLevelTitle = oldTitle;
-              _newLevelTitle = projectedTitle;
-            }
-          }
+        if (newEvo > oldEvo) {
+          _oldEvolutionStage = oldEvo;
+          _newEvolutionStage = newEvo;
         }
       }
     }

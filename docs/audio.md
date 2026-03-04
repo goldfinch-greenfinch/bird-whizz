@@ -96,3 +96,7 @@ Furthermore, overriding the `dispose()` method ensures the entire engine elegant
     super.dispose();
   }
 ```
+
+## 7. Audio File Formats
+
+The project primarily uses heavily compressed `.mp3` files for voice-overs and sound effects (16000 Hz, 32 kbps). While `.ogg` (Vorbis) is generally the preferred format for game audio due to its superior looping and lack of compression padding, experiments showed that converting these already-extreme low-bitrate `.mp3` files to `.ogg` actually increased the total file size (from ~29MB to ~48MB). This is because the `.ogg` container overhead is more significant on thousands of very short audio clips. Therefore, the `.mp3` format has been retained, and `.ogg` files generated during experimentation should remain ignored in version control if kept locally.

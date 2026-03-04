@@ -37,11 +37,9 @@ class _BirdQuizAppState extends State<BirdQuizApp> {
     super.initState();
     _quizProvider = QuizProvider();
     _audioService = AudioService();
-    // Initialize provider and wait at least 3 seconds to show off the animation
     _initFuture = Future.wait([
       _quizProvider.init(),
       _audioService.playIntroMusic(),
-      Future.delayed(const Duration(seconds: 3)),
     ]);
   }
 

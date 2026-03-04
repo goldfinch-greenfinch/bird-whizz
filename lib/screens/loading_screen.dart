@@ -239,43 +239,7 @@ class _LoadingScreenState extends State<LoadingScreen>
                                 ),
                               ],
                             )
-                          : Column(
-                              key: const ValueKey('loading'),
-                              children: [
-                                Text(
-                                  'Loading...',
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    letterSpacing: 1.2,
-                                    shadows: [
-                                      Shadow(
-                                        color: Colors.black.withValues(
-                                          alpha: 0.5,
-                                        ),
-                                        offset: const Offset(2, 2),
-                                        blurRadius: 4,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(height: 24),
-                                SizedBox(
-                                  width: 220,
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: LinearProgressIndicator(
-                                      backgroundColor: Colors.black.withValues(
-                                        alpha: 0.3,
-                                      ),
-                                      color: Colors.white,
-                                      minHeight: 10,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                          : const SizedBox.shrink(key: ValueKey('loading')),
                     ),
                   ],
                 ),

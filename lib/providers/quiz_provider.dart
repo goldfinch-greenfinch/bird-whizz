@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/question.dart';
 import '../models/level.dart';
 import '../models/user_profile.dart';
+import '../models/stamp.dart';
 
 import '../data/sections/trivia_data.dart';
 import '../data/sections/biology_data.dart';
@@ -26,6 +27,9 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
   String? _newLevelTitle;
   int? _oldEvolutionStage;
   int? _newEvolutionStage;
+
+  // Stamps
+  List<Stamp> _newlyUnlockedStamps = [];
 
   // Game Session State
   String _currentCategory = 'trivia'; // Default category
@@ -299,8 +303,181 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
       );
       _currentProfile = _profiles[index];
       _saveProfiles(); // Save on every update
+
+      _checkStamps(); // Check for unlocked stamps when profile updates
+
       notifyListeners();
     }
+  }
+
+  // --- Stamp Checking Logic ---
+  List<Stamp> get newlyUnlockedStamps =>
+      List.unmodifiable(_newlyUnlockedStamps);
+  List<String> get unlockedStamps => _currentProfile?.unlockedStamps ?? [];
+
+  void consumeNewlyUnlockedStamps() {
+    _newlyUnlockedStamps.clear();
+    notifyListeners();
+  }
+
+  void _checkStamps() {
+    if (_currentProfile == null) return;
+
+    List<String> currentStamps = List.from(_currentProfile!.unlockedStamps);
+    bool newlyUnlocked = false;
+
+    // First Flight
+    if (!currentStamps.contains('first_flight') && completedLevelsCount > 0) {
+      _unlockStamp('first_flight', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // Dedicated Watcher
+    if (!currentStamps.contains('dedicated_watcher') &&
+        totalTimePlayingSeconds >= 3600) {
+      _unlockStamp('dedicated_watcher', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // Trivia Master
+    if (!currentStamps.contains('trivia_master') && totalCorrectAnswers >= 50) {
+      _unlockStamp('trivia_master', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // Vocab Virtuoso
+    if (!currentStamps.contains('vocab_virtuoso') &&
+        totalUnscrambledWords >= 20) {
+      _unlockStamp('vocab_virtuoso', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // Perfectionist
+    if (!currentStamps.contains('perfectionist')) {
+      bool hasThreeStars = _levelStars.values.any((stars) => stars >= 3);
+      if (hasThreeStars) {
+        _unlockStamp('perfectionist', currentStamps);
+        newlyUnlocked = true;
+      }
+    }
+
+    // Identification Expert
+    if (!currentStamps.contains('identification_expert') &&
+        birdIdHighScore >= 50) {
+      _unlockStamp('identification_expert', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // Century Club
+    if (!currentStamps.contains('century_club') && totalCorrectAnswers >= 100) {
+      _unlockStamp('century_club', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // Marathon Flyer
+    if (!currentStamps.contains('marathon_flyer') &&
+        totalCorrectAnswers >= 500) {
+      _unlockStamp('marathon_flyer', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // New stamps
+    if (!currentStamps.contains('avian_apprentice') && totalStars >= 100) {
+      _unlockStamp('avian_apprentice', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('master_ornithologist') && totalStars >= 250) {
+      _unlockStamp('master_ornithologist', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('flock_starter') &&
+        completedLevelsCount >= 10) {
+      _unlockStamp('flock_starter', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('quiz_whiz') && totalCorrectAnswers >= 250) {
+      _unlockStamp('quiz_whiz', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // --- Section Completions ---
+    final sectionStamps = {
+      'trivia_complete': 'trivia',
+      'biology_complete': 'biology',
+      'habitat_complete': 'habitat',
+      'conservation_complete': 'conservation',
+      'behaviour_complete': 'behaviour',
+      'families_complete': 'families',
+      'migration_complete': 'migration',
+      'colours_complete': 'colours',
+    };
+
+    sectionStamps.forEach((stampId, category) {
+      if (!currentStamps.contains(stampId) &&
+          getSectionStarRating(category) > 0) {
+        _unlockStamp(stampId, currentStamps);
+        newlyUnlocked = true;
+      }
+    });
+
+    // --- Bird ID Complete (at least 1 star across the themes of a given difficulty) ---
+    // The easiest way to check is to count completed levels that end with the difficulty
+    // There are 10 themes per difficulty. So 10 levels ending in _easy means easy complete.
+    int idEasyCount = 0;
+    int idMedCount = 0;
+    int idHardCount = 0;
+
+    _levelStars.forEach((key, stars) {
+      if (key.startsWith('bird_id_session_') && stars > 0) {
+        if (key.endsWith('_easy'))
+          idEasyCount++;
+        else if (key.endsWith('_medium'))
+          idMedCount++;
+        else if (key.endsWith('_hard'))
+          idHardCount++;
+      }
+    });
+
+    if (!currentStamps.contains('id_easy_complete') && idEasyCount >= 10) {
+      _unlockStamp('id_easy_complete', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('id_medium_complete') && idMedCount >= 10) {
+      _unlockStamp('id_medium_complete', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('id_hard_complete') && idHardCount >= 10) {
+      _unlockStamp('id_hard_complete', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // --- Scramble Complete ---
+    if (!currentStamps.contains('scramble_master') &&
+        unscrambleCompletedLevels >= 5) {
+      _unlockStamp('scramble_master', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    if (newlyUnlocked) {
+      int index = _profiles.indexWhere((p) => p.id == _currentProfile!.id);
+      if (index != -1) {
+        _profiles[index] = _currentProfile!.copyWith(
+          unlockedStamps: currentStamps,
+        );
+        _currentProfile = _profiles[index];
+        _saveProfiles();
+        notifyListeners();
+      }
+    }
+  }
+
+  void _unlockStamp(String id, List<String> currentStamps) {
+    currentStamps.add(id);
+    final stamp = gameStamps.firstWhere(
+      (s) => s.id == id,
+      orElse: () => gameStamps.first,
+    );
+    _newlyUnlockedStamps.add(stamp);
   }
 
   // --- Word Games ---

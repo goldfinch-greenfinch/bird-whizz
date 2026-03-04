@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
-import '../models/bird.dart';
-import '../widgets/navigation_utils.dart';
-import '../widgets/user_level_badge.dart';
+import '../widgets/common_profile_header.dart';
 import 'text_quiz_selection_screen.dart';
 
-import 'coming_soon_screen.dart';
 import 'profile_selection_screen.dart';
 import '../services/audio_service.dart';
 import 'bird_id_selection_screen.dart';
 import 'word_games_selection_screen.dart';
-import 'stats_screen.dart';
 
 class MainSelectionScreen extends StatefulWidget {
   const MainSelectionScreen({super.key});
@@ -64,8 +60,7 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
                         title: 'Bird Identification',
                         icon: Icons.visibility_rounded,
                         color: Colors.orangeAccent.shade700,
-                        description:
-                            'High Score: ${context.watch<QuizProvider>().birdIdHighScore}/10\nIdentify birds from pictures!',
+                        description: 'Identify birds from pictures!',
                         onTap: () {
                           Navigator.push(
                             context,
@@ -90,79 +85,6 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
                           );
                         },
                       ),
-                      const SizedBox(height: 24),
-                      _FeatureCard(
-                        title: 'Bird Sounds',
-                        icon: Icons.music_note_rounded,
-                        color: Colors.indigoAccent.shade200,
-                        description: 'Guess the bird by its call!',
-                        isImplemented: false,
-                        onTap: () {
-                          // TODO: Implement Sound mode
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  const ComingSoonScreen(title: 'Bird Sounds'),
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 24),
-                      _FeatureCard(
-                        title: 'Quiz Challenge',
-                        icon: Icons.psychology_rounded,
-                        color: Colors.amber.shade700,
-                        description: 'Fast-paced trivia challenge!',
-                        isImplemented: false,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const ComingSoonScreen(
-                                title: 'Quiz Challenge',
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 24),
-                      _FeatureCard(
-                        title: 'Order the Birds',
-                        icon: Icons.sort_rounded,
-                        color: Colors.lightBlue.shade600,
-                        description: 'Sort birds by size, speed, and more!',
-                        isImplemented: false,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const ComingSoonScreen(
-                                title: 'Order the Birds',
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 24),
-                      _FeatureCard(
-                        title: 'Identify the Eggs',
-                        icon: Icons
-                            .egg_rounded, // Assuming egg_rounded is available, if not fallback to circle
-                        color: Colors.pinkAccent.shade200,
-                        description: 'Match the egg to the bird!',
-                        isImplemented: false,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const ComingSoonScreen(
-                                title: 'Identify the Eggs',
-                              ),
-                            ),
-                          );
-                        },
-                      ),
                     ],
                   ),
                 ),
@@ -181,7 +103,6 @@ class _FeatureCard extends StatelessWidget {
   final Color color;
   final String description;
   final VoidCallback onTap;
-  final bool isImplemented;
 
   const _FeatureCard({
     required this.title,
@@ -189,67 +110,63 @@ class _FeatureCard extends StatelessWidget {
     required this.color,
     required this.description,
     required this.onTap,
-    this.isImplemented = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Opacity(
-      opacity: isImplemented ? 1.0 : 0.6,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(24),
-        child: Container(
-          // height: 120, // Removed fixed height to prevent overflow
-          constraints: const BoxConstraints(minHeight: 100),
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(24),
-            boxShadow: [
-              BoxShadow(
-                color: color.withValues(alpha: 0.2),
-                blurRadius: 15,
-                offset: const Offset(0, 8),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(24),
+      child: Container(
+        // height: 120, // Removed fixed height to prevent overflow
+        constraints: const BoxConstraints(minHeight: 100),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: color.withValues(alpha: 0.2),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
+            ),
+          ],
+          border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
               ),
-            ],
-            border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(icon, color: color, size: 32),
-              ),
-              const SizedBox(width: 20),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
+              child: Icon(icon, color: color, size: 32),
+            ),
+            const SizedBox(width: 20),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
                     ),
-                    const SizedBox(height: 6),
-                    Text(
-                      description,
-                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    description,
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                  ),
+                ],
               ),
-              Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey[300]),
-            ],
-          ),
+            ),
+            Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey[300]),
+          ],
         ),
       ),
     );
@@ -263,17 +180,6 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<QuizProvider>(
       builder: (context, provider, child) {
-        Bird? selectedBird;
-        if (provider.selectedBirdId != null) {
-          try {
-            selectedBird = availableBirds.firstWhere(
-              (b) => b.id == provider.selectedBirdId,
-            );
-          } catch (e) {
-            // Fallback
-          }
-        }
-
         return Container(
           padding: const EdgeInsets.fromLTRB(16, 20, 16, 30),
           decoration: BoxDecoration(
@@ -292,77 +198,16 @@ class _Header extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Row(
-                children: [
-                  NavigationUtils.buildBackButton(
+              CommonProfileHeader(
+                onBackButtonPressed: () {
+                  Navigator.pushAndRemoveUntil(
                     context,
-                    color: Colors.white,
-                    onPressed: () {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const ProfileSelectionScreen(),
-                        ),
-                        (route) => false,
-                      );
-                    },
-                  ),
-                  if (selectedBird != null) ...[
-                    const SizedBox(width: 4),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const StatsScreen(),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: selectedBird.color,
-                            width: 2,
-                          ),
-                        ),
-                        child: ClipOval(
-                          child: Image.asset(
-                            selectedBird.getEvolvedImagePath(
-                              provider.userEvolutionStage,
-                            ),
-                            width: 48,
-                            height: 48,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
+                    MaterialPageRoute(
+                      builder: (_) => const ProfileSelectionScreen(),
                     ),
-                    const SizedBox(width: 12),
-                  ],
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          provider.currentProfile?.name ?? 'Adventurer',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        const UserLevelBadge(),
-                      ],
-                    ),
-                  ),
-                  NavigationUtils.buildProfileMenu(
-                    context,
-                    color: Colors.white,
-                  ),
-                ],
+                    (route) => false,
+                  );
+                },
               ),
             ],
           ),

@@ -143,12 +143,22 @@ const List<Bird> availableBirds = [
     imagePath: 'assets/bird_icons/wren.webp',
   ),
   Bird(
+    id: 'wood_pigeon',
+    name: 'Wood Pigeon',
+    emoji: '🕊️',
+    color: Colors.grey,
+    description: 'A massive, familiar pigeon of woods and gardens.',
+    imagePath: 'assets/bird_evolution/wood_pigeon_1.png',
+    hasEvolution: true,
+  ),
+  Bird(
     id: 'barn_owl',
     name: 'Barn Owl',
     emoji: '🦉',
     color: Colors.brown,
     description: 'A pale, ghostly owl.',
     imagePath: 'assets/bird_icons/barn_owl.webp',
+    hasEvolution: true,
   ),
   Bird(
     id: 'buzzard',
@@ -181,6 +191,7 @@ const List<Bird> availableBirds = [
     color: Colors.green,
     description: 'The classic dabbling duck.',
     imagePath: 'assets/bird_icons/mallard.webp',
+    hasEvolution: true,
   ),
   Bird(
     id: 'red_kite',

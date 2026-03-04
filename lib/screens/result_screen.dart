@@ -9,6 +9,7 @@ import '../data/result_messages.dart';
 import '../widgets/particle_overlay.dart';
 import 'level_up_screen.dart';
 import 'character_evolve_screen.dart';
+import 'new_stamp_screen.dart';
 
 class ResultScreen extends StatefulWidget {
   const ResultScreen({super.key});
@@ -258,6 +259,11 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   Widget _buildActionButtons(BuildContext context, QuizProvider provider) {
+    final bool hasNextScreen =
+        provider.hasLeveledUp ||
+        provider.hasEvolved ||
+        provider.newlyUnlockedStamps.isNotEmpty;
+
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
@@ -270,6 +276,22 @@ class _ResultScreenState extends State<ResultScreen> {
           elevation: 5,
         ),
         onPressed: () {
+          Widget? chainScreen;
+
+          if (provider.newlyUnlockedStamps.isNotEmpty) {
+            chainScreen = NewStampScreen(
+              stamps: List.from(provider.newlyUnlockedStamps),
+            );
+          }
+
+          if (provider.hasEvolved) {
+            chainScreen = CharacterEvolveScreen(
+              oldStage: provider.oldEvolutionStage!,
+              newStage: provider.newEvolutionStage!,
+              nextScreen: chainScreen,
+            );
+          }
+
           if (provider.hasLeveledUp) {
             Navigator.pushReplacement(
               context,
@@ -277,23 +299,23 @@ class _ResultScreenState extends State<ResultScreen> {
                 builder: (_) => LevelUpScreen(
                   oldRank: provider.oldLevelTitle ?? 'Unknown',
                   newRank: provider.newLevelTitle ?? 'Bird Wizard',
-                  nextScreen: provider.hasEvolved
-                      ? CharacterEvolveScreen(
-                          oldStage: provider.oldEvolutionStage!,
-                          newStage: provider.newEvolutionStage!,
-                        )
-                      : null,
+                  nextScreen: chainScreen,
                 ),
               ),
+            );
+          } else if (chainScreen != null) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) => chainScreen!),
             );
           } else {
             provider.resetQuiz();
             Navigator.pop(context);
           }
         },
-        child: const Text(
-          'Return to Home',
-          style: TextStyle(fontSize: 18, color: Colors.white),
+        child: Text(
+          hasNextScreen ? 'Next…' : 'Return to Home',
+          style: const TextStyle(fontSize: 18, color: Colors.white),
         ),
       ),
     );

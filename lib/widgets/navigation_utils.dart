@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../screens/profile_selection_screen.dart';
 import 'package:provider/provider.dart';
 import '../services/audio_service.dart';
+import '../screens/achievements_book_screen.dart';
 
 class NavigationUtils {
   static Widget buildProfileMenu(
@@ -21,6 +22,11 @@ class NavigationUtils {
         } else if (value == 'sound') {
           // Toggle sound
           context.read<AudioService>().toggleMute();
+        } else if (value == 'achievements') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const AchievementsBookScreen()),
+          );
         }
       },
       itemBuilder: (BuildContext context) {
@@ -38,6 +44,16 @@ class NavigationUtils {
                 ),
                 const SizedBox(width: 12),
                 Text(isMuted ? 'Sound Off' : 'Sound On'),
+              ],
+            ),
+          ),
+          const PopupMenuItem<String>(
+            value: 'achievements',
+            child: Row(
+              children: [
+                Icon(Icons.menu_book, color: Colors.teal),
+                SizedBox(width: 12),
+                Text('Achievements Book'),
               ],
             ),
           ),

@@ -7,6 +7,7 @@ import '../widgets/navigation_utils.dart';
 import 'package:confetti/confetti.dart';
 import 'level_up_screen.dart';
 import 'character_evolve_screen.dart';
+import 'new_stamp_screen.dart';
 
 class UnscrambleGameScreen extends StatefulWidget {
   final int minLength;
@@ -130,6 +131,23 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
               ),
               onPressed: () {
                 Navigator.of(context).pop(); // dismiss dialog
+
+                Widget? chainScreen;
+
+                if (provider.newlyUnlockedStamps.isNotEmpty) {
+                  chainScreen = NewStampScreen(
+                    stamps: List.from(provider.newlyUnlockedStamps),
+                  );
+                }
+
+                if (provider.hasEvolved) {
+                  chainScreen = CharacterEvolveScreen(
+                    oldStage: provider.oldEvolutionStage!,
+                    newStage: provider.newEvolutionStage!,
+                    nextScreen: chainScreen,
+                  );
+                }
+
                 if (provider.hasLeveledUp) {
                   Navigator.pushReplacement(
                     context,
@@ -137,14 +155,14 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
                       builder: (_) => LevelUpScreen(
                         oldRank: provider.oldLevelTitle ?? 'Unknown',
                         newRank: provider.newLevelTitle ?? 'Bird Wizard',
-                        nextScreen: provider.hasEvolved
-                            ? CharacterEvolveScreen(
-                                oldStage: provider.oldEvolutionStage!,
-                                newStage: provider.newEvolutionStage!,
-                              )
-                            : null,
+                        nextScreen: chainScreen,
                       ),
                     ),
+                  );
+                } else if (chainScreen != null) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (_) => chainScreen!),
                   );
                 } else {
                   Navigator.of(context).pop(); // dismiss word game screen

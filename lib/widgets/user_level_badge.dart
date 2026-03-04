@@ -10,7 +10,7 @@ class UserLevelBadge extends StatelessWidget {
     return Consumer<QuizProvider>(
       builder: (context, provider, child) {
         return SizedBox(
-          width: double.infinity,
+          width: 160,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -38,7 +38,9 @@ class UserLevelBadge extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(4),
                       child: LinearProgressIndicator(
-                        value: provider.nextLevelProgress,
+                        value: provider.nextLevelProgress < 0.02
+                            ? 0.02
+                            : provider.nextLevelProgress,
                         backgroundColor: Colors.white.withValues(alpha: 0.2),
                         color: Colors.yellowAccent,
                         minHeight: 6,

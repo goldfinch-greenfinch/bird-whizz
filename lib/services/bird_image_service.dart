@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/services.dart';
 import '../models/question.dart';
 import '../data/identification_data.dart';
+import '../data/bird_difficulty.dart';
 
 class BirdImageService {
   List<String> _birdImagePaths = [];
@@ -194,8 +195,25 @@ class BirdImageService {
       themeImagePaths = _birdImagePaths; // Fallback
     }
 
+    // Filter by difficulty based on bird rareness
+    List<String> idealDifficultyPaths = themeImagePaths.where((path) {
+      final name = _getBirdNameFromPath(path);
+      final birdDiff = birdDifficulty[name] ?? 'medium';
+      return birdDiff == difficulty;
+    }).toList();
+
+    // If we don't have enough birds of matching difficulty, fallback by mixing others
+    if (idealDifficultyPaths.length < count) {
+      final int missingCount = count - idealDifficultyPaths.length;
+      final List<String> otherPaths = themeImagePaths
+          .where((path) => !idealDifficultyPaths.contains(path))
+          .toList();
+      otherPaths.shuffle(random);
+      idealDifficultyPaths.addAll(otherPaths.take(missingCount));
+    }
+
     // Shuffle all available images to pick random ones
-    final List<String> shuffledImages = List.from(themeImagePaths)
+    final List<String> shuffledImages = List.from(idealDifficultyPaths)
       ..shuffle(random);
 
     // Select the first 'count' images (or all if less than count)

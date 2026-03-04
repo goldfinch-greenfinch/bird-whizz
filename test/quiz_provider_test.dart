@@ -2,6 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:bird_quiz/providers/quiz_provider.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   group('QuizProvider', () {
     test('Initial state is correct', () {
       final provider = QuizProvider();

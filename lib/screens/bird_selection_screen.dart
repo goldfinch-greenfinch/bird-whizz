@@ -100,10 +100,10 @@ class _BirdSelectionScreenState extends State<BirdSelectionScreen> {
                     return GridView.builder(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3, // Changed to 3
-                            crossAxisSpacing: 12,
-                            mainAxisSpacing: 12,
-                            childAspectRatio: 0.8,
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
+                            childAspectRatio: 0.85,
                           ),
                       itemCount: availableBirds
                           .where((b) => b.hasEvolution)
@@ -162,20 +162,20 @@ class _BirdSelectionScreenState extends State<BirdSelectionScreen> {
                                       children: [
                                         Image.asset(
                                           bird.getEvolvedImagePath(1),
-                                          width: 48,
-                                          height: 48,
+                                          width: 80,
+                                          height: 80,
                                           fit: BoxFit.contain,
                                         ),
-                                        const SizedBox(height: 4),
+                                        const SizedBox(height: 8),
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
-                                            horizontal: 2.0,
+                                            horizontal: 4.0,
                                           ),
                                           child: Text(
                                             bird.name,
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
-                                              fontSize: 11, // Smaller font
+                                              fontSize: 16,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.teal[800],
                                             ),

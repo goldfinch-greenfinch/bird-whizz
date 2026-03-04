@@ -11,6 +11,7 @@ class UserProfile {
   final DateTime? firstPlayDate;
   final int totalTimePlayingSeconds;
   final int totalUnscrambledWords;
+  final List<String> unlockedStamps; // List of unlocked stamp IDs
 
   UserProfile({
     required this.id,
@@ -24,6 +25,7 @@ class UserProfile {
     this.firstPlayDate,
     this.totalTimePlayingSeconds = 0,
     this.totalUnscrambledWords = 0,
+    this.unlockedStamps = const [],
   });
 
   Map<String, dynamic> toJson() {
@@ -39,6 +41,7 @@ class UserProfile {
       'firstPlayDate': firstPlayDate?.toIso8601String(),
       'totalTimePlayingSeconds': totalTimePlayingSeconds,
       'totalUnscrambledWords': totalUnscrambledWords,
+      'unlockedStamps': unlockedStamps,
     };
   }
 
@@ -69,6 +72,11 @@ class UserProfile {
           : null,
       totalTimePlayingSeconds: json['totalTimePlayingSeconds'] as int? ?? 0,
       totalUnscrambledWords: json['totalUnscrambledWords'] as int? ?? 0,
+      unlockedStamps:
+          (json['unlockedStamps'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
     );
   }
 
@@ -84,6 +92,7 @@ class UserProfile {
     DateTime? firstPlayDate,
     int? totalTimePlayingSeconds,
     int? totalUnscrambledWords,
+    List<String>? unlockedStamps,
   }) {
     return UserProfile(
       id: id ?? this.id,
@@ -100,6 +109,7 @@ class UserProfile {
           totalTimePlayingSeconds ?? this.totalTimePlayingSeconds,
       totalUnscrambledWords:
           totalUnscrambledWords ?? this.totalUnscrambledWords,
+      unlockedStamps: unlockedStamps ?? this.unlockedStamps,
     );
   }
 }

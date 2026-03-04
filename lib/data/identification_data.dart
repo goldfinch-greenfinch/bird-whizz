@@ -378,7 +378,7 @@ final Map<String, List<String>> identificationData = {
     "Mourning Warbler",
   ],
   "Black Throated Green Warbler": [
-    "Tennessee Warbler",
+    "Yellow Warbler",
     "Marsh Warbler",
     "Prairie Warbler",
   ],
@@ -416,7 +416,7 @@ final Map<String, List<String>> identificationData = {
   "Bluethroat": ["Barn Swallow", "Ruddy Shelduck", "African Comb Duck"],
   "Boat Tailed Grackle": [
     "Long Tailed Tit",
-    "White Tailed Hawk",
+    "Great Tailed Grackle",
     "White Tailed Kite",
   ],
   "Bobolink": ["Common Nighthawk", "Common Sandpiper", "Dickcissel"],
@@ -648,13 +648,8 @@ final Map<String, List<String>> identificationData = {
   ],
   "Eastern Kingbird": [
     "Couch's Kingbird",
-    "Eastern Meadowlark",
+    "Western Kingbird",
     "Eastern Wood Pewee",
-  ],
-  "Eastern Meadowlark": [
-    "Eastern Wood Pewee",
-    "Eastern Phoebe",
-    "Western Meadowlark",
   ],
   "Eastern Phoebe": ["Eastern Kingbird", "Eastern Screech Owl", "Black Phoebe"],
   "Eastern Screech Owl": ["Burrowing Owl", "Great Gray Owl", "Great Grey Owl"],
@@ -685,7 +680,7 @@ final Map<String, List<String>> identificationData = {
     "Rose Breasted Grosbeak",
     "Black Headed Grosbeak",
   ],
-  "Ferruginous Hawk": ["Harris's Hawk", "White Tailed Hawk", "Cooper's Hawk"],
+  "Ferruginous Hawk": ["Harris's Hawk", "Broad Winged Hawk", "Cooper's Hawk"],
   "Ferruginous Pochard": [
     "Red Crested Pochard",
     "Aplomado Falcon",
@@ -962,7 +957,7 @@ final Map<String, List<String>> identificationData = {
   "Nashville Warbler": [
     "Swainson's Warbler",
     "Black Throated Blue Warbler",
-    "Tennessee Warbler",
+    "Orange Crowned Warbler",
   ],
   "Neotropic Cormorant": [
     "Pelagic Cormorant",
@@ -1195,7 +1190,7 @@ final Map<String, List<String>> identificationData = {
     "Acadian Flycatcher",
   ],
   "Sedge Warbler": [
-    "Tennessee Warbler",
+    "Yellow Warbler",
     "Orange Crowned Warbler",
     "Mourning Warbler",
   ],
@@ -1265,11 +1260,6 @@ final Map<String, List<String>> identificationData = {
     "Savannah Sparrow",
   ],
   "Taiga Bean Goose": ["Hawaiian Goose", "Greylag Goose", "Barnacle Goose"],
-  "Tennessee Warbler": [
-    "Sedge Warbler",
-    "Black And White Warbler",
-    "American Yellow Warbler",
-  ],
   "Tree Swallow": [
     "Violet Green Swallow",
     "Northern Rough Winged Swallow",
@@ -1309,7 +1299,7 @@ final Map<String, List<String>> identificationData = {
   "Western Meadowlark": [
     "Western Bluebird",
     "Western Gull",
-    "Eastern Meadowlark",
+    "Eastern Kingbird",
   ],
   "Western Tanager": ["Summer Tanager", "Hepatic Tanager", "Scarlet Tanager"],
   "Whimbrel": [
@@ -1342,7 +1332,6 @@ final Map<String, List<String>> identificationData = {
     "Purple Sandpiper",
     "Common Sandpiper",
   ],
-  "White Tailed Hawk": ["Swainson's Hawk", "Ferruginous Hawk", "Gray Hawk"],
   "White Tailed Kite": ["Black Kite", "Mississippi Kite", "Red Kite"],
   "White Tailed Ptarmigan": [
     "White Breasted Nuthatch",
@@ -1368,7 +1357,7 @@ final Map<String, List<String>> identificationData = {
     "Black And White Warbler",
   ],
   "Wilson's Warbler": [
-    "Tennessee Warbler",
+    "Yellow Warbler",
     "Dartford Warbler",
     "Chestnut Sided Warbler",
   ],

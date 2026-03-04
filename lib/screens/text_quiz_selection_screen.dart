@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
-import '../models/bird.dart';
 import 'home_screen.dart';
-import 'stats_screen.dart';
-
-import '../widgets/navigation_utils.dart';
-import '../widgets/user_level_badge.dart';
+import '../widgets/common_profile_header.dart';
 
 class TextQuizSelectionScreen extends StatelessWidget {
   const TextQuizSelectionScreen({super.key});
@@ -133,17 +129,6 @@ class _CategoryHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<QuizProvider>(
       builder: (context, provider, child) {
-        Bird? selectedBird;
-        if (provider.selectedBirdId != null) {
-          try {
-            selectedBird = availableBirds.firstWhere(
-              (b) => b.id == provider.selectedBirdId,
-            );
-          } catch (e) {
-            // Fallback
-          }
-        }
-
         return Container(
           padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
           decoration: BoxDecoration(
@@ -162,66 +147,7 @@ class _CategoryHeader extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Row(
-                children: [
-                  NavigationUtils.buildBackButton(context, color: Colors.white),
-                  const SizedBox(width: 4),
-                  if (selectedBird != null) ...[
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const StatsScreen(),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: selectedBird.color,
-                            width: 2,
-                          ),
-                        ),
-                        child: ClipOval(
-                          child: Image.asset(
-                            selectedBird.getEvolvedImagePath(
-                              provider.userEvolutionStage,
-                            ),
-                            width: 48,
-                            height: 48,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                  ],
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Bird Quiz',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        const UserLevelBadge(),
-                      ],
-                    ),
-                  ),
-                  NavigationUtils.buildProfileMenu(
-                    context,
-                    color: Colors.white,
-                  ),
-                ],
-              ),
+              const CommonProfileHeader(),
               const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,

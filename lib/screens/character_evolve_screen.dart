@@ -9,11 +9,13 @@ import '../services/audio_service.dart';
 class CharacterEvolveScreen extends StatefulWidget {
   final int oldStage;
   final int newStage;
+  final Widget? nextScreen;
 
   const CharacterEvolveScreen({
     super.key,
     required this.oldStage,
     required this.newStage,
+    this.nextScreen,
   });
 
   @override
@@ -173,8 +175,17 @@ class _CharacterEvolveScreenState extends State<CharacterEvolveScreen>
                         child: ElevatedButton(
                           onPressed: _showNewStage
                               ? () {
-                                  provider.resetQuiz();
-                                  Navigator.pop(context);
+                                  if (widget.nextScreen != null) {
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => widget.nextScreen!,
+                                      ),
+                                    );
+                                  } else {
+                                    provider.resetQuiz();
+                                    Navigator.pop(context);
+                                  }
                                 }
                               : null,
                           style: ElevatedButton.styleFrom(

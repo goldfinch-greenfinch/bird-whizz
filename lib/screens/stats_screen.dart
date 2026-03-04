@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
-import '../models/bird.dart';
-import '../widgets/navigation_utils.dart';
 import 'package:intl/intl.dart';
+import '../widgets/common_profile_header.dart';
 
 class StatsScreen extends StatelessWidget {
   const StatsScreen({super.key});
@@ -268,17 +267,6 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<QuizProvider>(
       builder: (context, provider, child) {
-        Bird? selectedBird;
-        if (provider.selectedBirdId != null) {
-          try {
-            selectedBird = availableBirds.firstWhere(
-              (b) => b.id == provider.selectedBirdId,
-            );
-          } catch (e) {
-            // Fallback
-          }
-        }
-
         return Container(
           padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
           decoration: BoxDecoration(
@@ -296,56 +284,7 @@ class _Header extends StatelessWidget {
             ],
           ),
           child: Column(
-            children: [
-              Row(
-                children: [
-                  NavigationUtils.buildBackButton(context, color: Colors.white),
-                  const SizedBox(width: 4),
-                  if (selectedBird != null) ...[
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        shape: BoxShape.circle,
-                        border: Border.all(color: selectedBird.color, width: 2),
-                      ),
-                      child: ClipOval(
-                        child: Image.asset(
-                          selectedBird.getEvolvedImagePath(
-                            provider.userEvolutionStage,
-                          ),
-                          width: 48,
-                          height: 48,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                  ],
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Your Stats',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22,
-                          ),
-                        ),
-                        Text(
-                          'Track your birding journey!',
-                          style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.9),
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
+            children: [const CommonProfileHeader(isStatsScreen: true)],
           ),
         );
       },

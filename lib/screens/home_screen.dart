@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../models/level.dart';
-import '../models/bird.dart';
 import 'quiz_screen.dart';
-import '../widgets/navigation_utils.dart';
-import '../widgets/user_level_badge.dart';
+import '../widgets/common_profile_header.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -91,17 +89,6 @@ class _HomeHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<QuizProvider>(
       builder: (context, provider, child) {
-        Bird? selectedBird;
-        if (provider.selectedBirdId != null) {
-          try {
-            selectedBird = availableBirds.firstWhere(
-              (b) => b.id == provider.selectedBirdId,
-            );
-          } catch (e) {
-            // Fallback or ignore
-          }
-        }
-
         return Container(
           padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
           decoration: BoxDecoration(
@@ -120,53 +107,7 @@ class _HomeHeader extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Row(
-                children: [
-                  NavigationUtils.buildBackButton(context, color: Colors.white),
-                  const SizedBox(width: 4),
-                  if (selectedBird != null) ...[
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        shape: BoxShape.circle,
-                        border: Border.all(color: selectedBird.color, width: 3),
-                      ),
-                      child: ClipOval(
-                        child: Image.asset(
-                          selectedBird.getEvolvedImagePath(
-                            provider.userEvolutionStage,
-                          ),
-                          width: 68,
-                          height: 68,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            selectedBird.name,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          const UserLevelBadge(),
-                        ],
-                      ),
-                    ),
-                  ],
-                  NavigationUtils.buildProfileMenu(
-                    context,
-                    color: Colors.white,
-                  ),
-                ],
-              ),
+              const CommonProfileHeader(),
               const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,

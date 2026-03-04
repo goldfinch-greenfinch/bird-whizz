@@ -223,7 +223,7 @@ class _AchievementsBookScreenState extends State<AchievementsBookScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: Icon(
                     Icons.keyboard_double_arrow_up,
-                    color: Colors.white.withOpacity(0.5),
+                    color: Colors.white.withValues(alpha: 0.5),
                   ),
                 ),
               ],
@@ -376,7 +376,7 @@ class _AchievementsBookScreenState extends State<AchievementsBookScreen> {
                     color: Colors.brown[900],
                     shadows: [
                       Shadow(
-                        color: Colors.brown.withOpacity(0.3),
+                        color: Colors.brown.withValues(alpha: 0.3),
                         offset: const Offset(2, 2),
                         blurRadius: 4,
                       ),
@@ -504,7 +504,7 @@ class _AchievementsBookScreenState extends State<AchievementsBookScreen> {
                   border: Border.all(
                     color: isUnlocked
                         ? Colors.brown[800]!
-                        : Colors.brown[300]!.withOpacity(0.4),
+                        : Colors.brown[300]!.withValues(alpha: 0.4),
                     width: isUnlocked ? 3 : 2,
                   ),
                   color: isUnlocked ? Colors.white : Colors.transparent,
@@ -576,7 +576,7 @@ class _AchievementsBookScreenState extends State<AchievementsBookScreen> {
                     border: Border.all(
                       color: isUnlocked
                           ? Colors.brown[800]!
-                          : Colors.brown[300]!.withOpacity(0.5),
+                          : Colors.brown[300]!.withValues(alpha: 0.5),
                       width: 4,
                     ),
                     color: isUnlocked ? Colors.white : Colors.transparent,

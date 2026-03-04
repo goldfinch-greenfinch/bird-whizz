@@ -518,48 +518,48 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     }
 
     // Category Specific Correct Answers
-    int _getCatCorrect(String cat) =>
+    int getCatCorrect(String cat) =>
         _currentProfile?.categoryCorrectAnswers[cat] ?? 0;
 
     if (!currentStamps.contains('trivia_addict') &&
-        _getCatCorrect('trivia') >= 50) {
+        getCatCorrect('trivia') >= 50) {
       _unlockStamp('trivia_addict', currentStamps);
       newlyUnlocked = true;
     }
     if (!currentStamps.contains('biology_buff') &&
-        _getCatCorrect('biology') >= 50) {
+        getCatCorrect('biology') >= 50) {
       _unlockStamp('biology_buff', currentStamps);
       newlyUnlocked = true;
     }
     if (!currentStamps.contains('habitat_hero') &&
-        _getCatCorrect('habitat') >= 50) {
+        getCatCorrect('habitat') >= 50) {
       _unlockStamp('habitat_hero', currentStamps);
       newlyUnlocked = true;
     }
     if (!currentStamps.contains('conservation_champion') &&
-        _getCatCorrect('conservation') >= 50) {
+        getCatCorrect('conservation') >= 50) {
       _unlockStamp('conservation_champion', currentStamps);
       newlyUnlocked = true;
     }
     if (!currentStamps.contains('behavior_boss') &&
-        _getCatCorrect('behaviour') >= 50) {
+        getCatCorrect('behaviour') >= 50) {
       _unlockStamp('behavior_boss', currentStamps);
       newlyUnlocked = true;
     }
     if (!currentStamps.contains('family_fanatic') &&
-        _getCatCorrect('families') >= 50) {
+        getCatCorrect('families') >= 50) {
       _unlockStamp('family_fanatic', currentStamps);
       newlyUnlocked = true;
     }
     if (!currentStamps.contains('migration_marvel') &&
-        _getCatCorrect('migration') >= 50) {
+        getCatCorrect('migration') >= 50) {
       _unlockStamp('migration_marvel', currentStamps);
       newlyUnlocked = true;
     }
 
     // --- 10 Additional New Stamps ---
     if (!currentStamps.contains('colours_champ') &&
-        _getCatCorrect('colours') >= 50) {
+        getCatCorrect('colours') >= 50) {
       _unlockStamp('colours_champ', currentStamps);
       newlyUnlocked = true;
     }
@@ -596,17 +596,17 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
       newlyUnlocked = true;
     }
     if (!currentStamps.contains('trivia_titan') &&
-        _getCatCorrect('trivia') >= 150) {
+        getCatCorrect('trivia') >= 150) {
       _unlockStamp('trivia_titan', currentStamps);
       newlyUnlocked = true;
     }
     if (!currentStamps.contains('biology_brain') &&
-        _getCatCorrect('biology') >= 150) {
+        getCatCorrect('biology') >= 150) {
       _unlockStamp('biology_brain', currentStamps);
       newlyUnlocked = true;
     }
     if (!currentStamps.contains('habitat_hound') &&
-        _getCatCorrect('habitat') >= 150) {
+        getCatCorrect('habitat') >= 150) {
       _unlockStamp('habitat_hound', currentStamps);
       newlyUnlocked = true;
     }
@@ -642,10 +642,11 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
       if (key.startsWith('bird_id_session_') && stars > 0) {
         if (key.endsWith('_easy')) {
           idEasyCount++;
-        } else if (key.endsWith('_medium'))
+        } else if (key.endsWith('_medium')) {
           idMedCount++;
-        else if (key.endsWith('_hard'))
+        } else if (key.endsWith('_hard')) {
           idHardCount++;
+        }
       }
     });
 

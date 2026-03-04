@@ -29,7 +29,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
   int? _newEvolutionStage;
 
   // Stamps
-  List<Stamp> _newlyUnlockedStamps = [];
+  final List<Stamp> _newlyUnlockedStamps = [];
 
   // Game Session State
   String _currentCategory = 'trivia'; // Default category
@@ -400,6 +400,217 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
       newlyUnlocked = true;
     }
 
+    // --- Newly Added Stamps ---
+    // Star Collector
+    if (!currentStamps.contains('star_collector') && totalStars >= 10) {
+      _unlockStamp('star_collector', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // Flawless Flyer
+    if (!currentStamps.contains('flawless_flyer')) {
+      int flawlessCount = _levelStars.values
+          .where((stars) => stars >= 3)
+          .length;
+      if (flawlessCount >= 10) {
+        _unlockStamp('flawless_flyer', currentStamps);
+        newlyUnlocked = true;
+      }
+    }
+
+    // Dedicated Birder
+    if (!currentStamps.contains('dedicated_birder') &&
+        completedLevelsCount >= 50) {
+      _unlockStamp('dedicated_birder', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // Legendary Watcher
+    if (!currentStamps.contains('legendary_watcher') &&
+        totalCorrectAnswers >= 1000) {
+      _unlockStamp('legendary_watcher', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // Scramble Champion
+    if (!currentStamps.contains('scramble_champion') &&
+        totalUnscrambledWords >= 50) {
+      _unlockStamp('scramble_champion', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // ID Master
+    if (!currentStamps.contains('id_master') && birdIdHighScore >= 100) {
+      _unlockStamp('id_master', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // --- 20 New Varied Stamps ---
+    // Time base
+    if (!currentStamps.contains('time_flies') &&
+        totalTimePlayingSeconds >= 36000) {
+      _unlockStamp('time_flies', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('frequent_flyer') &&
+        totalTimePlayingSeconds >= 86400) {
+      _unlockStamp('frequent_flyer', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // Question totals
+    if (!currentStamps.contains('smart_cookie') &&
+        totalCorrectAnswers >= 2000) {
+      _unlockStamp('smart_cookie', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('know_it_owl') && totalCorrectAnswers >= 5000) {
+      _unlockStamp('know_it_owl', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // Stars & Levels
+    if (!currentStamps.contains('constellation') && totalStars >= 350) {
+      _unlockStamp('constellation', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('level_100') && completedLevelsCount >= 100) {
+      _unlockStamp('level_100', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('flawless_flock')) {
+      int flawlessCount = _levelStars.values
+          .where((stars) => stars >= 3)
+          .length;
+      if (flawlessCount >= 50) {
+        _unlockStamp('flawless_flock', currentStamps);
+        newlyUnlocked = true;
+      }
+    }
+
+    // Word Games
+    if (!currentStamps.contains('wordsmith') && totalUnscrambledWords >= 250) {
+      _unlockStamp('wordsmith', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('anagram_ace') &&
+        totalUnscrambledWords >= 500) {
+      _unlockStamp('anagram_ace', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('spelling_bee') && unscrambleHighScore >= 20) {
+      _unlockStamp('spelling_bee', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // Bird ID High Scores
+    if (!currentStamps.contains('sharp_shooter') && birdIdHighScore >= 250) {
+      _unlockStamp('sharp_shooter', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('hawk_eyed') && birdIdHighScore >= 500) {
+      _unlockStamp('hawk_eyed', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('bird_paparazzi') && birdIdHighScore >= 1000) {
+      _unlockStamp('bird_paparazzi', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // Category Specific Correct Answers
+    int _getCatCorrect(String cat) =>
+        _currentProfile?.categoryCorrectAnswers[cat] ?? 0;
+
+    if (!currentStamps.contains('trivia_addict') &&
+        _getCatCorrect('trivia') >= 50) {
+      _unlockStamp('trivia_addict', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('biology_buff') &&
+        _getCatCorrect('biology') >= 50) {
+      _unlockStamp('biology_buff', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('habitat_hero') &&
+        _getCatCorrect('habitat') >= 50) {
+      _unlockStamp('habitat_hero', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('conservation_champion') &&
+        _getCatCorrect('conservation') >= 50) {
+      _unlockStamp('conservation_champion', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('behavior_boss') &&
+        _getCatCorrect('behaviour') >= 50) {
+      _unlockStamp('behavior_boss', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('family_fanatic') &&
+        _getCatCorrect('families') >= 50) {
+      _unlockStamp('family_fanatic', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('migration_marvel') &&
+        _getCatCorrect('migration') >= 50) {
+      _unlockStamp('migration_marvel', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // --- 10 Additional New Stamps ---
+    if (!currentStamps.contains('colours_champ') &&
+        _getCatCorrect('colours') >= 50) {
+      _unlockStamp('colours_champ', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('weekend_warrior') &&
+        totalTimePlayingSeconds >= 172800) {
+      _unlockStamp('weekend_warrior', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('flawless_master')) {
+      int flawlessCount = _levelStars.values
+          .where((stars) => stars >= 3)
+          .length;
+      if (flawlessCount >= 75) {
+        _unlockStamp('flawless_master', currentStamps);
+        newlyUnlocked = true;
+      }
+    }
+    if (!currentStamps.contains('quiz_guru') && totalCorrectAnswers >= 10000) {
+      _unlockStamp('quiz_guru', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('id_legend') && birdIdHighScore >= 2000) {
+      _unlockStamp('id_legend', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('scramble_legend') &&
+        totalUnscrambledWords >= 1000) {
+      _unlockStamp('scramble_legend', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('spelling_master') &&
+        unscrambleHighScore >= 30) {
+      _unlockStamp('spelling_master', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('trivia_titan') &&
+        _getCatCorrect('trivia') >= 150) {
+      _unlockStamp('trivia_titan', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('biology_brain') &&
+        _getCatCorrect('biology') >= 150) {
+      _unlockStamp('biology_brain', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('habitat_hound') &&
+        _getCatCorrect('habitat') >= 150) {
+      _unlockStamp('habitat_hound', currentStamps);
+      newlyUnlocked = true;
+    }
+
     // --- Section Completions ---
     final sectionStamps = {
       'trivia_complete': 'trivia',
@@ -429,9 +640,9 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
 
     _levelStars.forEach((key, stars) {
       if (key.startsWith('bird_id_session_') && stars > 0) {
-        if (key.endsWith('_easy'))
+        if (key.endsWith('_easy')) {
           idEasyCount++;
-        else if (key.endsWith('_medium'))
+        } else if (key.endsWith('_medium'))
           idMedCount++;
         else if (key.endsWith('_hard'))
           idHardCount++;

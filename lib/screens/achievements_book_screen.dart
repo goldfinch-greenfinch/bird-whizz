@@ -3,6 +3,20 @@ import 'package:provider/provider.dart';
 import '../models/stamp.dart';
 import '../providers/quiz_provider.dart';
 
+abstract class AchievementItem {}
+
+class TitlePageItem extends AchievementItem {}
+
+class StampItem extends AchievementItem {
+  final Stamp stamp;
+  StampItem(this.stamp);
+}
+
+class SubheadingItem extends AchievementItem {
+  final String title;
+  SubheadingItem(this.title);
+}
+
 class AchievementsBookScreen extends StatefulWidget {
   const AchievementsBookScreen({super.key});
 
@@ -12,16 +26,16 @@ class AchievementsBookScreen extends StatefulWidget {
 
 class _AchievementsBookScreenState extends State<AchievementsBookScreen> {
   final PageController _pageController = PageController();
-  int _currentViewIndex = 0; // 0 for first 4 stamps, 1 for next 4, etc.
-
-  // Total stamps = gameStamps.length
-  // 6 stamps per view (2 pages side by side, 3 stamps per page top/mid/bottom)
+  int _currentViewIndex = 0;
+  late List<List<AchievementItem>> _pages;
   late int _totalViews;
 
   @override
   void initState() {
     super.initState();
-    _totalViews = (gameStamps.length / 6).ceil();
+    _pages = _buildPages();
+    // A spread has 2 pages (top and bottom)
+    _totalViews = (_pages.length / 2).ceil();
     _pageController.addListener(() {
       int next = _pageController.page?.round() ?? 0;
       if (next != _currentViewIndex) {
@@ -30,6 +44,119 @@ class _AchievementsBookScreenState extends State<AchievementsBookScreen> {
         });
       }
     });
+  }
+
+  List<List<AchievementItem>> _buildPages() {
+    List<List<AchievementItem>> pages = [];
+
+    Stamp getStamp(String id) => gameStamps.firstWhere((s) => s.id == id);
+
+    void addSection(String title, List<String> stampIds) {
+      List<AchievementItem> currentPage = [];
+      currentPage.add(SubheadingItem(title));
+
+      for (String id in stampIds) {
+        if (currentPage.length == 4) {
+          pages.add(currentPage);
+          currentPage = [];
+        }
+        currentPage.add(StampItem(getStamp(id)));
+      }
+
+      if (currentPage.isNotEmpty) {
+        pages.add(currentPage);
+      }
+    }
+
+    // 0. The Cover / Title Page
+    pages.add([TitlePageItem()]);
+
+    // 1. General Progress
+    addSection('General Progress', [
+      'time_flies',
+      'frequent_flyer',
+      'weekend_warrior',
+      'first_flight',
+      'star_collector',
+      'flock_starter',
+      'dedicated_birder',
+      'level_100',
+      'trivia_master',
+      'century_club',
+      'smart_cookie',
+      'know_it_owl',
+      'quiz_guru',
+      'quiz_whiz',
+      'marathon_flyer',
+      'legendary_watcher',
+      'avian_apprentice',
+      'master_ornithologist',
+      'constellation',
+      'perfectionist',
+      'flawless_flyer',
+      'flawless_flock',
+      'flawless_master',
+      'dedicated_watcher',
+    ]);
+
+    // 2. Section Masters (8 stamps)
+    addSection('Section Masters', [
+      'trivia_complete',
+      'biology_complete',
+      'habitat_complete',
+      'conservation_complete',
+      'behaviour_complete',
+      'families_complete',
+      'migration_complete',
+      'colours_complete',
+    ]);
+
+    // 3. Category Enthusiasts
+    addSection('Topic Fanatics', [
+      'trivia_addict',
+      'biology_buff',
+      'habitat_hero',
+      'conservation_champion',
+      'behavior_boss',
+      'family_fanatic',
+      'migration_marvel',
+      'colours_champ',
+      'trivia_titan',
+      'biology_brain',
+      'habitat_hound',
+    ]);
+
+    // 4. Word Games
+    addSection('Word Games', [
+      'vocab_virtuoso',
+      'wordsmith',
+      'anagram_ace',
+      'scramble_legend',
+      'spelling_bee',
+      'spelling_master',
+      'scramble_champion',
+      'scramble_master',
+    ]);
+
+    // 5. Bird ID
+    addSection('Eagle Eye Challenges', [
+      'id_easy_complete',
+      'id_medium_complete',
+      'id_hard_complete',
+      'identification_expert',
+      'id_master',
+      'sharp_shooter',
+      'hawk_eyed',
+      'bird_paparazzi',
+      'id_legend',
+    ]);
+
+    // Ensure even number of pages so bottom page index is always valid
+    if (pages.length % 2 != 0) {
+      pages.add([]);
+    }
+
+    return pages;
   }
 
   @override
@@ -41,249 +168,553 @@ class _AchievementsBookScreenState extends State<AchievementsBookScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.teal[50], // Book cover color behind
       appBar: AppBar(
         title: const Text(
-          'Achievements Book',
-          style: TextStyle(color: Colors.white),
+          'Field Guide',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
+          ),
         ),
-        backgroundColor: Colors.teal[800],
+        backgroundColor: Colors.brown[800],
         iconTheme: const IconThemeData(color: Colors.white),
         elevation: 0,
       ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white, // Pages color
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black26,
-                  offset: Offset(5, 5),
-                  blurRadius: 10,
-                ),
-              ],
+      backgroundColor: Colors.brown[900],
+      body: Stack(
+        children: [
+          // Background Generated Image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/rustic_wood_bg.png',
+              fit: BoxFit.cover,
             ),
-            child: Row(
+          ),
+          SafeArea(
+            child: Column(
               children: [
-                // Left arrow
-                IconButton(
-                  icon: const Icon(Icons.arrow_back_ios, color: Colors.teal),
-                  onPressed: _currentViewIndex > 0
-                      ? () {
-                          _pageController.previousPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                        }
-                      : null,
-                ),
-                // Book Pages
-                Expanded(
-                  child: PageView.builder(
-                    controller: _pageController,
-                    itemCount: _totalViews,
-                    itemBuilder: (context, viewIndex) {
-                      return _buildBookSpread(viewIndex);
-                    },
+                const SizedBox(height: 10),
+                Text(
+                  'Spread ${_currentViewIndex + 1} of $_totalViews (Swipe Up/Down)',
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                // Right arrow
-                IconButton(
-                  icon: const Icon(Icons.arrow_forward_ios, color: Colors.teal),
-                  onPressed: _currentViewIndex < _totalViews - 1
-                      ? () {
-                          _pageController.nextPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                        }
-                      : null,
+                const SizedBox(height: 10),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: PageView.builder(
+                      controller: _pageController,
+                      scrollDirection:
+                          Axis.vertical, // Calendar flip horizontally
+                      itemCount: _totalViews,
+                      itemBuilder: (context, index) {
+                        return _buildBookSpread(index);
+                      },
+                    ),
+                  ),
+                ),
+                // Indicator Arrow
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.keyboard_double_arrow_up,
+                    color: Colors.white.withOpacity(0.5),
+                  ),
                 ),
               ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }
 
   Widget _buildBookSpread(int viewIndex) {
-    int startIndex = viewIndex * 6;
-    return CustomPaint(
-      painter: DashedCrossPainter(color: Colors.teal.withValues(alpha: 0.3)),
-      child: Column(
-        children: [
-          // Top Row
-          Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+    int topPageIndex = viewIndex * 2;
+    int bottomPageIndex = topPageIndex + 1;
+
+    List<AchievementItem> topPageItems = topPageIndex < _pages.length
+        ? _pages[topPageIndex]
+        : [];
+    List<AchievementItem> bottomPageItems = bottomPageIndex < _pages.length
+        ? _pages[bottomPageIndex]
+        : [];
+
+    return RepaintBoundary(
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 25, top: 5),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black54,
+              offset: Offset(8, 12),
+              blurRadius: 20,
+            ),
+            BoxShadow(
+              color: Colors.black26, // Inner ambient shadow
+              offset: Offset(-2, -2),
+              blurRadius: 10,
+            ),
+          ],
+        ),
+        child: Stack(
+          children: [
+            Column(
               children: [
-                _buildCardWrapper(startIndex, context), // Top-Left
-                _buildCardWrapper(startIndex + 1, context), // Top-Right
+                // Top Page (flips away upwards)
+                Expanded(child: _buildPage(topPageItems, isTopPage: true)),
+                // Bottom Page (flips in from below)
+                Expanded(child: _buildPage(bottomPageItems, isTopPage: false)),
               ],
             ),
-          ),
-          // Middle Row
-          Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildCardWrapper(startIndex + 2, context), // Mid-Left
-                _buildCardWrapper(startIndex + 3, context), // Mid-Right
-              ],
+            // Middle Spiral seam overlay!
+            Positioned(
+              left: 0,
+              right: 0,
+              top: 0,
+              bottom: 0,
+              child: Center(
+                child: CustomPaint(
+                  size: const Size(double.infinity, 30),
+                  painter: HorizontalSpiralPainter(),
+                ),
+              ),
             ),
-          ),
-          // Bottom Row
-          Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildCardWrapper(startIndex + 4, context), // Bot-Left
-                _buildCardWrapper(startIndex + 5, context), // Bot-Right
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildCardWrapper(int stampIndex, BuildContext context) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: _buildStampSlot(stampIndex),
-      ),
-    );
-  }
-
-  Widget _buildStampSlot(int stampIndex) {
-    if (stampIndex >= gameStamps.length) {
-      // Empty slot if we ran out of stamps
-      return const SizedBox();
+  Widget _buildPage(
+    List<AchievementItem> pageItems, {
+    required bool isTopPage,
+  }) {
+    if (pageItems.isNotEmpty && pageItems.first is TitlePageItem) {
+      return _buildTitlePageDecoration(isTopPage: isTopPage);
     }
 
-    final stamp = gameStamps[stampIndex];
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFF7F2E2),
+        image: const DecorationImage(
+          image: AssetImage('assets/images/vintage_paper_texture.png'),
+          fit: BoxFit.cover,
+        ),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(isTopPage ? 10 : 0),
+          topRight: Radius.circular(isTopPage ? 10 : 0),
+          bottomLeft: Radius.circular(!isTopPage ? 10 : 0),
+          bottomRight: Radius.circular(!isTopPage ? 10 : 0),
+        ),
+      ),
+      child: Padding(
+        padding: EdgeInsets.only(
+          top: isTopPage ? 15.0 : 30.0, // push away from the center spiral
+          bottom: isTopPage ? 30.0 : 15.0,
+          left: 10.0,
+          right: 10.0,
+        ),
+        child: Column(
+          children: [
+            Expanded(child: _buildRow(pageItems, 0, 1)),
+            Expanded(child: _buildRow(pageItems, 2, 3)),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTitlePageDecoration({required bool isTopPage}) {
+    final provider = Provider.of<QuizProvider>(context);
+    final totalStamps = gameStamps.length;
+    final unlockedStamps = provider.unlockedStamps.length;
+    final percent = (unlockedStamps / totalStamps * 100).toStringAsFixed(1);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFF7F2E2),
+        image: const DecorationImage(
+          image: AssetImage('assets/images/vintage_paper_texture.png'),
+          fit: BoxFit.cover,
+        ),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(isTopPage ? 10 : 0),
+          topRight: Radius.circular(isTopPage ? 10 : 0),
+          bottomLeft: Radius.circular(!isTopPage ? 10 : 0),
+          bottomRight: Radius.circular(!isTopPage ? 10 : 0),
+        ),
+      ),
+      child: Center(
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.menu_book_rounded,
+                  size: 80,
+                  color: Colors.brown[800],
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  'FIELD GUIDE',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 36,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 4.0,
+                    color: Colors.brown[900],
+                    shadows: [
+                      Shadow(
+                        color: Colors.brown.withOpacity(0.3),
+                        offset: const Offset(2, 2),
+                        blurRadius: 4,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  'A Record of Avian Discoveries',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontStyle: FontStyle.italic,
+                    color: Colors.brown[700],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.brown[800]!, width: 2),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        '$percent%',
+                        style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.brown[800],
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '$unlockedStamps / $totalStamps Stamps Found',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.brown[700],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 30),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRow(List<AchievementItem> pageItems, int index1, int index2) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(child: _buildSlot(pageItems, index1)),
+        Expanded(child: _buildSlot(pageItems, index2)),
+      ],
+    );
+  }
+
+  Widget _buildSlot(List<AchievementItem> pageItems, int index) {
+    if (index >= pageItems.length) {
+      return const SizedBox();
+    }
+    final item = pageItems[index];
+    if (item is SubheadingItem) {
+      return _buildSubheading(item);
+    } else if (item is StampItem) {
+      return _buildStamp(item.stamp);
+    }
+    return const SizedBox();
+  }
+
+  Widget _buildSubheading(SubheadingItem item) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
+      alignment: Alignment.center,
+      child: Container(
+        decoration: BoxDecoration(
+          border: const Border(
+            bottom: BorderSide(color: Colors.brown, width: 2),
+            top: BorderSide(color: Colors.brown, width: 2),
+          ),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Text(
+          item.title,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.brown[900],
+            fontSize: 14,
+            fontWeight: FontWeight.w900,
+            letterSpacing: 1.0,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStamp(Stamp stamp) {
     final provider = Provider.of<QuizProvider>(context);
     final isUnlocked = provider.unlockedStamps.contains(stamp.id);
 
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Stamp Icon Image
-          Container(
-            height: 80,
-            width: 80,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: isUnlocked ? Colors.teal : Colors.grey,
-                width: 3,
+    return GestureDetector(
+      onTap: () {
+        _showStampDialog(stamp, isUnlocked);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(4.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Icon Image
+            Expanded(
+              flex: 4,
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: isUnlocked
+                        ? Colors.brown[800]!
+                        : Colors.brown[300]!.withOpacity(0.4),
+                    width: isUnlocked ? 3 : 2,
+                  ),
+                  color: isUnlocked ? Colors.white : Colors.transparent,
+                ),
+                child: ClipOval(
+                  child: isUnlocked
+                      ? Image.asset(stamp.iconPath, fit: BoxFit.cover)
+                      : Opacity(
+                          opacity: 0.2, // Faint placeholder
+                          child: ColorFiltered(
+                            colorFilter: const ColorFilter.mode(
+                              Colors.brown,
+                              BlendMode.srcIn,
+                            ),
+                            child: Image.asset(
+                              stamp.iconPath,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                ),
               ),
-              color: isUnlocked ? Colors.white : Colors.grey[200],
             ),
-            child: ClipOval(
-              child: isUnlocked
-                  ? Image.asset(stamp.iconPath, fit: BoxFit.cover)
-                  : ColorFiltered(
-                      colorFilter: const ColorFilter.mode(
-                        Colors.black,
-                        BlendMode.srcATop,
-                      ),
-                      child: Image.asset(stamp.iconPath, fit: BoxFit.cover),
-                    ),
-            ),
-          ),
-          const SizedBox(height: 12),
-          // Title
-          Text(
-            stamp.title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-              color: Colors.teal, // Title is always visible
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 6),
-          // Description
-          Expanded(
-            child: Text(
-              isUnlocked ? stamp.description : '???',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 12,
-                fontStyle: FontStyle.italic,
-                color: isUnlocked ? Colors.black87 : Colors.black54,
+            const SizedBox(height: 6),
+            // Title
+            Expanded(
+              flex: 2,
+              child: Center(
+                child: Text(
+                  stamp.title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                    height: 1.1,
+                    color: isUnlocked ? Colors.brown[900] : Colors.brown[600],
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
+    );
+  }
+
+  void _showStampDialog(Stamp stamp, bool isUnlocked) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          backgroundColor: const Color(0xFFF7F2E2),
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Icon
+                Container(
+                  height: 120,
+                  width: 120,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isUnlocked
+                          ? Colors.brown[800]!
+                          : Colors.brown[300]!.withOpacity(0.5),
+                      width: 4,
+                    ),
+                    color: isUnlocked ? Colors.white : Colors.transparent,
+                    boxShadow: [
+                      if (isUnlocked)
+                        const BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 10,
+                          offset: Offset(0, 4),
+                        ),
+                    ],
+                  ),
+                  child: ClipOval(
+                    child: isUnlocked
+                        ? Image.asset(stamp.iconPath, fit: BoxFit.cover)
+                        : Opacity(
+                            opacity: 0.2, // Faint placeholder
+                            child: ColorFiltered(
+                              colorFilter: const ColorFilter.mode(
+                                Colors.brown,
+                                BlendMode.srcIn,
+                              ),
+                              child: Image.asset(
+                                stamp.iconPath,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Title
+                Text(
+                  stamp.title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.brown[900],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                // Subtitle / Description
+                Text(
+                  isUnlocked
+                      ? stamp.description
+                      : 'Locked Achievement.\nKeep playing to discover how to earn this stamp!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontStyle: FontStyle.italic,
+                    color: Colors.brown[800],
+                  ),
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.brown[800],
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
+                  ),
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text(
+                    'Close',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
 
-class DashedCrossPainter extends CustomPainter {
-  final Color color;
-  final double strokeWidth;
-  final double dashWidth;
-  final double dashSpace;
-
-  DashedCrossPainter({
-    required this.color,
-    this.strokeWidth = 2.0,
-    this.dashWidth = 8.0,
-    this.dashSpace = 6.0,
-  });
-
+class HorizontalSpiralPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = strokeWidth
-      ..style = PaintingStyle.stroke;
+    // Middle split groove shadow
+    final seamPaint = Paint()
+      ..color = Colors.black45
+      ..style = PaintingStyle.fill;
 
-    // Draw Vertical Dashed Line
-    double startY = 0;
-    while (startY < size.height) {
-      canvas.drawLine(
-        Offset(size.width / 2, startY),
-        Offset(size.width / 2, startY + dashWidth),
-        paint,
+    // Draw deep groove horizontally
+    canvas.drawRect(
+      Rect.fromLTWH(0, size.height / 2 - 2, size.width, 4),
+      seamPaint,
+    );
+
+    // Draw spiral loops
+    final loopPaint = Paint()
+      ..color =
+          Colors.grey[300]! // Lighter metal
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3.5;
+
+    final loopShadowPaint = Paint()
+      ..color = Colors.black87
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4.0;
+
+    double x = 20.0;
+    while (x < size.width - 15) {
+      // Small paper hole above and below seam
+      canvas.drawCircle(
+        Offset(x, size.height / 2 - 10),
+        3.5,
+        Paint()..color = Colors.black87,
       );
-      startY += dashWidth + dashSpace;
-    }
+      canvas.drawCircle(
+        Offset(x, size.height / 2 + 10),
+        3.5,
+        Paint()..color = Colors.black87,
+      );
 
-    // Draw Horizontal Dashed Lines (at 1/3 and 2/3)
-    for (int i = 1; i <= 2; i++) {
-      double startX = 0;
-      double y = size.height * i / 3;
-      while (startX < size.width) {
-        canvas.drawLine(
-          Offset(startX, y),
-          Offset(startX + dashWidth, y),
-          paint,
-        );
-        startX += dashWidth + dashSpace;
-      }
+      // Loop shadows underneath the metal rings
+      canvas.drawOval(
+        Rect.fromLTWH(x - 3.5, size.height / 2 - 12, 9, 24),
+        loopShadowPaint,
+      );
+
+      // Metal loops
+      canvas.drawOval(
+        Rect.fromLTWH(x - 4, size.height / 2 - 14, 8, 24),
+        loopPaint,
+      );
+
+      x += 24.0; // Spacing
     }
   }
 
   @override
-  bool shouldRepaint(covariant DashedCrossPainter oldDelegate) {
-    return oldDelegate.color != color ||
-        oldDelegate.strokeWidth != strokeWidth ||
-        oldDelegate.dashWidth != dashWidth ||
-        oldDelegate.dashSpace != dashSpace;
-  }
+  bool shouldRepaint(covariant HorizontalSpiralPainter oldDelegate) => false;
 }

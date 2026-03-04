@@ -22,7 +22,7 @@ class Bird {
   String getEvolvedImagePath(int evolutionStage) {
     if (!hasEvolution) return imagePath;
     int stage = evolutionStage.clamp(1, 5);
-    return 'assets/bird_evolution/${id}_$stage.png';
+    return 'assets/bird_evolution/${id}_$stage.webp';
   }
 }
 
@@ -148,7 +148,7 @@ const List<Bird> availableBirds = [
     emoji: '🕊️',
     color: Colors.grey,
     description: 'A massive, familiar pigeon of woods and gardens.',
-    imagePath: 'assets/bird_evolution/wood_pigeon_1.png',
+    imagePath: 'assets/bird_evolution/wood_pigeon_1.webp',
     hasEvolution: true,
   ),
   Bird(

@@ -13,6 +13,13 @@ class UserProfile {
   final int totalUnscrambledWords;
   final List<String> unlockedStamps; // List of unlocked stamp IDs
 
+  // Daily Challenge & Login Tracking
+  final DateTime? lastDailyChallengeDate;
+  final int currentDailyStreak;
+  final int totalDailyChallengesCompleted;
+  final DateTime? lastLoginDate;
+  final int currentLoginStreak;
+
   UserProfile({
     required this.id,
     required this.name,
@@ -26,6 +33,11 @@ class UserProfile {
     this.totalTimePlayingSeconds = 0,
     this.totalUnscrambledWords = 0,
     this.unlockedStamps = const [],
+    this.lastDailyChallengeDate,
+    this.currentDailyStreak = 0,
+    this.totalDailyChallengesCompleted = 0,
+    this.lastLoginDate,
+    this.currentLoginStreak = 0,
   });
 
   Map<String, dynamic> toJson() {
@@ -42,6 +54,11 @@ class UserProfile {
       'totalTimePlayingSeconds': totalTimePlayingSeconds,
       'totalUnscrambledWords': totalUnscrambledWords,
       'unlockedStamps': unlockedStamps,
+      'lastDailyChallengeDate': lastDailyChallengeDate?.toIso8601String(),
+      'currentDailyStreak': currentDailyStreak,
+      'totalDailyChallengesCompleted': totalDailyChallengesCompleted,
+      'lastLoginDate': lastLoginDate?.toIso8601String(),
+      'currentLoginStreak': currentLoginStreak,
     };
   }
 
@@ -77,6 +94,16 @@ class UserProfile {
               ?.map((e) => e as String)
               .toList() ??
           [],
+      lastDailyChallengeDate: json['lastDailyChallengeDate'] != null
+          ? DateTime.tryParse(json['lastDailyChallengeDate'] as String)
+          : null,
+      currentDailyStreak: json['currentDailyStreak'] as int? ?? 0,
+      totalDailyChallengesCompleted:
+          json['totalDailyChallengesCompleted'] as int? ?? 0,
+      lastLoginDate: json['lastLoginDate'] != null
+          ? DateTime.tryParse(json['lastLoginDate'] as String)
+          : null,
+      currentLoginStreak: json['currentLoginStreak'] as int? ?? 0,
     );
   }
 
@@ -93,6 +120,11 @@ class UserProfile {
     int? totalTimePlayingSeconds,
     int? totalUnscrambledWords,
     List<String>? unlockedStamps,
+    DateTime? lastDailyChallengeDate,
+    int? currentDailyStreak,
+    int? totalDailyChallengesCompleted,
+    DateTime? lastLoginDate,
+    int? currentLoginStreak,
   }) {
     return UserProfile(
       id: id ?? this.id,
@@ -110,6 +142,13 @@ class UserProfile {
       totalUnscrambledWords:
           totalUnscrambledWords ?? this.totalUnscrambledWords,
       unlockedStamps: unlockedStamps ?? this.unlockedStamps,
+      lastDailyChallengeDate:
+          lastDailyChallengeDate ?? this.lastDailyChallengeDate,
+      currentDailyStreak: currentDailyStreak ?? this.currentDailyStreak,
+      totalDailyChallengesCompleted:
+          totalDailyChallengesCompleted ?? this.totalDailyChallengesCompleted,
+      lastLoginDate: lastLoginDate ?? this.lastLoginDate,
+      currentLoginStreak: currentLoginStreak ?? this.currentLoginStreak,
     );
   }
 }

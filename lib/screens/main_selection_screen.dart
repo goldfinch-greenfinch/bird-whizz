@@ -8,6 +8,7 @@ import 'profile_selection_screen.dart';
 import '../services/audio_service.dart';
 import 'bird_id_selection_screen.dart';
 import 'word_games_selection_screen.dart';
+import 'quiz_screen.dart';
 
 class MainSelectionScreen extends StatefulWidget {
   const MainSelectionScreen({super.key});
@@ -21,8 +22,87 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
       context.read<AudioService>().playMenuMusic();
+
+      final provider = Provider.of<QuizProvider>(context, listen: false);
+      if (provider.isDailyChallengeAvailable &&
+          !provider.hasShownDailyChallengeThisSession) {
+        provider.markDailyChallengeShown();
+
+        Future.delayed(const Duration(milliseconds: 200), () {
+          if (mounted) {
+            _launchDailyChallenge(context, provider);
+          }
+        });
+      }
     });
+  }
+
+  void _launchDailyChallenge(BuildContext context, QuizProvider provider) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: '',
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (context, anim1, anim2) {
+        return ScaleTransition(
+          scale: Tween<double>(
+            begin: 0.5,
+            end: 1.0,
+          ).animate(CurvedAnimation(parent: anim1, curve: Curves.elasticOut)),
+          child: AlertDialog(
+            backgroundColor: Colors.amber.shade50,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            title: const Text(
+              'Daily Challenge!',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.amber,
+              ),
+            ),
+            content: const Text(
+              'A new bird challenge awaits you!',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 18),
+            ),
+            actionsAlignment: MainAxisAlignment.center,
+            actions: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.amber,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                    vertical: 15,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context); // close dialog
+                  provider.startDailyChallenge();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const QuizScreen()),
+                  );
+                },
+                child: const Text(
+                  'Play Now',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -40,6 +120,89 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      Consumer<QuizProvider>(
+                        builder: (context, provider, child) {
+                          if (!provider.isDailyChallengeAvailable) {
+                            return const SizedBox.shrink();
+                          }
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 24.0),
+                            child: InkWell(
+                              onTap: () {
+                                _launchDailyChallenge(context, provider);
+                              },
+                              borderRadius: BorderRadius.circular(24),
+                              child: Container(
+                                padding: const EdgeInsets.all(20),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.amber.shade300,
+                                      Colors.orange.shade400,
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(24),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 15,
+                                      offset: Offset(0, 8),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withValues(
+                                          alpha: 0.2,
+                                        ),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: const Icon(
+                                        Icons.star,
+                                        color: Colors.white,
+                                        size: 32,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 20),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: const [
+                                          Text(
+                                            'Daily Bird Challenge',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          SizedBox(height: 6),
+                                          Text(
+                                            'Tap to play today\'s challenge!',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const Icon(
+                                      Icons.arrow_forward_ios_rounded,
+                                      color: Colors.white,
+                                      size: 20,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                       _FeatureCard(
                         title: 'Bird Quiz (Text)',
                         icon: Icons.quiz_rounded,

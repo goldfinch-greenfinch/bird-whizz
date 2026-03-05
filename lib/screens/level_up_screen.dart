@@ -4,6 +4,7 @@ import 'package:confetti/confetti.dart';
 import '../providers/quiz_provider.dart';
 import '../widgets/navigation_utils.dart';
 import '../widgets/particle_overlay.dart';
+import '../models/bird.dart';
 
 import '../services/audio_service.dart';
 
@@ -63,6 +64,18 @@ class _LevelUpScreenState extends State<LevelUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<QuizProvider>();
+    Bird? selectedBird;
+    if (provider.selectedBirdId != null) {
+      try {
+        selectedBird = availableBirds.firstWhere(
+          (b) => b.id == provider.selectedBirdId,
+        );
+      } catch (e) {
+        // Fallback
+      }
+    }
+
     return Scaffold(
       backgroundColor: Colors.teal[50], // Match old finish screen background
       extendBodyBehindAppBar: true,
@@ -96,11 +109,37 @@ class _LevelUpScreenState extends State<LevelUpScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.workspace_premium,
-                    size: 100,
-                    color: Colors.amber,
-                  ),
+                  if (selectedBird != null)
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.5),
+                        shape: BoxShape.circle,
+                        border: Border.all(color: selectedBird.color, width: 4),
+                        boxShadow: [
+                          BoxShadow(
+                            color: selectedBird.color.withValues(alpha: 0.3),
+                            blurRadius: 15,
+                            spreadRadius: 2,
+                          ),
+                        ],
+                      ),
+                      child: ClipOval(
+                        child: Image.asset(
+                          selectedBird.getEvolvedImagePath(
+                            provider.userEvolutionStage,
+                          ),
+                          width: 120,
+                          height: 120,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    )
+                  else
+                    const Icon(
+                      Icons.workspace_premium,
+                      size: 100,
+                      color: Colors.amber,
+                    ),
                   const SizedBox(height: 30),
                   Text(
                     'CONGRATULATIONS!',
@@ -117,12 +156,22 @@ class _LevelUpScreenState extends State<LevelUpScreen> {
                     style: TextStyle(color: Colors.teal[700], fontSize: 18),
                   ),
                   const SizedBox(height: 10),
-                  Text(
-                    widget.oldRank,
-                    style: TextStyle(
-                      color: Colors.teal[800],
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500,
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.teal.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      widget.oldRank,
+                      style: TextStyle(
+                        color: Colors.teal[800],
+                        fontSize: 24,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -133,21 +182,35 @@ class _LevelUpScreenState extends State<LevelUpScreen> {
                     style: TextStyle(color: Colors.teal[700], fontSize: 18),
                   ),
                   const SizedBox(height: 10),
-                  Text(
-                    widget.newRank,
-                    style: TextStyle(
-                      color: Colors.amber[700],
-                      fontSize: 36,
-                      fontWeight: FontWeight.bold,
-                      shadows: const [
-                        Shadow(
-                          blurRadius: 10.0,
-                          color: Colors.black12,
-                          offset: Offset(2, 2),
-                        ),
-                      ],
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
                     ),
-                    textAlign: TextAlign.center,
+                    decoration: BoxDecoration(
+                      color: Colors.amber.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: Colors.amber.withValues(alpha: 0.5),
+                        width: 2,
+                      ),
+                    ),
+                    child: Text(
+                      widget.newRank,
+                      style: TextStyle(
+                        color: Colors.amber[700],
+                        fontSize: 36,
+                        fontWeight: FontWeight.bold,
+                        shadows: const [
+                          Shadow(
+                            blurRadius: 10.0,
+                            color: Colors.black12,
+                            offset: Offset(2, 2),
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ),
                   const SizedBox(height: 60),
                   ElevatedButton(

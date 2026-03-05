@@ -234,6 +234,23 @@ class AchievementsBookScreen extends StatefulWidget {
       'id_legend',
     ]);
 
+    // 6. Daily Challenges
+    addSection('Daily Challenges', [
+      'daily_bonus_1',
+      'daily_bonus_5',
+      'daily_bonus_20',
+      'daily_bonus_50',
+      'daily_bonus_100',
+      'daily_bonus_365',
+    ]);
+
+    // 7. Login Streaks
+    addSection('Login Streaks', [
+      'first_login',
+      'login_streak_3',
+      'login_streak_7',
+    ]);
+
     // Ensure even number of pages so bottom page index is always valid
     if (pages.length % 2 != 0) {
       pages.add([]);

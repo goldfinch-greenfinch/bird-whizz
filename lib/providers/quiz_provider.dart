@@ -17,6 +17,8 @@ import '../data/sections/families_data.dart';
 import '../data/sections/migration_data.dart';
 import '../data/sections/colours_data.dart';
 import '../services/bird_image_service.dart';
+import '../models/daily_question.dart';
+import '../data/daily_questions_data.dart';
 
 class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
   List<UserProfile> _profiles = [];
@@ -27,6 +29,8 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
   String? _newLevelTitle;
   int? _oldEvolutionStage;
   int? _newEvolutionStage;
+
+  bool _hasShownDailyChallengeThisSession = false;
 
   // Stamps
   final List<Stamp> _newlyUnlockedStamps = [];
@@ -126,12 +130,15 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     _profiles.add(newProfile);
     _currentProfile = newProfile;
     await _saveProfiles();
+    _recordLogin();
     notifyListeners();
   }
 
   Future<void> selectProfile(String id) async {
     try {
       _currentProfile = _profiles.firstWhere((p) => p.id == id);
+      _hasShownDailyChallengeThisSession = false; // Reset on profile change
+      _recordLogin();
       notifyListeners();
     } catch (e) {
       // print('Profile not found: $id');
@@ -275,6 +282,80 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     return 0;
   }
 
+  // --- Daily Challenge Logic ---
+
+  bool get isDailyChallengeAvailable {
+    if (_currentProfile == null) return false;
+    final lastCompleteDate = _currentProfile!.lastDailyChallengeDate;
+    if (lastCompleteDate == null) return true;
+    final now = DateTime.now();
+    return !(lastCompleteDate.year == now.year &&
+        lastCompleteDate.month == now.month &&
+        lastCompleteDate.day == now.day);
+  }
+
+  bool get hasShownDailyChallengeThisSession =>
+      _hasShownDailyChallengeThisSession;
+  void markDailyChallengeShown() {
+    _hasShownDailyChallengeThisSession = true;
+  }
+
+  DailyQuestion get dailyChallengeQuestion {
+    final now = DateTime.now();
+    // Simple way to pick one question per day of the year (0-364)
+    final startOfYear = DateTime(now.year, 1, 1);
+    int dayOfYear = now.difference(startOfYear).inDays;
+    return dailyQuestions[dayOfYear % dailyQuestions.length];
+  }
+
+  void startDailyChallenge() {
+    final dailyQ = dailyChallengeQuestion;
+    final virtualQuestion = Question(
+      id: dailyQ.id,
+      text: dailyQ.text,
+      options: dailyQ.options,
+      correctOptionIndex: dailyQ.correctOptionIndex,
+    );
+
+    final dailyLevel = Level(
+      id: 'daily_challenge_level',
+      name: 'Daily Bird Challenge',
+      questions: [virtualQuestion],
+      requiredScoreToUnlock: 0,
+    );
+
+    _score = 0;
+    _wordGameTotalQuestions = 1;
+    _currentCategory = 'daily_challenge';
+    startLevel(dailyLevel);
+  }
+
+  void _recordLogin() {
+    if (_currentProfile == null) return;
+    final now = DateTime.now();
+    final lastLogin = _currentProfile!.lastLoginDate;
+
+    int newStreak = _currentProfile!.currentLoginStreak;
+
+    if (lastLogin != null) {
+      final difference = DateTime(now.year, now.month, now.day)
+          .difference(DateTime(lastLogin.year, lastLogin.month, lastLogin.day))
+          .inDays;
+
+      if (difference == 1) {
+        newStreak++;
+      } else if (difference > 1) {
+        newStreak = 1;
+      }
+      // if difference == 0, already logged in today, do nothing.
+      if (difference == 0) return;
+    } else {
+      newStreak = 1;
+    }
+
+    _updateCurrentProfile(lastLoginDate: now, currentLoginStreak: newStreak);
+  }
+
   // --- Game State Getters (proxied to current profile) ---
 
   Map<String, int> get _levelStars => _currentProfile?.levelStars ?? {};
@@ -288,6 +369,11 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     Map<String, int>? wordGameHighScores,
     int? totalTimePlayingSeconds,
     int? totalUnscrambledWords,
+    DateTime? lastDailyChallengeDate,
+    int? currentDailyStreak,
+    int? totalDailyChallengesCompleted,
+    DateTime? lastLoginDate,
+    int? currentLoginStreak,
   }) {
     if (_currentProfile == null) return;
 
@@ -301,6 +387,16 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
         wordGameHighScores: wordGameHighScores,
         totalTimePlayingSeconds: totalTimePlayingSeconds,
         totalUnscrambledWords: totalUnscrambledWords,
+        lastDailyChallengeDate:
+            lastDailyChallengeDate ?? _currentProfile!.lastDailyChallengeDate,
+        currentDailyStreak:
+            currentDailyStreak ?? _currentProfile!.currentDailyStreak,
+        totalDailyChallengesCompleted:
+            totalDailyChallengesCompleted ??
+            _currentProfile!.totalDailyChallengesCompleted,
+        lastLoginDate: lastLoginDate ?? _currentProfile!.lastLoginDate,
+        currentLoginStreak:
+            currentLoginStreak ?? _currentProfile!.currentLoginStreak,
       );
       _currentProfile = _profiles[index];
       _saveProfiles(); // Save on every update
@@ -661,6 +757,48 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     }
     if (!currentStamps.contains('id_hard_complete') && idHardCount >= 10) {
       _unlockStamp('id_hard_complete', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // --- Daily Challenge Stamps ---
+    int dailyCompleted = _currentProfile?.totalDailyChallengesCompleted ?? 0;
+    if (!currentStamps.contains('daily_bonus_1') && dailyCompleted >= 1) {
+      _unlockStamp('daily_bonus_1', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('daily_bonus_5') && dailyCompleted >= 5) {
+      _unlockStamp('daily_bonus_5', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('daily_bonus_20') && dailyCompleted >= 20) {
+      _unlockStamp('daily_bonus_20', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('daily_bonus_50') && dailyCompleted >= 50) {
+      _unlockStamp('daily_bonus_50', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('daily_bonus_100') && dailyCompleted >= 100) {
+      _unlockStamp('daily_bonus_100', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('daily_bonus_365') && dailyCompleted >= 365) {
+      _unlockStamp('daily_bonus_365', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // --- Login Streak Stamps ---
+    int loginStreak = _currentProfile?.currentLoginStreak ?? 0;
+    if (!currentStamps.contains('first_login') && loginStreak >= 1) {
+      _unlockStamp('first_login', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('login_streak_3') && loginStreak >= 3) {
+      _unlockStamp('login_streak_3', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('login_streak_7') && loginStreak >= 7) {
+      _unlockStamp('login_streak_7', currentStamps);
       newlyUnlocked = true;
     }
 
@@ -1133,6 +1271,58 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
 
   void _handleLevelCompletion() {
     if (_currentLevel != null) {
+      if (_currentLevel!.id == 'daily_challenge_level') {
+        int stars = (_score == 1) ? 1 : 0;
+        final now = DateTime.now();
+        int newStreak = _currentProfile!.currentDailyStreak;
+        final lastDate = _currentProfile!.lastDailyChallengeDate;
+
+        if (lastDate != null) {
+          final difference = DateTime(now.year, now.month, now.day)
+              .difference(DateTime(lastDate.year, lastDate.month, lastDate.day))
+              .inDays;
+          if (difference == 1) {
+            newStreak++;
+          } else if (difference > 1) {
+            newStreak = 1;
+          }
+        } else {
+          newStreak = 1;
+        }
+
+        String dailyLevelKey =
+            'daily_challenge_${now.year}_${now.month}_${now.day}';
+
+        int oldTotalStars = totalStars;
+        String oldTitle = _getStatusTitleForStars(oldTotalStars);
+        int oldEvo = getEvolutionStageForStars(oldTotalStars);
+
+        final newStars = Map<String, int>.from(_levelStars);
+        if (stars > 0) newStars[dailyLevelKey] = stars;
+
+        _updateCurrentProfile(
+          lastDailyChallengeDate: now,
+          currentDailyStreak: newStreak,
+          totalDailyChallengesCompleted:
+              _currentProfile!.totalDailyChallengesCompleted + 1,
+          levelStars: newStars,
+        );
+
+        int newTotalStars = totalStars;
+        String newTitle = _getStatusTitleForStars(newTotalStars);
+        int newEvo = getEvolutionStageForStars(newTotalStars);
+
+        if (newTitle != oldTitle) {
+          _oldLevelTitle = oldTitle;
+          _newLevelTitle = newTitle;
+        }
+        if (newEvo > oldEvo) {
+          _oldEvolutionStage = oldEvo;
+          _newEvolutionStage = newEvo;
+        }
+        return;
+      }
+
       if (_currentCategory == 'bird_id') {
         // Handle Bird ID High Score
         if (_score > birdIdHighScore) {

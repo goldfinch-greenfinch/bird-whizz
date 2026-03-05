@@ -372,6 +372,62 @@ final List<Stamp> gameStamps = [
     description: 'Complete the Hard Bird Identification challenge.',
     iconPath: 'assets/bird_icons/blackbird.webp',
   ),
+  // -- Daily Challenge Stamps --
+  const Stamp(
+    id: 'daily_bonus_1',
+    title: 'Early Riser',
+    description: 'Complete your first Daily Bird Challenge.',
+    iconPath: 'assets/bird_icons/robin.webp',
+  ),
+  const Stamp(
+    id: 'daily_bonus_5',
+    title: 'Daily Dedication',
+    description: 'Complete 5 Daily Bird Challenges.',
+    iconPath: 'assets/bird_icons/jay.webp',
+  ),
+  const Stamp(
+    id: 'daily_bonus_20',
+    title: 'Habitual Hatchling',
+    description: 'Complete 20 Daily Bird Challenges.',
+    iconPath: 'assets/bird_icons/woodpecker.webp',
+  ),
+  const Stamp(
+    id: 'daily_bonus_50',
+    title: 'Routine Raptor',
+    description: 'Complete 50 Daily Bird Challenges.',
+    iconPath: 'assets/bird_icons/puffin.webp',
+  ),
+  const Stamp(
+    id: 'daily_bonus_100',
+    title: 'Centurion Scholar',
+    description: 'Complete 100 Daily Bird Challenges.',
+    iconPath: 'assets/bird_icons/barn_owl.webp',
+  ),
+  const Stamp(
+    id: 'daily_bonus_365',
+    title: 'Year-Round Birder',
+    description: 'Complete 365 Daily Bird Challenges.',
+    iconPath: 'assets/bird_icons/red_kite.webp',
+  ),
+  // -- Login Streak Stamps --
+  const Stamp(
+    id: 'first_login',
+    title: 'First Sighting',
+    description: 'Log into the app for the very first time.',
+    iconPath: 'assets/bird_icons/house_sparrow.webp',
+  ),
+  const Stamp(
+    id: 'login_streak_3',
+    title: 'Returning Flock',
+    description: 'Log in for 3 days in a row.',
+    iconPath: 'assets/bird_icons/gull.webp',
+  ),
+  const Stamp(
+    id: 'login_streak_7',
+    title: 'Weekly Wings',
+    description: 'Log in for 7 days in a row.',
+    iconPath: 'assets/bird_icons/lapwing.webp',
+  ),
   // -- Vocabulary / Scramble Stamps --
   const Stamp(
     id: 'scramble_master',

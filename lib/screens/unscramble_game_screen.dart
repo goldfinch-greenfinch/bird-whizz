@@ -5,9 +5,7 @@ import '../providers/quiz_provider.dart';
 import '../services/audio_service.dart';
 import '../widgets/navigation_utils.dart';
 import 'package:confetti/confetti.dart';
-import 'level_up_screen.dart';
-import 'character_evolve_screen.dart';
-import 'new_stamp_screen.dart';
+import 'result_screen.dart';
 
 class UnscrambleGameScreen extends StatefulWidget {
   final int minLength;
@@ -29,7 +27,7 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
   late ConfettiController _confettiController;
   Bird? _currentBird;
   List<String> _targetLetters = [];
-  List<String> _scrambledLetters = [];
+  List<String?> _scrambledLetters = [];
   List<String?> _userArrangement = [];
   int _score = 0;
   int _questionsAnswered = 0;
@@ -76,7 +74,7 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
 
   void _startNewRound() {
     if (_questionsAnswered >= _totalQuestions) {
-      _showResultDialog();
+      _navigateToResultScreen();
       return;
     }
 
@@ -91,12 +89,12 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
           .replaceAll('-', '');
 
       _targetLetters = word.split('');
-      _scrambledLetters = List.from(_targetLetters)..shuffle();
+      _scrambledLetters = List<String?>.from(_targetLetters)..shuffle();
       _userArrangement = List.filled(_targetLetters.length, null);
     });
   }
 
-  void _showResultDialog() {
+  void _navigateToResultScreen() {
     final provider = context.read<QuizProvider>();
     provider.saveWordGameStars(
       widget.title,
@@ -104,75 +102,9 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
       totalQuestions: _totalQuestions,
     );
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text(
-          'Level Complete!',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.deepPurple,
-          ),
-        ),
-        content: Text(
-          'You scored $_score out of $_totalQuestions!',
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 18),
-        ),
-        actions: [
-          Center(
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepPurpleAccent,
-                foregroundColor: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop(); // dismiss dialog
-
-                Widget? chainScreen;
-
-                if (provider.newlyUnlockedStamps.isNotEmpty) {
-                  chainScreen = NewStampScreen(
-                    stamps: List.from(provider.newlyUnlockedStamps),
-                  );
-                }
-
-                if (provider.hasEvolved) {
-                  chainScreen = CharacterEvolveScreen(
-                    oldStage: provider.oldEvolutionStage!,
-                    newStage: provider.newEvolutionStage!,
-                    nextScreen: chainScreen,
-                  );
-                }
-
-                if (provider.hasLeveledUp) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => LevelUpScreen(
-                        oldRank: provider.oldLevelTitle ?? 'Unknown',
-                        newRank: provider.newLevelTitle ?? 'Bird Wizard',
-                        nextScreen: chainScreen,
-                      ),
-                    ),
-                  );
-                } else if (chainScreen != null) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (_) => chainScreen!),
-                  );
-                } else {
-                  Navigator.of(context).pop(); // dismiss word game screen
-                }
-              },
-              child: const Text('Back to Menu'),
-            ),
-          ),
-        ],
-      ),
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const ResultScreen()),
     );
   }
 
@@ -193,7 +125,7 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
     // Remove the *first* instance of this letter from the scrambled pool
     final letterIndex = _scrambledLetters.indexOf(letter);
     if (letterIndex != -1) {
-      _scrambledLetters.removeAt(letterIndex);
+      _scrambledLetters[letterIndex] = null;
     }
   }
 
@@ -204,7 +136,12 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
     if (letter != null) {
       setState(() {
         _userArrangement[index] = null;
-        _scrambledLetters.add(letter);
+        final emptyIndex = _scrambledLetters.indexOf(null);
+        if (emptyIndex != -1) {
+          _scrambledLetters[emptyIndex] = letter;
+        } else {
+          _scrambledLetters.add(letter);
+        }
       });
     }
   }
@@ -355,6 +292,9 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
                             spacing: 12,
                             runSpacing: 12,
                             children: _scrambledLetters.map((letter) {
+                              if (letter == null) {
+                                return const SizedBox(width: 50, height: 60);
+                              }
                               return GestureDetector(
                                 onTap: () => _onLetterTapped(letter),
                                 child: _buildLetterTile(letter),

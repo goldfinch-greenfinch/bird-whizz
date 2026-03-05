@@ -20,33 +20,116 @@ class SubheadingItem extends AchievementItem {
 class AchievementsBookScreen extends StatefulWidget {
   const AchievementsBookScreen({super.key});
 
-  @override
-  State<AchievementsBookScreen> createState() => _AchievementsBookScreenState();
-}
-
-class _AchievementsBookScreenState extends State<AchievementsBookScreen> {
-  final PageController _pageController = PageController();
-  int _currentViewIndex = 0;
-  late List<List<AchievementItem>> _pages;
-  late int _totalViews;
-
-  @override
-  void initState() {
-    super.initState();
-    _pages = _buildPages();
-    // A spread has 2 pages (top and bottom)
-    _totalViews = (_pages.length / 2).ceil();
-    _pageController.addListener(() {
-      int next = _pageController.page?.round() ?? 0;
-      if (next != _currentViewIndex) {
-        setState(() {
-          _currentViewIndex = next;
-        });
-      }
-    });
+  static void showStampDialog(
+    BuildContext context,
+    Stamp stamp,
+    bool isUnlocked,
+  ) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          backgroundColor: const Color(0xFFF7F2E2),
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Icon
+                Container(
+                  height: 120,
+                  width: 120,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isUnlocked
+                          ? Colors.brown[800]!
+                          : Colors.brown[300]!.withValues(alpha: 0.5),
+                      width: 4,
+                    ),
+                    color: isUnlocked ? Colors.white : Colors.transparent,
+                    boxShadow: [
+                      if (isUnlocked)
+                        const BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 10,
+                          offset: Offset(0, 4),
+                        ),
+                    ],
+                  ),
+                  child: ClipOval(
+                    child: isUnlocked
+                        ? Image.asset(stamp.iconPath, fit: BoxFit.cover)
+                        : Opacity(
+                            opacity: 0.2, // Faint placeholder
+                            child: ColorFiltered(
+                              colorFilter: const ColorFilter.mode(
+                                Colors.brown,
+                                BlendMode.srcIn,
+                              ),
+                              child: Image.asset(
+                                stamp.iconPath,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Title
+                Text(
+                  stamp.title,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.brown[900],
+                  ),
+                ),
+                const SizedBox(height: 12),
+                // Subtitle / Description
+                Text(
+                  isUnlocked
+                      ? stamp.description
+                      : 'Locked Achievement.\nKeep playing to discover how to earn this stamp!',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontStyle: FontStyle.italic,
+                    color: Colors.brown[800],
+                  ),
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.brown[800],
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
+                  ),
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text(
+                    'Close',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
-  List<List<AchievementItem>> _buildPages() {
+  static List<List<AchievementItem>> buildPages() {
     List<List<AchievementItem>> pages = [];
 
     Stamp getStamp(String id) => gameStamps.firstWhere((s) => s.id == id);
@@ -159,90 +242,23 @@ class _AchievementsBookScreenState extends State<AchievementsBookScreen> {
     return pages;
   }
 
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
+  // --- Extracted Reusable Book UI ---
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Field Guide',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.2,
-          ),
-        ),
-        backgroundColor: Colors.brown[800],
-        iconTheme: const IconThemeData(color: Colors.white),
-        elevation: 0,
-      ),
-      backgroundColor: Colors.brown[900],
-      body: Stack(
-        children: [
-          // Background Generated Image
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/rustic_wood_bg.png',
-              fit: BoxFit.cover,
-            ),
-          ),
-          SafeArea(
-            child: Column(
-              children: [
-                const SizedBox(height: 10),
-                Text(
-                  'Spread ${_currentViewIndex + 1} of $_totalViews (Swipe Up/Down)',
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: PageView.builder(
-                      controller: _pageController,
-                      scrollDirection:
-                          Axis.vertical, // Calendar flip horizontally
-                      itemCount: _totalViews,
-                      itemBuilder: (context, index) {
-                        return _buildBookSpread(index);
-                      },
-                    ),
-                  ),
-                ),
-                // Indicator Arrow
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.keyboard_double_arrow_up,
-                    color: Colors.white.withValues(alpha: 0.5),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBookSpread(int viewIndex) {
+  static Widget buildBookSpread(
+    BuildContext context,
+    int viewIndex,
+    List<List<AchievementItem>> pages, {
+    Widget Function(BuildContext context, Stamp stamp, bool isUnlocked)?
+    stampBuilder,
+  }) {
     int topPageIndex = viewIndex * 2;
     int bottomPageIndex = topPageIndex + 1;
 
-    List<AchievementItem> topPageItems = topPageIndex < _pages.length
-        ? _pages[topPageIndex]
+    List<AchievementItem> topPageItems = topPageIndex < pages.length
+        ? pages[topPageIndex]
         : [];
-    List<AchievementItem> bottomPageItems = bottomPageIndex < _pages.length
-        ? _pages[bottomPageIndex]
+    List<AchievementItem> bottomPageItems = bottomPageIndex < pages.length
+        ? pages[bottomPageIndex]
         : [];
 
     return RepaintBoundary(
@@ -268,9 +284,23 @@ class _AchievementsBookScreenState extends State<AchievementsBookScreen> {
             Column(
               children: [
                 // Top Page (flips away upwards)
-                Expanded(child: _buildPage(topPageItems, isTopPage: true)),
+                Expanded(
+                  child: buildPage(
+                    context,
+                    topPageItems,
+                    isTopPage: true,
+                    stampBuilder: stampBuilder,
+                  ),
+                ),
                 // Bottom Page (flips in from below)
-                Expanded(child: _buildPage(bottomPageItems, isTopPage: false)),
+                Expanded(
+                  child: buildPage(
+                    context,
+                    bottomPageItems,
+                    isTopPage: false,
+                    stampBuilder: stampBuilder,
+                  ),
+                ),
               ],
             ),
             // Middle Spiral seam overlay!
@@ -292,12 +322,15 @@ class _AchievementsBookScreenState extends State<AchievementsBookScreen> {
     );
   }
 
-  Widget _buildPage(
+  static Widget buildPage(
+    BuildContext context,
     List<AchievementItem> pageItems, {
     required bool isTopPage,
+    Widget Function(BuildContext context, Stamp stamp, bool isUnlocked)?
+    stampBuilder,
   }) {
     if (pageItems.isNotEmpty && pageItems.first is TitlePageItem) {
-      return _buildTitlePageDecoration(isTopPage: isTopPage);
+      return buildTitlePageDecoration(context, isTopPage: isTopPage);
     }
 
     return Container(
@@ -323,15 +356,34 @@ class _AchievementsBookScreenState extends State<AchievementsBookScreen> {
         ),
         child: Column(
           children: [
-            Expanded(child: _buildRow(pageItems, 0, 1)),
-            Expanded(child: _buildRow(pageItems, 2, 3)),
+            Expanded(
+              child: buildRow(
+                context,
+                pageItems,
+                0,
+                1,
+                stampBuilder: stampBuilder,
+              ),
+            ),
+            Expanded(
+              child: buildRow(
+                context,
+                pageItems,
+                2,
+                3,
+                stampBuilder: stampBuilder,
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTitlePageDecoration({required bool isTopPage}) {
+  static Widget buildTitlePageDecoration(
+    BuildContext context, {
+    required bool isTopPage,
+  }) {
     final provider = Provider.of<QuizProvider>(context);
     final totalStamps = gameStamps.length;
     final unlockedStamps = provider.unlockedStamps.length;
@@ -433,30 +485,59 @@ class _AchievementsBookScreenState extends State<AchievementsBookScreen> {
     );
   }
 
-  Widget _buildRow(List<AchievementItem> pageItems, int index1, int index2) {
+  static Widget buildRow(
+    BuildContext context,
+    List<AchievementItem> pageItems,
+    int index1,
+    int index2, {
+    Widget Function(BuildContext context, Stamp stamp, bool isUnlocked)?
+    stampBuilder,
+  }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Expanded(child: _buildSlot(pageItems, index1)),
-        Expanded(child: _buildSlot(pageItems, index2)),
+        Expanded(
+          child: buildSlot(
+            context,
+            pageItems,
+            index1,
+            stampBuilder: stampBuilder,
+          ),
+        ),
+        Expanded(
+          child: buildSlot(
+            context,
+            pageItems,
+            index2,
+            stampBuilder: stampBuilder,
+          ),
+        ),
       ],
     );
   }
 
-  Widget _buildSlot(List<AchievementItem> pageItems, int index) {
+  static Widget buildSlot(
+    BuildContext context,
+    List<AchievementItem> pageItems,
+    int index, {
+    Widget Function(BuildContext context, Stamp stamp, bool isUnlocked)?
+    stampBuilder,
+  }) {
     if (index >= pageItems.length) {
       return const SizedBox();
     }
     final item = pageItems[index];
     if (item is SubheadingItem) {
-      return _buildSubheading(item);
+      return buildSubheading(context, item);
     } else if (item is StampItem) {
-      return _buildStamp(item.stamp);
+      return stampBuilder != null
+          ? stampBuilder(context, item.stamp, true)
+          : buildStamp(context, item.stamp);
     }
     return const SizedBox();
   }
 
-  Widget _buildSubheading(SubheadingItem item) {
+  static Widget buildSubheading(BuildContext context, SubheadingItem item) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 4.0),
       alignment: Alignment.center,
@@ -482,13 +563,13 @@ class _AchievementsBookScreenState extends State<AchievementsBookScreen> {
     );
   }
 
-  Widget _buildStamp(Stamp stamp) {
+  static Widget buildStamp(BuildContext context, Stamp stamp) {
     final provider = Provider.of<QuizProvider>(context);
     final isUnlocked = provider.unlockedStamps.contains(stamp.id);
 
     return GestureDetector(
       onTap: () {
-        _showStampDialog(stamp, isUnlocked);
+        AchievementsBookScreen.showStampDialog(context, stamp, isUnlocked);
       },
       child: Container(
         padding: const EdgeInsets.all(4.0),
@@ -553,108 +634,108 @@ class _AchievementsBookScreenState extends State<AchievementsBookScreen> {
     );
   }
 
-  void _showStampDialog(Stamp stamp, bool isUnlocked) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+  @override
+  State<AchievementsBookScreen> createState() => _AchievementsBookScreenState();
+}
+
+class _AchievementsBookScreenState extends State<AchievementsBookScreen> {
+  final PageController _pageController = PageController();
+  int _currentViewIndex = 0;
+  late List<List<AchievementItem>> _pages;
+  late int _totalViews;
+
+  @override
+  void initState() {
+    super.initState();
+    _pages = AchievementsBookScreen.buildPages();
+    // A spread has 2 pages (top and bottom)
+    _totalViews = (_pages.length / 2).ceil();
+    _pageController.addListener(() {
+      int next = _pageController.page?.round() ?? 0;
+      if (next != _currentViewIndex) {
+        setState(() {
+          _currentViewIndex = next;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Field Guide',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
           ),
-          backgroundColor: const Color(0xFFF7F2E2),
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
+        ),
+        backgroundColor: Colors.brown[800],
+        iconTheme: const IconThemeData(color: Colors.white),
+        elevation: 0,
+      ),
+      backgroundColor: Colors.brown[900],
+      body: Stack(
+        children: [
+          // Background Generated Image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/rustic_wood_bg.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          SafeArea(
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               children: [
-                // Icon
-                Container(
-                  height: 120,
-                  width: 120,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: isUnlocked
-                          ? Colors.brown[800]!
-                          : Colors.brown[300]!.withValues(alpha: 0.5),
-                      width: 4,
-                    ),
-                    color: isUnlocked ? Colors.white : Colors.transparent,
-                    boxShadow: [
-                      if (isUnlocked)
-                        const BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 10,
-                          offset: Offset(0, 4),
-                        ),
-                    ],
-                  ),
-                  child: ClipOval(
-                    child: isUnlocked
-                        ? Image.asset(stamp.iconPath, fit: BoxFit.cover)
-                        : Opacity(
-                            opacity: 0.2, // Faint placeholder
-                            child: ColorFiltered(
-                              colorFilter: const ColorFilter.mode(
-                                Colors.brown,
-                                BlendMode.srcIn,
-                              ),
-                              child: Image.asset(
-                                stamp.iconPath,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                // Title
+                const SizedBox(height: 10),
                 Text(
-                  stamp.title,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 22,
+                  'Spread ${_currentViewIndex + 1} of $_totalViews (Swipe Up/Down)',
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 13,
                     fontWeight: FontWeight.bold,
-                    color: Colors.brown[900],
                   ),
                 ),
-                const SizedBox(height: 12),
-                // Subtitle / Description
-                Text(
-                  isUnlocked
-                      ? stamp.description
-                      : 'Locked Achievement.\nKeep playing to discover how to earn this stamp!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.brown[800],
+                const SizedBox(height: 10),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: PageView.builder(
+                      controller: _pageController,
+                      scrollDirection:
+                          Axis.vertical, // Calendar flip horizontally
+                      itemCount: _totalViews,
+                      itemBuilder: (context, index) {
+                        return AchievementsBookScreen.buildBookSpread(
+                          context,
+                          index,
+                          _pages,
+                        );
+                      },
+                    ),
                   ),
                 ),
-                const SizedBox(height: 24),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.brown[800],
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 12,
-                    ),
-                  ),
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text(
-                    'Close',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                // Indicator Arrow
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.keyboard_double_arrow_up,
+                    color: Colors.white.withValues(alpha: 0.5),
                   ),
                 ),
               ],
             ),
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 }

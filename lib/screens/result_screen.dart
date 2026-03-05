@@ -124,7 +124,7 @@ class _ResultScreenState extends State<ResultScreen> {
                           _buildHeaderObject(),
                           const SizedBox(height: 20),
                           Text(
-                            'Quiz Finished!',
+                            'Level Complete!',
                             style: TextStyle(
                               fontSize: 32,
                               fontWeight: FontWeight.bold,

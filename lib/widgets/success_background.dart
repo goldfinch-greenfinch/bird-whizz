@@ -30,13 +30,22 @@ class _SuccessBackgroundState extends State<SuccessBackground>
   }
 
   Particle _generateParticle() {
+    final colors = const [
+      Colors.yellowAccent,
+      Colors.lightGreenAccent,
+      Color(0xFFE6EE9C), // Lime
+      Color(0xFFFFE082), // Amber
+    ];
+
     return Particle(
       x: _random.nextDouble(), // 0.0 to 1.0 (screen width)
       y: _random.nextDouble(), // 0.0 to 1.0 (screen height)
-      speed: 0.1 + _random.nextDouble() * 0.2,
-      size: 5.0 + _random.nextDouble() * 10.0,
+      speed: 0.05 + _random.nextDouble() * 0.15, // Slightly slower speed
+      size: 2.0 + _random.nextDouble() * 5.0, // Slightly smaller size
       angle: _random.nextDouble() * 2 * pi,
-      color: Colors.white.withValues(alpha: 0.1 + _random.nextDouble() * 0.3),
+      color: colors[_random.nextInt(colors.length)],
+      pulseOffset: _random.nextDouble() * 2 * pi, // Random phase
+      maxAlpha: 0.3 + _random.nextDouble() * 0.7, // Random peak brightness
     );
   }
 
@@ -56,7 +65,8 @@ class _SuccessBackgroundState extends State<SuccessBackground>
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Color(0xFF6A11CB), Color(0xFF2575FC)],
+              // Dark twilight forest / midnight blue nature gradient
+              colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
             ),
           ),
         ),
@@ -84,6 +94,8 @@ class Particle {
   double size;
   double angle;
   Color color;
+  double pulseOffset;
+  double maxAlpha;
 
   Particle({
     required this.x,
@@ -92,6 +104,8 @@ class Particle {
     required this.size,
     required this.angle,
     required this.color,
+    required this.pulseOffset,
+    required this.maxAlpha,
   });
 }
 
@@ -109,13 +123,28 @@ class ParticlePainter extends CustomPainter {
       // Move particle up
       particle.y -= particle.speed * 0.01;
 
+      // Add slight horizontal drift for floating effect
+      particle.x += sin(animationValue * 2 * pi + particle.pulseOffset) * 0.001;
+
       // Reset if goes off top
       if (particle.y < -0.1) {
         particle.y = 1.1;
         particle.x = Random().nextDouble();
       }
 
-      paint.color = particle.color;
+      // Pulsing opacity effect using sine wave based on animation value
+      // animationValue goes from 0.0 to 1.0
+      double pulse =
+          (sin((animationValue * 2 * pi * 3.0) + particle.pulseOffset) + 1.0) /
+          2.0;
+      double currentAlpha = 0.1 + (pulse * particle.maxAlpha);
+      currentAlpha = currentAlpha.clamp(0.0, 1.0);
+
+      paint.color = particle.color.withValues(alpha: currentAlpha);
+
+      // Subtle glow effect
+      paint.maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.0);
+
       canvas.drawCircle(
         Offset(particle.x * size.width, particle.y * size.height),
         particle.size,

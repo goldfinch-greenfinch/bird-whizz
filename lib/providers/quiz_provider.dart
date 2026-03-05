@@ -40,6 +40,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
   int _score = 0;
   int? _selectedAnswerIndex;
   bool _isAnswerProcessing = false;
+  int? _wordGameTotalQuestions;
 
   // Initialize SharedPreferences
   QuizProvider() {
@@ -738,6 +739,11 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     int totalQuestions = 10,
   }) {
     if (_currentProfile == null) return;
+
+    // Support using ResultScreen
+    _score = score;
+    _wordGameTotalQuestions = totalQuestions;
+
     int stars = 0;
     if (totalQuestions > 0) {
       double pct = score / totalQuestions;
@@ -964,8 +970,10 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
   Level? get currentLevel => _currentLevel;
 
   bool get isAnswerProcessing => _isAnswerProcessing;
-  int get totalQuestions => _activeQuestions
-      .length; // Exposed for UI to know session length (should always be 10)
+  int get totalQuestions =>
+      _wordGameTotalQuestions ??
+      _activeQuestions
+          .length; // Exposed for UI to know session length (should always be 10)
 
   int getStarsForLevel(String levelId) {
     return _levelStars[levelId] ?? 0;
@@ -1042,6 +1050,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     _score = 0;
     _selectedAnswerIndex = null;
     _isAnswerProcessing = false;
+    _wordGameTotalQuestions = null;
     _oldLevelTitle = null; // Clear level up state on new level
     _newLevelTitle = null;
     _oldEvolutionStage = null;
@@ -1181,6 +1190,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     _score = 0;
     _selectedAnswerIndex = null;
     _isAnswerProcessing = false;
+    _wordGameTotalQuestions = null;
     notifyListeners();
   }
 }

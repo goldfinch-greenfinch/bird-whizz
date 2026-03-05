@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:confetti/confetti.dart';
 import '../providers/quiz_provider.dart';
 import '../widgets/navigation_utils.dart';
-import '../widgets/success_background.dart';
+import '../widgets/particle_overlay.dart';
 
 import '../services/audio_service.dart';
 
@@ -23,134 +24,208 @@ class LevelUpScreen extends StatefulWidget {
 }
 
 class _LevelUpScreenState extends State<LevelUpScreen> {
+  late ConfettiController _confettiController;
+
   @override
   void initState() {
     super.initState();
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 3),
+    );
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final audioService = context.read<AudioService>();
       audioService.playMenuMusic();
       audioService.playLevelUpSound();
+      _confettiController.play();
     });
+  }
+
+  @override
+  void dispose() {
+    _confettiController.dispose();
+    super.dispose();
+  }
+
+  Path _drawFeather(Size size) {
+    final path = Path();
+    path.moveTo(size.width / 2, 0);
+    path.quadraticBezierTo(
+      size.width,
+      size.height / 2,
+      size.width / 2,
+      size.height,
+    );
+    path.quadraticBezierTo(0, size.height / 2, size.width / 2, 0);
+    path.close();
+    return path;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.teal[50], // Match old finish screen background
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: NavigationUtils.buildBackButton(context, color: Colors.white),
+        leading: NavigationUtils.buildBackButton(
+          context,
+          color: Colors.teal[900]!,
+        ),
         actions: [
-          NavigationUtils.buildProfileMenu(context, color: Colors.white),
+          NavigationUtils.buildProfileMenu(context, color: Colors.teal[900]!),
         ],
       ),
-      body: SuccessBackground(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(
-                  Icons.workspace_premium,
-                  size: 100,
-                  color: Colors.amber,
-                ),
-                const SizedBox(height: 30),
-                Text(
-                  'CONGRATULATIONS!',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.5,
+      body: Stack(
+        children: [
+          const ParticleOverlay(
+            numberOfParticles: 60,
+            colors: [
+              Colors.red,
+              Colors.blue,
+              Colors.green,
+              Colors.yellow,
+              Colors.purple,
+              Colors.orange,
+            ],
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.workspace_premium,
+                    size: 100,
+                    color: Colors.amber,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 40),
-                const Text(
-                  'You have leveled up from',
-                  style: TextStyle(color: Colors.white70, fontSize: 18),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  widget.oldRank,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.w500,
+                  const SizedBox(height: 30),
+                  Text(
+                    'CONGRATULATIONS!',
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      color: Colors.teal[900],
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.5,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                ),
-                const SizedBox(height: 20),
-                const Icon(
-                  Icons.arrow_downward,
-                  color: Colors.white54,
-                  size: 32,
-                ),
-                const SizedBox(height: 20),
-                const Text(
-                  'To',
-                  style: TextStyle(color: Colors.white70, fontSize: 18),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  widget.newRank,
-                  style: const TextStyle(
-                    color: Colors.amberAccent,
-                    fontSize: 36,
-                    fontWeight: FontWeight.bold,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 10.0,
-                        color: Colors.black26,
-                        offset: Offset(2, 2),
-                      ),
-                    ],
+                  const SizedBox(height: 40),
+                  Text(
+                    'You have leveled up from',
+                    style: TextStyle(color: Colors.teal[700], fontSize: 18),
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 60),
-                ElevatedButton(
-                  onPressed: () {
-                    // Consume Level Up so we don't show it again
-                    final provider = Provider.of<QuizProvider>(
-                      context,
-                      listen: false,
-                    );
-                    provider.consumeLevelUp();
-
-                    // Navigate to the next appropriate screen
-                    if (widget.nextScreen != null) {
-                      Navigator.pushReplacement(
+                  const SizedBox(height: 10),
+                  Text(
+                    widget.oldRank,
+                    style: TextStyle(
+                      color: Colors.teal[800],
+                      fontSize: 24,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Icon(Icons.arrow_downward, color: Colors.teal[400], size: 32),
+                  const SizedBox(height: 20),
+                  Text(
+                    'To',
+                    style: TextStyle(color: Colors.teal[700], fontSize: 18),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    widget.newRank,
+                    style: TextStyle(
+                      color: Colors.amber[700],
+                      fontSize: 36,
+                      fontWeight: FontWeight.bold,
+                      shadows: const [
+                        Shadow(
+                          blurRadius: 10.0,
+                          color: Colors.black12,
+                          offset: Offset(2, 2),
+                        ),
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 60),
+                  ElevatedButton(
+                    onPressed: () {
+                      final provider = Provider.of<QuizProvider>(
                         context,
-                        MaterialPageRoute(builder: (_) => widget.nextScreen!),
+                        listen: false,
                       );
-                    } else {
-                      provider.resetQuiz();
-                      Navigator.pop(context);
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: const Color(0xFF2575FC),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 40,
-                      vertical: 16,
+                      provider.consumeLevelUp();
+
+                      if (widget.nextScreen != null) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (_) => widget.nextScreen!),
+                        );
+                      } else {
+                        provider.resetQuiz();
+                        Navigator.pop(context);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.teal,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 40,
+                        vertical: 16,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      elevation: 5,
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+                    child: const Text(
+                      'CONTINUE',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    elevation: 5,
                   ),
-                  child: const Text(
-                    'CONTINUE',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ),
+                ],
+              ),
+            ),
+          ),
+          // Regular Confetti
+          Align(
+            alignment: Alignment.topCenter,
+            child: ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirectionality: BlastDirectionality.explosive,
+              shouldLoop: false,
+              colors: const [
+                Colors.green,
+                Colors.blue,
+                Colors.pink,
+                Colors.orange,
+                Colors.purple,
               ],
             ),
           ),
-        ),
+          // Feather Confetti
+          Align(
+            alignment: Alignment.topCenter,
+            child: ConfettiWidget(
+              confettiController: _confettiController,
+              blastDirectionality: BlastDirectionality.explosive,
+              shouldLoop: false,
+              createParticlePath: _drawFeather,
+              colors: const [
+                Colors.white,
+                Colors.grey,
+                Colors.brown,
+                Color(0xFF8D6E63), // Brown
+                Color(0xFFFFCC80), // Light Orange/Cream
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

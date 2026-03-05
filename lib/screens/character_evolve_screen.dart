@@ -73,7 +73,7 @@ class _CharacterEvolveScreenState extends State<CharacterEvolveScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.teal[800],
+      backgroundColor: Colors.teal[800], // Fallback color
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,

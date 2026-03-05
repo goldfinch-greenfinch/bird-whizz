@@ -1,3 +1,10 @@
+References
+
+Photography andf questions from Ivy Waring
+
+Bird photos from Nuthatch (see scripts for full reference)
+
+
 Audio Assets Documentation
 
 All audio files in this project are sourced from https://freesound.org/.
@@ -124,3 +131,5 @@ Photo by <a href="https://unsplash.com/@zmachacek?utm_source=unsplash&utm_medium
 Violetear hummingbird
 Photo by <a href="https://unsplash.com/@licole?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Chris Charles</a> on <a href="https://unsplash.com/photos/blue-and-green-bird-on-top-of-brown-branch-during-daytime-9APFPoNb9iw?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a>
       
+
+Photography also from Ivy Waring

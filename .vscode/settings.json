@@ -68,5 +68,6 @@
         "java -version",
         "cls",
         "clear"
-    ]
+    ],
+    "cmake.sourceDirectory": "C:/Users/adamw/.gemini/antigravity/scratch/bird_quiz/linux/runner"
 }

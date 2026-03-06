@@ -9,6 +9,7 @@ import '../services/audio_service.dart';
 import 'bird_id_selection_screen.dart';
 import 'word_games_selection_screen.dart';
 import 'quiz_screen.dart';
+import 'endless_quiz_screen.dart';
 
 class MainSelectionScreen extends StatefulWidget {
   const MainSelectionScreen({super.key});
@@ -244,6 +245,27 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (_) => const WordGamesSelectionScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(height: 24),
+                      _FeatureCard(
+                        title: 'Endless Mode',
+                        icon: Icons.all_inclusive,
+                        color: Colors.redAccent,
+                        description:
+                            'Survive as long as you can with 3 strikes!',
+                        onTap: () {
+                          final provider = Provider.of<QuizProvider>(
+                            context,
+                            listen: false,
+                          );
+                          provider.startEndlessMode();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const EndlessQuizScreen(),
                             ),
                           );
                         },

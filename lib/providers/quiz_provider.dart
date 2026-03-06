@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:async';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:uuid/uuid.dart'; // Removed
@@ -21,6 +22,7 @@ import '../models/daily_question.dart';
 import '../data/daily_questions_data.dart';
 
 class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
+  final Random _random = Random();
   List<UserProfile> _profiles = [];
   UserProfile? _currentProfile;
   DateTime? _sessionStartTime;
@@ -45,6 +47,14 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
   int? _selectedAnswerIndex;
   bool _isAnswerProcessing = false;
   int? _wordGameTotalQuestions;
+
+  // Endless Mode State
+  bool _isEndlessMode = false;
+  int _endlessStreak = 0;
+  int _endlessStrikes = 0;
+  int _endlessQuestionCount = 0;
+  Question? _endlessCurrentQuestion;
+  int _lastEndlessStreak = 0;
 
   // Initialize SharedPreferences
   QuizProvider() {
@@ -809,6 +819,25 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
       newlyUnlocked = true;
     }
 
+    // --- Endless Mode Streak Stamps ---
+    final int endlessBest = endlessHighScore;
+    if (!currentStamps.contains('endless_streak_10') && endlessBest >= 10) {
+      _unlockStamp('endless_streak_10', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('endless_streak_20') && endlessBest >= 20) {
+      _unlockStamp('endless_streak_20', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('endless_streak_50') && endlessBest >= 50) {
+      _unlockStamp('endless_streak_50', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('endless_streak_100') && endlessBest >= 100) {
+      _unlockStamp('endless_streak_100', currentStamps);
+      newlyUnlocked = true;
+    }
+
     if (newlyUnlocked) {
       int index = _profiles.indexWhere((p) => p.id == _currentProfile!.id);
       if (index != -1) {
@@ -835,6 +864,9 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
   int get unscrambleHighScore =>
       _currentProfile?.wordGameHighScores['unscramble'] ?? 0;
 
+  int get endlessHighScore =>
+      _currentProfile?.wordGameHighScores['endless'] ?? 0;
+
   void updateUnscrambleHighScore(int score) {
     if (_currentProfile == null) return;
     if (score > unscrambleHighScore) {
@@ -842,6 +874,17 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
         _currentProfile?.wordGameHighScores ?? {},
       );
       newHighScores['unscramble'] = score;
+      _updateCurrentProfile(wordGameHighScores: newHighScores);
+    }
+  }
+
+  void updateEndlessHighScore(int streak) {
+    if (_currentProfile == null) return;
+    if (streak > endlessHighScore) {
+      final newHighScores = Map<String, int>.from(
+        _currentProfile?.wordGameHighScores ?? {},
+      );
+      newHighScores['endless'] = streak;
       _updateCurrentProfile(wordGameHighScores: newHighScores);
     }
   }
@@ -1102,6 +1145,17 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
 
   // --- Quiz Logic ---
 
+  // Endless Mode public getters
+  bool get isEndlessMode => _isEndlessMode;
+  int get endlessStreak => _endlessStreak;
+  int get endlessStrikes => _endlessStrikes;
+  int get lastEndlessStreak => _lastEndlessStreak;
+  Question get endlessCurrentQuestion {
+    if (_endlessCurrentQuestion != null) return _endlessCurrentQuestion!;
+    // Fallback to standard currentQuestion if something goes wrong
+    return currentQuestion;
+  }
+
   int get currentQuestionIndex => _currentQuestionIndex;
   int get score => _score;
   int? get selectedAnswerIndex => _selectedAnswerIndex;
@@ -1138,11 +1192,16 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
   }
 
   bool get isQuizFinished {
+    if (_isEndlessMode) return false;
     if (_currentLevel == null) return true;
     return _currentQuestionIndex >= _activeQuestions.length;
   }
 
   Question get currentQuestion {
+    if (_isEndlessMode && _endlessCurrentQuestion != null) {
+      return _endlessCurrentQuestion!;
+    }
+
     if (_currentLevel == null || _activeQuestions.isEmpty) {
       // Fallback
       return allLevels.first.questions.first;
@@ -1180,6 +1239,74 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
 
     _currentCategory = 'bird_id';
     startLevel(birdIdLevel, isBirdIdMode: true);
+  }
+
+  // --- Endless Mode Logic ---
+
+  void startEndlessMode() {
+    _isEndlessMode = true;
+    _endlessStreak = 0;
+    _endlessStrikes = 0;
+    _endlessQuestionCount = 0;
+    _lastEndlessStreak = 0;
+    _selectedAnswerIndex = null;
+    _isAnswerProcessing = false;
+    _currentCategory = 'endless';
+    _currentLevel = null;
+    _activeQuestions = [];
+    _currentQuestionIndex = 0;
+    _score = 0;
+    _wordGameTotalQuestions = null;
+
+    _endlessCurrentQuestion = _generateNextEndlessQuestion();
+    notifyListeners();
+  }
+
+  Question _generateNextEndlessQuestion() {
+    _endlessQuestionCount++;
+
+    // Simple ramp-up: as question count increases, bias towards later levels.
+    final allLevels = _allLevelsGlobally;
+    if (allLevels.isEmpty) {
+      return _allLevelsGlobally.first.questions.first;
+    }
+
+    final int totalLevels = allLevels.length;
+    final double progress =
+        (_endlessQuestionCount / 50).clamp(0.0, 1.0); // 0..1 over 50 Qs
+
+    final int minIndex = (progress * totalLevels * 0.4).toInt().clamp(
+          0,
+          totalLevels - 1,
+        );
+    final int maxIndex = (progress * totalLevels).toInt().clamp(
+          minIndex,
+          totalLevels - 1,
+        );
+
+    final int levelIndex =
+        minIndex + _random.nextInt((maxIndex - minIndex) + 1);
+    final Level level = allLevels[levelIndex];
+
+    if (level.questions.isEmpty) {
+      return allLevels.first.questions.first;
+    }
+
+    final Question baseQuestion =
+        level.questions[_random.nextInt(level.questions.length)];
+
+    final originalCorrectOption = baseQuestion.options[baseQuestion
+        .correctOptionIndex];
+    final scrambledOptions = List<String>.from(baseQuestion.options)..shuffle();
+    final newCorrectIndex = scrambledOptions.indexOf(originalCorrectOption);
+
+    return Question(
+      id: baseQuestion.id,
+      text: baseQuestion.text,
+      imagePath: baseQuestion.imagePath,
+      options: scrambledOptions,
+      correctOptionIndex: newCorrectIndex,
+    );
   }
 
   void startLevel(Level level, {bool isBirdIdMode = false}) {
@@ -1223,6 +1350,10 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
   }
 
   void selectAnswer(int index) {
+    if (_isEndlessMode) {
+      _selectEndlessAnswer(index);
+      return;
+    }
     if (_isAnswerProcessing || _selectedAnswerIndex != null) return;
 
     _selectedAnswerIndex = index;
@@ -1255,7 +1386,59 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     });
   }
 
+  void _selectEndlessAnswer(int index) {
+    if (_isAnswerProcessing || _selectedAnswerIndex != null) return;
+
+    _selectedAnswerIndex = index;
+    _isAnswerProcessing = true;
+
+    if (_endlessCurrentQuestion != null &&
+        _selectedAnswerIndex == _endlessCurrentQuestion!.correctOptionIndex) {
+      _endlessStreak++;
+
+      // Update global totals under a dedicated 'endless' category key
+      Map<String, int> newCategoryCorrect = Map<String, int>.from(
+        _currentProfile?.categoryCorrectAnswers ?? {},
+      );
+
+      const String categoryKey = 'endless';
+
+      newCategoryCorrect[categoryKey] =
+          (newCategoryCorrect[categoryKey] ?? 0) + 1;
+
+      _updateCurrentProfile(
+        totalCorrectAnswers: totalCorrectAnswers + 1,
+        categoryCorrectAnswers: newCategoryCorrect,
+      );
+    } else {
+      _endlessStrikes++;
+    }
+
+    notifyListeners();
+
+    Timer(const Duration(seconds: 1), () {
+      if (_isEndlessMode || _endlessStrikes >= 3) {
+        nextQuestion();
+      }
+    });
+  }
+
   void nextQuestion() {
+    if (_isEndlessMode) {
+      if (_endlessStrikes >= 3) {
+        _finishEndlessRun();
+        notifyListeners();
+        return;
+      }
+
+      _currentQuestionIndex++;
+      _selectedAnswerIndex = null;
+      _isAnswerProcessing = false;
+      _endlessCurrentQuestion = _generateNextEndlessQuestion();
+      notifyListeners();
+      return;
+    }
+
     if (_currentLevel != null) {
       _currentQuestionIndex++;
       _selectedAnswerIndex = null;
@@ -1381,6 +1564,65 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     _selectedAnswerIndex = null;
     _isAnswerProcessing = false;
     _wordGameTotalQuestions = null;
+    _isEndlessMode = false;
+    _endlessStreak = 0;
+    _endlessStrikes = 0;
+    _endlessQuestionCount = 0;
+    _endlessCurrentQuestion = null;
+    _lastEndlessStreak = 0;
     notifyListeners();
+  }
+
+  void _finishEndlessRun() {
+    _lastEndlessStreak = _endlessStreak;
+
+    final int previousHigh = endlessHighScore;
+    updateEndlessHighScore(_endlessStreak);
+    final int newHigh = endlessHighScore;
+
+    // Map best endless streak to stars
+    int starsForStreak(int streak) {
+      if (streak >= 50) return 3;
+      if (streak >= 20) return 2;
+      if (streak >= 10) return 1;
+      return 0;
+    }
+
+    final String levelId = 'endless_mode';
+    final int previousStars = _levelStars[levelId] ?? 0;
+    final int previousBestStars = starsForStreak(previousHigh);
+    final int newBestStars = starsForStreak(newHigh);
+
+    int effectiveOldStars = previousStars > previousBestStars
+        ? previousStars
+        : previousBestStars;
+    int effectiveNewStars = newBestStars;
+
+    if (effectiveNewStars > effectiveOldStars) {
+      int oldTotalStars = totalStars;
+      String oldTitle = _getStatusTitleForStars(oldTotalStars);
+      int oldEvo = getEvolutionStageForStars(oldTotalStars);
+
+      final newStarsMap = Map<String, int>.from(_levelStars);
+      newStarsMap[levelId] = effectiveNewStars;
+      _updateCurrentProfile(levelStars: newStarsMap);
+
+      int newTotalStars = totalStars;
+      String newTitle = _getStatusTitleForStars(newTotalStars);
+      int newEvo = getEvolutionStageForStars(newTotalStars);
+
+      if (newTitle != oldTitle) {
+        _oldLevelTitle = oldTitle;
+        _newLevelTitle = newTitle;
+      }
+      if (newEvo > oldEvo) {
+        _oldEvolutionStage = oldEvo;
+        _newEvolutionStage = newEvo;
+      }
+    }
+
+    _isEndlessMode = false;
+    _selectedAnswerIndex = null;
+    _isAnswerProcessing = false;
   }
 }

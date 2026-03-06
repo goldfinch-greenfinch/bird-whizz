@@ -435,4 +435,29 @@ final List<Stamp> gameStamps = [
     description: 'Unscramble all words in the Scramble Section.',
     iconPath: 'assets/bird_icons/jackdaw.webp',
   ),
+  // -- Endless Mode Stamps --
+  const Stamp(
+    id: 'endless_streak_10',
+    title: 'Endless Hatchling',
+    description: 'Reach a streak of 10 in Endless Mode.',
+    iconPath: 'assets/bird_icons/robin.webp',
+  ),
+  const Stamp(
+    id: 'endless_streak_20',
+    title: 'Endless Glider',
+    description: 'Reach a streak of 20 in Endless Mode.',
+    iconPath: 'assets/bird_icons/jay.webp',
+  ),
+  const Stamp(
+    id: 'endless_streak_50',
+    title: 'Endless Soarer',
+    description: 'Reach a streak of 50 in Endless Mode.',
+    iconPath: 'assets/bird_icons/barn_owl.webp',
+  ),
+  const Stamp(
+    id: 'endless_streak_100',
+    title: 'Endless Legend',
+    description: 'Answer 100 Endless Mode questions in a row.',
+    iconPath: 'assets/bird_icons/red_kite.webp',
+  ),
 ];

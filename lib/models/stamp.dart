@@ -460,4 +460,23 @@ final List<Stamp> gameStamps = [
     description: 'Answer 100 Endless Mode questions in a row.',
     iconPath: 'assets/bird_icons/red_kite.webp',
   ),
+  // -- Rescue the Bird Stamps --
+  const Stamp(
+    id: 'rescue_rookie',
+    title: 'Rescue Rookie',
+    description: 'Rescue your very first bird from its egg.',
+    iconPath: 'assets/bird_icons/robin.webp',
+  ),
+  const Stamp(
+    id: 'rescue_ranger',
+    title: 'Rescue Ranger',
+    description: 'Rescue 10 birds in the Rescue the Bird game.',
+    iconPath: 'assets/bird_icons/greenfinch.webp',
+  ),
+  const Stamp(
+    id: 'rescue_hero',
+    title: 'Rescue Hero',
+    description: 'Rescue 25 birds in the Rescue the Bird game.',
+    iconPath: 'assets/bird_icons/barn_owl.webp',
+  ),
 ];

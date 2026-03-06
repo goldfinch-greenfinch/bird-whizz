@@ -28,17 +28,6 @@ Currently, when a user earns a new stamp, it plays the generic `level_up.mp3`. W
 - **Suggested Additions:**
   - `assets/audio/sound_effects/stamp_thud.mp3`: A heavy, satisfying paper-stamping "thud" or "ker-chunk" that plays precisely when the stamp finishes scaling down and hits the page, followed by the `level_up` fanfare.
 
-### 5. Quiz Screen Interactions (`quiz_screen.dart`)
-While there are `correct` and `wrong` sounds, the user receives no feedback simply for locking in an answer or using a hint.
-- **Missing Audio:** Option selection before the result is validated.
-- **Suggested Additions:**
-  - `assets/audio/sound_effects/select.mp3`: A subtle click to indicate an option has been highlighted or selected before the system confirms if it is right or wrong.
-
-### 6. Voice Overs
-The `lib/services/audio_service.dart` has extensive, well-written support for Voice Overs (including `playVoiceOver` and `playSequence` handling logic to prevent overlap), but these methods aren't currently being called anywhere in the app.
-- **Missing Audio:** Spoken bird names or facts.
-- **Suggested Additions:**
-  - A `assets/audio/voice/` folder containing spoken pronunciations of the bird names to play on the `ResultScreen` after a quiz, making the app more accessible and educational.
 
 ### Summary of recommended files to source:
 1. `ui_tap.mp3`
@@ -47,6 +36,5 @@ The `lib/services/audio_service.dart` has extensive, well-written support for Vo
 4. `stamp_view.mp3`
 5. `letter_tap.mp3`
 6. `stamp_thud.mp3`
-7. `select.mp3`
 
 *(Remember: if adding these new files, they need to be declared in the `pubspec.yaml` without changing to `.ogg` format, and a full app restart is required for them to load correctly).*

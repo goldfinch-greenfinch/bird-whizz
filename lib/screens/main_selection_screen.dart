@@ -89,6 +89,7 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
                 onPressed: () {
                   Navigator.pop(context); // close dialog
                   provider.startDailyChallenge();
+                  context.read<AudioService>().playTransition();
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (_) => const QuizScreen()),
@@ -211,6 +212,7 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
                         description:
                             'Test your knowledge with multiple choice!',
                         onTap: () {
+                          context.read<AudioService>().playUiTap();
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -226,6 +228,7 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
                         color: Colors.orangeAccent.shade700,
                         description: 'Identify birds from pictures!',
                         onTap: () {
+                          context.read<AudioService>().playUiTap();
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -236,11 +239,12 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
                       ),
                       const SizedBox(height: 24),
                       _FeatureCard(
-                        title: 'Unscramble',
+                        title: 'Bird Word Games',
                         icon: Icons.spellcheck_rounded,
                         color: Colors.deepPurpleAccent,
-                        description: 'Unscramble and guess the bird words!',
+                        description: 'Unscramble birds or rescue them from eggs!',
                         onTap: () {
+                          context.read<AudioService>().playUiTap();
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -262,6 +266,7 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
                             listen: false,
                           );
                           provider.startEndlessMode();
+                          context.read<AudioService>().playTransition();
                           Navigator.push(
                             context,
                             MaterialPageRoute(

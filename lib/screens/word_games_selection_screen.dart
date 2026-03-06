@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../services/audio_service.dart';
 import 'unscramble_game_screen.dart';
+import 'rescue_bird_screen.dart';
 import '../widgets/common_profile_header.dart';
+import '../widgets/navigation_utils.dart';
 
 class WordGamesSelectionScreen extends StatelessWidget {
   const WordGamesSelectionScreen({super.key});
@@ -19,10 +21,10 @@ class WordGamesSelectionScreen extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
-                child: Column(
+                child: ListView(
                   children: [
                     const Text(
-                      'Unscramble',
+                      'Bird Word Games',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -31,63 +33,41 @@ class WordGamesSelectionScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Master the language of birds!',
+                      'Relaxing, no-fail bird word challenges.',
                       style: TextStyle(fontSize: 16, color: Colors.grey[700]),
                     ),
-                    const SizedBox(height: 32),
-                    // Game List
-                    Expanded(
-                      child: ListView(
-                        children: [
-                          Consumer<QuizProvider>(
-                            builder: (context, provider, child) {
-                              return Column(
-                                children: [
-                                  _buildLevelCard(
-                                    context,
-                                    'Level 1: Short Words',
-                                    '3-4 Letters',
-                                    1,
-                                    4,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  _buildLevelCard(
-                                    context,
-                                    'Level 2: Fledglings',
-                                    '5-6 Letters',
-                                    5,
-                                    6,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  _buildLevelCard(
-                                    context,
-                                    'Level 3: Winging It',
-                                    '7-8 Letters',
-                                    7,
-                                    8,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  _buildLevelCard(
-                                    context,
-                                    'Level 4: High Flyer',
-                                    '9-10 Letters',
-                                    9,
-                                    10,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  _buildLevelCard(
-                                    context,
-                                    'Level 5: Master',
-                                    '11+ Letters',
-                                    11,
-                                    100,
-                                  ),
-                                ],
-                              );
-                            },
+                    const SizedBox(height: 24),
+                    _GameCard(
+                      title: 'Unscramble',
+                      subtitle: 'Rearrange the letters to find the bird.',
+                      icon: Icons.spellcheck_rounded,
+                      color: Colors.deepPurpleAccent,
+                      onTap: () {
+                        context.read<AudioService>().playUiTap();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const _UnscrambleLevelsScreen(),
                           ),
-                        ],
-                      ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    _GameCard(
+                      title: 'Rescue the Bird',
+                      subtitle:
+                          'Guess letters to crack the egg and free the bird.',
+                      icon: Icons.egg_rounded,
+                      color: Colors.orangeAccent,
+                      onTap: () {
+                        context.read<AudioService>().playTransition();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const RescueBirdScreen(),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -96,37 +76,6 @@ class WordGamesSelectionScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildLevelCard(
-    BuildContext context,
-    String title,
-    String subtitle,
-    int minLength,
-    int maxLength,
-  ) {
-    return _GameCard(
-      title: title,
-      subtitle: subtitle,
-      icon: Icons.spellcheck_rounded,
-      color: Colors.deepPurpleAccent,
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => UnscrambleGameScreen(
-              title: title,
-              minLength: minLength,
-              maxLength: maxLength,
-            ),
-          ),
-        ).then((_) {
-          if (context.mounted) {
-            context.read<AudioService>().playMenuMusic();
-          }
-        });
-      },
     );
   }
 }
@@ -236,22 +185,22 @@ class _Header extends StatelessWidget {
                 children: [
                   _buildStatItem(
                     Icons.star_rounded,
-                    '${provider.unscrambleTotalStars}/${provider.unscrambleMaxStars}',
-                    'App Stats',
+                    '${provider.wordGamesTotalStars}/${provider.wordGamesMaxStars}',
+                    'Word Stars',
                     Colors.amber,
                   ),
                   _buildContainerLine(),
                   _buildStatItem(
                     Icons.emoji_events_rounded,
-                    '${provider.unscrambleCompletedLevels}/5',
-                    'Levels Done',
+                    '${provider.unscrambleCompletedLevels + provider.rescueCompletedLevels}',
+                    'Word Levels',
                     Colors.orangeAccent,
                   ),
                   _buildContainerLine(),
                   _buildStatItem(
                     Icons.spellcheck_rounded,
-                    '${provider.totalUnscrambledWords}',
-                    'Words Found',
+                    '${provider.totalUnscrambledWords + provider.totalRescuedBirds}',
+                    'Words & Birds',
                     Colors.greenAccent,
                   ),
                 ],
@@ -297,6 +246,191 @@ class _Header extends StatelessWidget {
       height: 30,
       width: 1,
       color: Colors.white.withValues(alpha: 0.2),
+    );
+  }
+}
+
+class _UnscrambleLevelsScreen extends StatelessWidget {
+  const _UnscrambleLevelsScreen();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.teal[50],
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildHeader(context),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: ListView(
+                  children: [
+                    _buildLevelCard(
+                      context,
+                      'Level 1: Short Words',
+                      '3-4 Letters',
+                      1,
+                      4,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildLevelCard(
+                      context,
+                      'Level 2: Fledglings',
+                      '5-6 Letters',
+                      5,
+                      6,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildLevelCard(
+                      context,
+                      'Level 3: Winging It',
+                      '7-8 Letters',
+                      7,
+                      8,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildLevelCard(
+                      context,
+                      'Level 4: High Flyer',
+                      '9-10 Letters',
+                      9,
+                      10,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildLevelCard(
+                      context,
+                      'Level 5: Master',
+                      '11+ Letters',
+                      11,
+                      100,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return Consumer<QuizProvider>(
+      builder: (context, provider, _) {
+        return Container(
+          padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
+          decoration: BoxDecoration(
+            color: Colors.deepPurple,
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(30),
+              bottomRight: Radius.circular(30),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.deepPurple.withValues(alpha: 0.3),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              const CommonProfileHeader(),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildStatItem(
+                    Icons.star_rounded,
+                    '${provider.unscrambleTotalStars}/${provider.unscrambleMaxStars}',
+                    'Stars',
+                    Colors.amber,
+                  ),
+                  _buildDivider(),
+                  _buildStatItem(
+                    Icons.emoji_events_rounded,
+                    '${provider.unscrambleCompletedLevels}',
+                    'Levels Done',
+                    Colors.orangeAccent,
+                  ),
+                  _buildDivider(),
+                  _buildStatItem(
+                    Icons.spellcheck_rounded,
+                    '${provider.totalUnscrambledWords}',
+                    'Words Solved',
+                    Colors.greenAccent,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildStatItem(IconData icon, String value, String label, Color color) {
+    return Column(
+      children: [
+        Icon(icon, color: color, size: 26),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 17,
+          ),
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.white.withValues(alpha: 0.8),
+            fontSize: 11,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDivider() {
+    return Container(
+      height: 30,
+      width: 1,
+      color: Colors.white.withValues(alpha: 0.2),
+    );
+  }
+
+  Widget _buildLevelCard(
+    BuildContext context,
+    String title,
+    String subtitle,
+    int minLength,
+    int maxLength,
+  ) {
+    return _GameCard(
+      title: title,
+      subtitle: subtitle,
+      icon: Icons.spellcheck_rounded,
+      color: Colors.deepPurpleAccent,
+      onTap: () {
+        context.read<AudioService>().playTransition();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => UnscrambleGameScreen(
+              title: title,
+              minLength: minLength,
+              maxLength: maxLength,
+            ),
+          ),
+        ).then((_) {
+          if (context.mounted) {
+            context.read<AudioService>().playMenuMusic();
+          }
+        });
+      },
     );
   }
 }

@@ -156,6 +156,30 @@ class AudioService extends ChangeNotifier {
     await _playSfx('audio/sound_effects/end_quiz.mp3');
   }
 
+  Future<void> playUiTap() async {
+    await _playSfx('audio/sound_effects/ui_tap.wav');
+  }
+
+  Future<void> playTransition() async {
+    await _playSfx('audio/sound_effects/transition.mp3');
+  }
+
+  Future<void> playPageTurn() async {
+    await _playSfx('audio/sound_effects/page_turn.wav');
+  }
+
+  Future<void> playStampView() async {
+    await _playSfx('audio/sound_effects/stamp_view.mp3');
+  }
+
+  Future<void> playLetterTap() async {
+    await _playSfx('audio/sound_effects/letter_tap.wav');
+  }
+
+  Future<void> playStampThud() async {
+    await _playSfx('audio/sound_effects/stamp_thud.wav');
+  }
+
   Future<void> _playSfx(String path) async {
     if (_isMuted) return;
     await _ensureInitialized();

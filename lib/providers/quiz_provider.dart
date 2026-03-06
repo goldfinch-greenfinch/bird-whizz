@@ -379,6 +379,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     Map<String, int>? wordGameHighScores,
     int? totalTimePlayingSeconds,
     int? totalUnscrambledWords,
+    int? totalRescuedBirds,
     DateTime? lastDailyChallengeDate,
     int? currentDailyStreak,
     int? totalDailyChallengesCompleted,
@@ -397,6 +398,8 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
         wordGameHighScores: wordGameHighScores,
         totalTimePlayingSeconds: totalTimePlayingSeconds,
         totalUnscrambledWords: totalUnscrambledWords,
+        totalRescuedBirds:
+            totalRescuedBirds ?? _currentProfile!.totalRescuedBirds,
         lastDailyChallengeDate:
             lastDailyChallengeDate ?? _currentProfile!.lastDailyChallengeDate,
         currentDailyStreak:
@@ -607,6 +610,20 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     }
     if (!currentStamps.contains('spelling_bee') && unscrambleHighScore >= 20) {
       _unlockStamp('spelling_bee', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // Rescue the Bird
+    if (!currentStamps.contains('rescue_rookie') && totalRescuedBirds >= 1) {
+      _unlockStamp('rescue_rookie', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('rescue_ranger') && totalRescuedBirds >= 10) {
+      _unlockStamp('rescue_ranger', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('rescue_hero') && totalRescuedBirds >= 25) {
+      _unlockStamp('rescue_hero', currentStamps);
       newlyUnlocked = true;
     }
 
@@ -896,6 +913,13 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     );
   }
 
+  void incrementRescuedBirds() {
+    if (_currentProfile == null) return;
+    _updateCurrentProfile(
+      totalRescuedBirds: _currentProfile!.totalRescuedBirds + 1,
+    );
+  }
+
   int get unscrambleTotalStars {
     int total = 0;
     _levelStars.forEach((key, stars) {
@@ -913,6 +937,27 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     });
     return count;
   }
+
+  int get rescueTotalStars {
+    int total = 0;
+    _levelStars.forEach((key, stars) {
+      if (key.startsWith('rescue_bird')) total += stars;
+    });
+    return total;
+  }
+
+  int get rescueMaxStars => 3;
+
+  int get rescueCompletedLevels {
+    int count = 0;
+    _levelStars.forEach((key, stars) {
+      if (key.startsWith('rescue_bird') && stars > 0) count++;
+    });
+    return count;
+  }
+
+  int get wordGamesTotalStars => unscrambleTotalStars + rescueTotalStars;
+  int get wordGamesMaxStars => unscrambleMaxStars + rescueMaxStars;
 
   void saveWordGameStars(
     String levelTitle,
@@ -965,6 +1010,53 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     }
   }
 
+  void saveRescueBirdStars(
+    int rescuedCount, {
+    int totalPuzzles = 3,
+  }) {
+    if (_currentProfile == null) return;
+
+    _score = rescuedCount;
+    _wordGameTotalQuestions = totalPuzzles;
+
+    int stars = 0;
+    if (totalPuzzles > 0) {
+      double pct = rescuedCount / totalPuzzles;
+      if (pct == 1.0) {
+        stars = 3;
+      } else if (pct >= 0.8) {
+        stars = 2;
+      } else if (pct >= 0.6) {
+        stars = 1;
+      }
+    }
+
+    const String levelId = 'rescue_bird';
+    int currentStars = _levelStars[levelId] ?? 0;
+    if (stars > currentStars) {
+      int oldTotalStars = totalStars;
+      String oldTitle = _getStatusTitleForStars(oldTotalStars);
+      int oldEvo = getEvolutionStageForStars(oldTotalStars);
+
+      final newStars = Map<String, int>.from(_levelStars);
+      newStars[levelId] = stars;
+      _updateCurrentProfile(levelStars: newStars);
+
+      int newTotalStars = totalStars;
+      String newTitle = _getStatusTitleForStars(newTotalStars);
+      int newEvo = getEvolutionStageForStars(newTotalStars);
+
+      if (newTitle != oldTitle) {
+        _oldLevelTitle = oldTitle;
+        _newLevelTitle = newTitle;
+      }
+      if (newEvo > oldEvo) {
+        _oldEvolutionStage = oldEvo;
+        _newEvolutionStage = newEvo;
+      }
+    }
+  }
+
   // --- Bird ID Stars ---
   int get birdIdTotalStars {
     int total = 0;
@@ -994,6 +1086,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
       _currentProfile?.totalTimePlayingSeconds ?? 0;
   DateTime? get firstPlayDate => _currentProfile?.firstPlayDate;
   int get totalUnscrambledWords => _currentProfile?.totalUnscrambledWords ?? 0;
+  int get totalRescuedBirds => _currentProfile?.totalRescuedBirds ?? 0;
 
   int get categoryTotalCorrectAnswers {
     if (_currentProfile == null) return 0;
@@ -1019,7 +1112,10 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
 
   // To update this properly as the game expands you simply need to tally the individual maxes:
   int get maxStars =>
-      (_allLevelsGlobally.length * 3) + unscrambleMaxStars + birdIdMaxStars;
+      (_allLevelsGlobally.length * 3) +
+      unscrambleMaxStars +
+      rescueMaxStars +
+      birdIdMaxStars;
 
   int get completedLevelsCount {
     int count = 0;

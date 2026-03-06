@@ -110,6 +110,7 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
 
   void _onLetterTapped(String letter) {
     if (_isSuccess) return;
+    context.read<AudioService>().playLetterTap();
 
     setState(() {
       int emptyIndex = _userArrangement.indexOf(null);
@@ -134,6 +135,7 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
 
     final letter = _userArrangement[index];
     if (letter != null) {
+      context.read<AudioService>().playLetterTap();
       setState(() {
         _userArrangement[index] = null;
         final emptyIndex = _scrambledLetters.indexOf(null);

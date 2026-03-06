@@ -11,6 +11,14 @@ All audio files in this project are sourced from https://freesound.org/.
 Below is the mapping of the project filenames to their original source filenames.
 
 Sound Effects:
+- ui-tap: Aggressive Button Tap / UI Tap Hit by subquire -- https://freesound.org/s/833601/ -- License: Creative Commons 0
+- woosh transition: quick woosh by florianreichelt -- https://freesound.org/s/683101/ -- License: Creative Commons 0
+- page-tuen: Fast Page Turn - 2 by SpaceJoe -- https://freesound.org/s/484908/ -- License: Creative Commons 0
+- pop ui: UI_POP_UP.mp3 by Marevnik -- https://freesound.org/s/708605/ -- License: Attribution 4.0
+- key-tap: Keys 1.wav by SDLx -- https://freesound.org/s/194649/ -- License: Attribution 3.0
+- thud: muted_thud_2.wav by farbin -- https://freesound.org/s/36791/ -- License: Sampling+
+
+
 - correct.wav: 538147__fupicat__correct-bell_correct.wav
     Correct Bell by Fupicat -- https://freesound.org/s/538147/ -- License: Creative Commons 0   
 - wrong.wav: 587253__beetlemuse__dats-wrong_wrong.wav

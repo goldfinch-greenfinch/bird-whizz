@@ -13,6 +13,9 @@ class UserProfile {
   final int totalUnscrambledWords;
   final List<String> unlockedStamps; // List of unlocked stamp IDs
 
+  // Word game specific stats
+  final int totalRescuedBirds;
+
   // Daily Challenge & Login Tracking
   final DateTime? lastDailyChallengeDate;
   final int currentDailyStreak;
@@ -38,6 +41,7 @@ class UserProfile {
     this.totalDailyChallengesCompleted = 0,
     this.lastLoginDate,
     this.currentLoginStreak = 0,
+    this.totalRescuedBirds = 0,
   });
 
   Map<String, dynamic> toJson() {
@@ -59,6 +63,7 @@ class UserProfile {
       'totalDailyChallengesCompleted': totalDailyChallengesCompleted,
       'lastLoginDate': lastLoginDate?.toIso8601String(),
       'currentLoginStreak': currentLoginStreak,
+      'totalRescuedBirds': totalRescuedBirds,
     };
   }
 
@@ -104,6 +109,7 @@ class UserProfile {
           ? DateTime.tryParse(json['lastLoginDate'] as String)
           : null,
       currentLoginStreak: json['currentLoginStreak'] as int? ?? 0,
+      totalRescuedBirds: json['totalRescuedBirds'] as int? ?? 0,
     );
   }
 
@@ -125,6 +131,7 @@ class UserProfile {
     int? totalDailyChallengesCompleted,
     DateTime? lastLoginDate,
     int? currentLoginStreak,
+    int? totalRescuedBirds,
   }) {
     return UserProfile(
       id: id ?? this.id,
@@ -149,6 +156,7 @@ class UserProfile {
           totalDailyChallengesCompleted ?? this.totalDailyChallengesCompleted,
       lastLoginDate: lastLoginDate ?? this.lastLoginDate,
       currentLoginStreak: currentLoginStreak ?? this.currentLoginStreak,
+      totalRescuedBirds: totalRescuedBirds ?? this.totalRescuedBirds,
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/stamp.dart';
 import '../providers/quiz_provider.dart';
+import '../services/audio_service.dart';
 
 abstract class AchievementItem {}
 
@@ -586,6 +587,7 @@ class AchievementsBookScreen extends StatefulWidget {
 
     return GestureDetector(
       onTap: () {
+        context.read<AudioService>().playStampView();
         AchievementsBookScreen.showStampDialog(context, stamp, isUnlocked);
       },
       child: Container(
@@ -673,6 +675,7 @@ class _AchievementsBookScreenState extends State<AchievementsBookScreen> {
         setState(() {
           _currentViewIndex = next;
         });
+        context.read<AudioService>().playPageTurn();
       }
     });
   }

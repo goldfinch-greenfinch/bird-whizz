@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
+import '../services/audio_service.dart';
 import 'quiz_screen.dart';
 import '../widgets/common_profile_header.dart';
 
@@ -214,6 +215,7 @@ class _DifficultyButton extends StatelessWidget {
         final provider = context.read<QuizProvider>();
         await provider.startBirdIdQuiz(title, difficulty);
         if (context.mounted) {
+          context.read<AudioService>().playTransition();
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const QuizScreen()),

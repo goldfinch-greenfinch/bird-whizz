@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../models/level.dart';
+import '../services/audio_service.dart';
 import 'quiz_screen.dart';
 
 import '../widgets/common_profile_header.dart';
@@ -62,6 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           onTap: () {
                             if (isUnlocked) {
                               provider.startLevel(level);
+                              context.read<AudioService>().playTransition();
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

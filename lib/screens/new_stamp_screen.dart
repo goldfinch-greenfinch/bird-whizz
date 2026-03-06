@@ -63,6 +63,7 @@ class _NewStampScreenState extends State<NewStampScreen>
       if (_scaleAnimation.value <= 1.05 && !_hasShook) {
         _hasShook = true;
         _shakeAnimController.forward(from: 0);
+        context.read<AudioService>().playStampThud();
       }
     });
 
@@ -71,6 +72,7 @@ class _NewStampScreenState extends State<NewStampScreen>
         setState(() {
           _animationComplete = true;
         });
+        context.read<AudioService>().playLevelUpSound();
       }
     });
 
@@ -97,8 +99,6 @@ class _NewStampScreenState extends State<NewStampScreen>
     });
 
     _stampAnimController.forward(from: 0);
-    final audioService = context.read<AudioService>();
-    audioService.playLevelUpSound();
   }
 
   @override

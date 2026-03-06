@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
+import '../services/audio_service.dart';
 import 'home_screen.dart';
 import '../widgets/common_profile_header.dart';
 
@@ -100,6 +101,7 @@ class TextQuizSelectionScreen extends StatelessWidget {
                             cat['id'] as String,
                           ),
                           onTap: () {
+                            context.read<AudioService>().playUiTap();
                             provider.selectCategory(cat['id'] as String);
                             Navigator.push(
                               context,

@@ -380,6 +380,9 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     int? totalTimePlayingSeconds,
     int? totalUnscrambledWords,
     int? totalRescuedBirds,
+    int? totalCrosswordsSolved,
+    int? totalGuessBirdBirdsGuessed,
+    int? totalSpeedChallengeCorrect,
     DateTime? lastDailyChallengeDate,
     int? currentDailyStreak,
     int? totalDailyChallengesCompleted,
@@ -400,6 +403,14 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
         totalUnscrambledWords: totalUnscrambledWords,
         totalRescuedBirds:
             totalRescuedBirds ?? _currentProfile!.totalRescuedBirds,
+        totalCrosswordsSolved:
+            totalCrosswordsSolved ?? _currentProfile!.totalCrosswordsSolved,
+        totalGuessBirdBirdsGuessed:
+            totalGuessBirdBirdsGuessed ??
+            _currentProfile!.totalGuessBirdBirdsGuessed,
+        totalSpeedChallengeCorrect:
+            totalSpeedChallengeCorrect ??
+            _currentProfile!.totalSpeedChallengeCorrect,
         lastDailyChallengeDate:
             lastDailyChallengeDate ?? _currentProfile!.lastDailyChallengeDate,
         currentDailyStreak:
@@ -492,11 +503,11 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     }
 
     // New stamps
-    if (!currentStamps.contains('avian_apprentice') && totalStars >= 100) {
+    if (!currentStamps.contains('avian_apprentice') && progressStars >= 100) {
       _unlockStamp('avian_apprentice', currentStamps);
       newlyUnlocked = true;
     }
-    if (!currentStamps.contains('master_ornithologist') && totalStars >= 250) {
+    if (!currentStamps.contains('master_ornithologist') && progressStars >= 250) {
       _unlockStamp('master_ornithologist', currentStamps);
       newlyUnlocked = true;
     }
@@ -512,7 +523,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
 
     // --- Newly Added Stamps ---
     // Star Collector
-    if (!currentStamps.contains('star_collector') && totalStars >= 10) {
+    if (!currentStamps.contains('star_collector') && progressStars >= 10) {
       _unlockStamp('star_collector', currentStamps);
       newlyUnlocked = true;
     }
@@ -580,7 +591,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     }
 
     // Stars & Levels
-    if (!currentStamps.contains('constellation') && totalStars >= 350) {
+    if (!currentStamps.contains('constellation') && progressStars >= 350) {
       _unlockStamp('constellation', currentStamps);
       newlyUnlocked = true;
     }
@@ -610,6 +621,30 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     }
     if (!currentStamps.contains('spelling_bee') && unscrambleHighScore >= 20) {
       _unlockStamp('spelling_bee', currentStamps);
+      newlyUnlocked = true;
+    }
+
+    // Crossbird
+    final crossbirdSolvedCount = totalCrosswordsSolved;
+    if (!currentStamps.contains('crossbird_first') &&
+        crossbirdSolvedCount >= 1) {
+      _unlockStamp('crossbird_first', currentStamps);
+      newlyUnlocked = true;
+    }
+    final crossbirdPuzzlesCompleted = _levelStars.entries
+        .where((e) => e.key.startsWith('crossbird_puzzle_') && e.value > 0)
+        .length;
+    if (!currentStamps.contains('crossbird_master') &&
+        crossbirdPuzzlesCompleted >= 3) {
+      _unlockStamp('crossbird_master', currentStamps);
+      newlyUnlocked = true;
+    }
+    final crossbirdPerfectPuzzles = _levelStars.entries
+        .where((e) => e.key.startsWith('crossbird_puzzle_') && e.value >= 3)
+        .length;
+    if (!currentStamps.contains('crossbird_perfectionist') &&
+        crossbirdPerfectPuzzles >= 3) {
+      _unlockStamp('crossbird_perfectionist', currentStamps);
       newlyUnlocked = true;
     }
 
@@ -855,6 +890,91 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
       newlyUnlocked = true;
     }
 
+    // --- Speed Challenge Stamps ---
+    final speedCompletedLevels = _countSpeedChallengeLevels();
+    if (!currentStamps.contains('speed_first') && speedCompletedLevels >= 1) {
+      _unlockStamp('speed_first', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('speed_all_5') && speedCompletedLevels >= 5) {
+      _unlockStamp('speed_all_5', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('speed_perfect')) {
+      final hasSpeedPerfect = _levelStars.entries
+          .any((e) => e.key.startsWith('speed_challenge_level_') && e.value >= 3);
+      if (hasSpeedPerfect) {
+        _unlockStamp('speed_perfect', currentStamps);
+        newlyUnlocked = true;
+      }
+    }
+    if (!currentStamps.contains('speed_legend_3stars')) {
+      final legendStars = _levelStars['speed_challenge_level_4'] ?? 0;
+      if (legendStars >= 3) {
+        _unlockStamp('speed_legend_3stars', currentStamps);
+        newlyUnlocked = true;
+      }
+    }
+
+    // --- Guess the Bird Stamps ---
+    if (!currentStamps.contains('guess_bird_first') &&
+        guessBirdCompletedLevels >= 1) {
+      _unlockStamp('guess_bird_first', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('guess_bird_all_5') &&
+        guessBirdCompletedLevels >= 5) {
+      _unlockStamp('guess_bird_all_5', currentStamps);
+      newlyUnlocked = true;
+    }
+    if (!currentStamps.contains('guess_bird_perfect')) {
+      final hasGuessBirdPerfect = _levelStars.entries
+          .any((e) => e.key.startsWith('guess_bird_level_') && e.value >= 3);
+      if (hasGuessBirdPerfect) {
+        _unlockStamp('guess_bird_perfect', currentStamps);
+        newlyUnlocked = true;
+      }
+    }
+    if (!currentStamps.contains('guess_bird_legend')) {
+      final legendStars = _levelStars['guess_bird_level_4'] ?? 0;
+      if (legendStars >= 3) {
+        _unlockStamp('guess_bird_legend', currentStamps);
+        newlyUnlocked = true;
+      }
+    }
+
+    // --- Companion Evolution Stamps ---
+    // Stage 1: awarded immediately on completing the first level
+    if (!currentStamps.contains('evolution_stage_1') &&
+        completedLevelsCount >= 1) {
+      _unlockStamp('evolution_stage_1', currentStamps);
+      newlyUnlocked = true;
+    }
+    // Stage 2: reached when evolution stage advances to 2 (stars >= 18)
+    if (!currentStamps.contains('evolution_stage_2') &&
+        userEvolutionStage >= 2) {
+      _unlockStamp('evolution_stage_2', currentStamps);
+      newlyUnlocked = true;
+    }
+    // Stage 3: evolution stage 3 (stars >= 60)
+    if (!currentStamps.contains('evolution_stage_3') &&
+        userEvolutionStage >= 3) {
+      _unlockStamp('evolution_stage_3', currentStamps);
+      newlyUnlocked = true;
+    }
+    // Stage 4: evolution stage 4 (stars >= 140)
+    if (!currentStamps.contains('evolution_stage_4') &&
+        userEvolutionStage >= 4) {
+      _unlockStamp('evolution_stage_4', currentStamps);
+      newlyUnlocked = true;
+    }
+    // Stage 5: evolution stage 5 (stars >= 275)
+    if (!currentStamps.contains('evolution_stage_5') &&
+        userEvolutionStage >= 5) {
+      _unlockStamp('evolution_stage_5', currentStamps);
+      newlyUnlocked = true;
+    }
+
     if (newlyUnlocked) {
       int index = _profiles.indexWhere((p) => p.id == _currentProfile!.id);
       if (index != -1) {
@@ -920,6 +1040,251 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     );
   }
 
+  void incrementCrosswordsSolved() {
+    if (_currentProfile == null) return;
+    _updateCurrentProfile(
+      totalCrosswordsSolved: _currentProfile!.totalCrosswordsSolved + 1,
+    );
+  }
+
+  int get totalCrosswordsSolved =>
+      _currentProfile?.totalCrosswordsSolved ?? 0;
+
+  void saveCrossbirdsStars(
+    int puzzleIndex,
+    int solvedWords,
+    int totalWords,
+  ) {
+    if (_currentProfile == null) return;
+
+    _score = solvedWords;
+    _wordGameTotalQuestions = totalWords;
+
+    int stars = 0;
+    if (totalWords > 0) {
+      final pct = solvedWords / totalWords;
+      if (pct == 1.0) {
+        stars = 3;
+      } else if (pct >= 0.8) {
+        stars = 2;
+      } else if (pct >= 0.5) {
+        stars = 1;
+      }
+    }
+
+    final String levelId = 'crossbird_puzzle_$puzzleIndex';
+    final int currentStars = _levelStars[levelId] ?? 0;
+    if (stars > currentStars) {
+      int oldTotalStars = progressStars;
+      String oldTitle = _getStatusTitleForStars(oldTotalStars);
+      int oldEvo = getEvolutionStageForStars(oldTotalStars);
+
+      final newStars = Map<String, int>.from(_levelStars);
+      newStars[levelId] = stars;
+      _updateCurrentProfile(levelStars: newStars);
+
+      int newTotalStars = progressStars;
+      String newTitle = _getStatusTitleForStars(newTotalStars);
+      int newEvo = getEvolutionStageForStars(newTotalStars);
+
+      if (newTitle != oldTitle) {
+        _oldLevelTitle = oldTitle;
+        _newLevelTitle = newTitle;
+      }
+      if (newEvo > oldEvo) {
+        _oldEvolutionStage = oldEvo;
+        _newEvolutionStage = newEvo;
+      }
+    }
+  }
+
+  int get crossbirdTotalStars {
+    int total = 0;
+    _levelStars.forEach((key, stars) {
+      if (key.startsWith('crossbird_puzzle_')) total += stars;
+    });
+    return total;
+  }
+
+  int get crossbirdMaxStars => 4 * 3; // 4 puzzles * 3 stars
+
+  // --- Guess the Bird Stats ---
+  int get guessBirdTotalStars {
+    int total = 0;
+    for (int i = 0; i < 5; i++) {
+      total += _levelStars['guess_bird_level_$i'] ?? 0;
+    }
+    return total;
+  }
+
+  int get guessBirdMaxStars => 5 * 3; // 5 levels * 3 stars
+
+  int get guessBirdCompletedLevels {
+    int count = 0;
+    for (int i = 0; i < 5; i++) {
+      if ((_levelStars['guess_bird_level_$i'] ?? 0) > 0) count++;
+    }
+    return count;
+  }
+
+  int get guessBirdTotalGuessed =>
+      _currentProfile?.totalGuessBirdBirdsGuessed ?? 0;
+
+  void finishGuessBirdLevel(int levelIndex, int score, int total) {
+    if (_currentProfile == null) return;
+
+    _score = score;
+    _wordGameTotalQuestions = total;
+    _currentCategory = 'guess_bird';
+    _oldLevelTitle = null;
+    _newLevelTitle = null;
+    _oldEvolutionStage = null;
+    _newEvolutionStage = null;
+
+    // Record total birds guessed correctly
+    _updateCurrentProfile(
+      totalGuessBirdBirdsGuessed:
+          _currentProfile!.totalGuessBirdBirdsGuessed + score,
+    );
+
+    // Calculate stars
+    int stars;
+    if (total > 0) {
+      final pct = score / total;
+      if (pct == 1.0) {
+        stars = 3;
+      } else if (pct >= 0.8) {
+        stars = 2;
+      } else if (pct >= 0.6) {
+        stars = 1;
+      } else {
+        stars = 0;
+      }
+    } else {
+      stars = 0;
+    }
+
+    final String levelId = 'guess_bird_level_$levelIndex';
+    final int currentStars = _levelStars[levelId] ?? 0;
+    if (stars > currentStars) {
+      int oldTotalStars = progressStars;
+      String oldTitle = _getStatusTitleForStars(oldTotalStars);
+      int oldEvo = getEvolutionStageForStars(oldTotalStars);
+
+      final newStars = Map<String, int>.from(_levelStars);
+      newStars[levelId] = stars;
+      _updateCurrentProfile(levelStars: newStars);
+
+      int newTotalStars = progressStars;
+      String newTitle = _getStatusTitleForStars(newTotalStars);
+      int newEvo = getEvolutionStageForStars(newTotalStars);
+
+      if (newTitle != oldTitle) {
+        _oldLevelTitle = oldTitle;
+        _newLevelTitle = newTitle;
+      }
+      if (newEvo > oldEvo) {
+        _oldEvolutionStage = oldEvo;
+        _newEvolutionStage = newEvo;
+      }
+    }
+
+    notifyListeners();
+  }
+
+  // ─── Speed Challenge ────────────────────────────────────────────────────────
+
+  int get speedChallengeTotalStars {
+    int total = 0;
+    for (int i = 0; i < 5; i++) {
+      total += _levelStars['speed_challenge_level_$i'] ?? 0;
+    }
+    return total;
+  }
+
+  int get speedChallengeMaxStars => 5 * 3;
+
+  int get speedChallengeCompletedLevels => _countSpeedChallengeLevels();
+
+  int _countSpeedChallengeLevels() {
+    int count = 0;
+    for (int i = 0; i < 5; i++) {
+      if ((_levelStars['speed_challenge_level_$i'] ?? 0) > 0) count++;
+    }
+    return count;
+  }
+
+  int get speedChallengeTotalCorrect =>
+      _currentProfile?.totalSpeedChallengeCorrect ?? 0;
+
+  void finishSpeedChallengeLevel(int levelIndex, int score, int total) {
+    if (_currentProfile == null) return;
+
+    _score = score;
+    _wordGameTotalQuestions = total;
+    _currentCategory = 'speed_challenge';
+    _oldLevelTitle = null;
+    _newLevelTitle = null;
+    _oldEvolutionStage = null;
+    _newEvolutionStage = null;
+
+    _updateCurrentProfile(
+      totalSpeedChallengeCorrect:
+          _currentProfile!.totalSpeedChallengeCorrect + score,
+    );
+
+    int stars;
+    if (total > 0) {
+      final pct = score / total;
+      if (pct == 1.0) {
+        stars = 3;
+      } else if (pct >= 0.8) {
+        stars = 2;
+      } else if (pct >= 0.6) {
+        stars = 1;
+      } else {
+        stars = 0;
+      }
+    } else {
+      stars = 0;
+    }
+
+    final String levelId = 'speed_challenge_level_$levelIndex';
+    final int currentStars = _levelStars[levelId] ?? 0;
+    if (stars > currentStars) {
+      int oldTotalStars = progressStars;
+      String oldTitle = _getStatusTitleForStars(oldTotalStars);
+      int oldEvo = getEvolutionStageForStars(oldTotalStars);
+
+      final newStars = Map<String, int>.from(_levelStars);
+      newStars[levelId] = stars;
+      _updateCurrentProfile(levelStars: newStars);
+
+      int newTotalStars = progressStars;
+      String newTitle = _getStatusTitleForStars(newTotalStars);
+      int newEvo = getEvolutionStageForStars(newTotalStars);
+
+      if (newTitle != oldTitle) {
+        _oldLevelTitle = oldTitle;
+        _newLevelTitle = newTitle;
+      }
+      if (newEvo > oldEvo) {
+        _oldEvolutionStage = oldEvo;
+        _newEvolutionStage = newEvo;
+      }
+    }
+
+    notifyListeners();
+  }
+
+  int get crossbirdCompletedPuzzles {
+    int count = 0;
+    _levelStars.forEach((key, stars) {
+      if (key.startsWith('crossbird_puzzle_') && stars > 0) count++;
+    });
+    return count;
+  }
+
   int get unscrambleTotalStars {
     int total = 0;
     _levelStars.forEach((key, stars) {
@@ -948,6 +1313,8 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
 
   int get rescueMaxStars => 3;
 
+  int levelStars(String levelId) => _levelStars[levelId] ?? 0;
+
   int get rescueCompletedLevels {
     int count = 0;
     _levelStars.forEach((key, stars) {
@@ -956,8 +1323,10 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     return count;
   }
 
-  int get wordGamesTotalStars => unscrambleTotalStars + rescueTotalStars;
-  int get wordGamesMaxStars => unscrambleMaxStars + rescueMaxStars;
+  int get wordGamesTotalStars =>
+      unscrambleTotalStars + rescueTotalStars + crossbirdTotalStars;
+  int get wordGamesMaxStars =>
+      unscrambleMaxStars + rescueMaxStars + crossbirdMaxStars;
 
   void saveWordGameStars(
     String levelTitle,
@@ -986,7 +1355,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     int currentStars = _levelStars[levelId] ?? 0;
     if (stars > currentStars) {
       // Capture old status
-      int oldTotalStars = totalStars;
+      int oldTotalStars = progressStars;
       String oldTitle = _getStatusTitleForStars(oldTotalStars);
       int oldEvo = getEvolutionStageForStars(oldTotalStars);
 
@@ -995,7 +1364,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
       _updateCurrentProfile(levelStars: newStars);
 
       // Check for Level Up
-      int newTotalStars = totalStars;
+      int newTotalStars = progressStars;
       String newTitle = _getStatusTitleForStars(newTotalStars);
       int newEvo = getEvolutionStageForStars(newTotalStars);
 
@@ -1020,21 +1389,18 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     _wordGameTotalQuestions = totalPuzzles;
 
     int stars = 0;
-    if (totalPuzzles > 0) {
-      double pct = rescuedCount / totalPuzzles;
-      if (pct == 1.0) {
-        stars = 3;
-      } else if (pct >= 0.8) {
-        stars = 2;
-      } else if (pct >= 0.6) {
-        stars = 1;
-      }
+    if (rescuedCount >= totalPuzzles) {
+      stars = 3;
+    } else if (rescuedCount >= 2) {
+      stars = 2;
+    } else if (rescuedCount >= 1) {
+      stars = 1;
     }
 
     const String levelId = 'rescue_bird';
     int currentStars = _levelStars[levelId] ?? 0;
     if (stars > currentStars) {
-      int oldTotalStars = totalStars;
+      int oldTotalStars = progressStars;
       String oldTitle = _getStatusTitleForStars(oldTotalStars);
       int oldEvo = getEvolutionStageForStars(oldTotalStars);
 
@@ -1042,7 +1408,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
       newStars[levelId] = stars;
       _updateCurrentProfile(levelStars: newStars);
 
-      int newTotalStars = totalStars;
+      int newTotalStars = progressStars;
       String newTitle = _getStatusTitleForStars(newTotalStars);
       int newEvo = getEvolutionStageForStars(newTotalStars);
 
@@ -1102,6 +1468,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     return count;
   }
 
+  // All stars ever earned, including daily challenge (for raw stat display only).
   int get totalStars {
     int total = 0;
     _levelStars.forEach((_, stars) {
@@ -1110,12 +1477,38 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     return total;
   }
 
-  // To update this properly as the game expands you simply need to tally the individual maxes:
+  // Stars that count toward level-up / evolution / maxStars. Excludes daily
+  // challenge stars (daily_challenge_* keys) per design.
+  int get progressStars {
+    int total = 0;
+    _levelStars.forEach((key, stars) {
+      if (!key.startsWith('daily_challenge_')) total += stars;
+    });
+    return total;
+  }
+
+  int get textQuizTotalStars {
+    int total = 0;
+    for (var level in _allLevelsGlobally) {
+      total += _levelStars[level.id] ?? 0;
+    }
+    return total;
+  }
+
+  int get textQuizMaxStars => _allLevelsGlobally.length * 3; // 80 * 3 = 240
+
+  // Total possible stars across all game modes (excluding daily challenge):
+  // Text Quiz 240 + Unscramble 15 + Rescue 3 + Bird ID 90 + Crossbird 12 + Guess the Bird 15 + Speed Challenge 15 = 390
   int get maxStars =>
-      (_allLevelsGlobally.length * 3) +
-      unscrambleMaxStars +
-      rescueMaxStars +
-      birdIdMaxStars;
+      textQuizMaxStars +        // 240
+      unscrambleMaxStars +      // 15
+      rescueMaxStars +          // 3
+      birdIdMaxStars +          // 90
+      crossbirdMaxStars +       // 12
+      guessBirdMaxStars +       // 15
+      speedChallengeMaxStars;   // 15 → total 390
+
+  bool get isMaxCompletion => progressStars >= maxStars;
 
   int get completedLevelsCount {
     int count = 0;
@@ -1125,98 +1518,91 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     return count;
   }
 
-  String get userStatusTitle => _getStatusTitleForStars(totalStars);
+  String get userStatusTitle => _getStatusTitleForStars(progressStars);
 
+  // 9 levels (0–8). Level 8 "Bird Wizard" reached at 370 stars ≈ 95% of 390.
+  // At 100% (390 stars) the title stays "Bird Wizard" but a crown is shown.
   String _getStatusTitleForStars(int starCount) {
-    if (starCount < 3) return 'Just Hatched';
-    if (starCount < 8) return 'Bird Newbie';
-    if (starCount < 18) return 'Feather Weight';
-    if (starCount < 35) return 'Learning to Fly';
-    if (starCount < 60) return 'Nest Builder';
-    if (starCount < 95) return 'Winging It';
-    if (starCount < 140) return 'High Flyer';
-    if (starCount < 200) return 'Eagle Eye';
-    if (starCount < 275) return 'Owl-some';
-    if (starCount < 370) return 'Hawk-wardly Good';
-    return 'Bird Wizard';
+    if (starCount < 5) return 'Just Hatched';
+    if (starCount < 15) return 'Bird Newbie';
+    if (starCount < 35) return 'Feather Weight';
+    if (starCount < 65) return 'Learning to Fly';
+    if (starCount < 110) return 'Nest Builder';
+    if (starCount < 170) return 'Winging It';
+    if (starCount < 250) return 'High Flyer';
+    if (starCount < 370) return 'Eagle Eye';
+    return 'Bird Wizard'; // 370+ stars (≥95%), level 8
   }
 
-  int get userLevelIndex => getLevelIndexForStars(totalStars);
+  int get userLevelIndex => getLevelIndexForStars(progressStars);
 
+  // Level index 8 = max rank. Evolution formula (levelIndex ~/ 2) + 1 gives:
+  // levels 0-1→stage1, 2-3→stage2, 4-5→stage3, 6-7→stage4, 8→stage5
   int getLevelIndexForStars(int starCount) {
-    if (starCount < 3) return 0;
-    if (starCount < 8) return 1;
-    if (starCount < 18) return 2;
-    if (starCount < 35) return 3;
-    if (starCount < 60) return 4;
-    if (starCount < 95) return 5;
-    if (starCount < 140) return 6;
-    if (starCount < 200) return 7;
-    if (starCount < 275) return 8;
-    if (starCount < 370) return 9;
-    return 10;
+    if (starCount < 5) return 0;
+    if (starCount < 15) return 1;
+    if (starCount < 35) return 2;
+    if (starCount < 65) return 3;
+    if (starCount < 110) return 4;
+    if (starCount < 170) return 5;
+    if (starCount < 250) return 6;
+    if (starCount < 370) return 7;
+    return 8; // Bird Wizard
   }
 
-  int get userEvolutionStage => getEvolutionStageForStars(totalStars);
+  int get userEvolutionStage => getEvolutionStageForStars(progressStars);
 
   int getEvolutionStageForStars(int starCount) {
     return (getLevelIndexForStars(starCount) ~/ 2) + 1;
   }
 
   double get nextLevelProgress {
-    int current = totalStars;
+    if (isMaxCompletion) return 1.0;
+    int current = progressStars;
     int nextThreshold = _getNextLevelThreshold(current);
     int prevThreshold = _getPreviousLevelThreshold(current);
-
-    if (current >= 370) return 1.0; // Max Level
-
     int range = nextThreshold - prevThreshold;
     int earnedInLevel = current - prevThreshold;
-
     return earnedInLevel / range;
   }
 
   int get currentStarsInLevel {
-    int current = totalStars;
-    if (current >= 370) return 0;
+    if (isMaxCompletion) return maxStars;
+    int current = progressStars;
     int prevThreshold = _getPreviousLevelThreshold(current);
     return current - prevThreshold;
   }
 
   int get neededStarsForNextLevel {
-    int current = totalStars;
-    if (current >= 370) return 1; // Prevent 0/0 edgecase
+    if (isMaxCompletion) return maxStars;
+    int current = progressStars;
     int nextThreshold = _getNextLevelThreshold(current);
     int prevThreshold = _getPreviousLevelThreshold(current);
     return nextThreshold - prevThreshold;
   }
 
   int _getNextLevelThreshold(int starCount) {
-    if (starCount < 3) return 3;
-    if (starCount < 8) return 8;
-    if (starCount < 18) return 18;
+    if (starCount < 5) return 5;
+    if (starCount < 15) return 15;
     if (starCount < 35) return 35;
-    if (starCount < 60) return 60;
-    if (starCount < 95) return 95;
-    if (starCount < 140) return 140;
-    if (starCount < 200) return 200;
-    if (starCount < 275) return 275;
+    if (starCount < 65) return 65;
+    if (starCount < 110) return 110;
+    if (starCount < 170) return 170;
+    if (starCount < 250) return 250;
     if (starCount < 370) return 370;
-    return starCount; // Max
+    return maxStars; // 390 — king state
   }
 
   int _getPreviousLevelThreshold(int starCount) {
-    if (starCount < 3) return 0;
-    if (starCount < 8) return 3;
-    if (starCount < 18) return 8;
-    if (starCount < 35) return 18;
-    if (starCount < 60) return 35;
-    if (starCount < 95) return 60;
-    if (starCount < 140) return 95;
-    if (starCount < 200) return 140;
-    if (starCount < 275) return 200;
-    if (starCount < 370) return 275;
-    return 370; // Max
+    if (starCount < 5) return 0;
+    if (starCount < 15) return 5;
+    if (starCount < 35) return 15;
+    if (starCount < 65) return 35;
+    if (starCount < 110) return 65;
+    if (starCount < 170) return 110;
+    if (starCount < 250) return 170;
+    if (starCount < 370) return 250;
+    return 370; // Max rank entry point
   }
 
   // Level Up Getters and Actions
@@ -1572,7 +1958,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
         String dailyLevelKey =
             'daily_challenge_${now.year}_${now.month}_${now.day}';
 
-        int oldTotalStars = totalStars;
+        int oldTotalStars = progressStars;
         String oldTitle = _getStatusTitleForStars(oldTotalStars);
         int oldEvo = getEvolutionStageForStars(oldTotalStars);
 
@@ -1587,7 +1973,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
           levelStars: newStars,
         );
 
-        int newTotalStars = totalStars;
+        int newTotalStars = progressStars;
         String newTitle = _getStatusTitleForStars(newTotalStars);
         int newEvo = getEvolutionStageForStars(newTotalStars);
 
@@ -1626,7 +2012,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
       int currentStars = _levelStars[_currentLevel!.id] ?? 0;
       if (stars > currentStars) {
         // Capture old status
-        int oldTotalStars = totalStars;
+        int oldTotalStars = progressStars;
         String oldTitle = _getStatusTitleForStars(oldTotalStars);
         int oldEvo = getEvolutionStageForStars(oldTotalStars);
 
@@ -1638,7 +2024,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
 
         // Check for Level Up
         // We need to fetch totalStars again as it's a computed property based on the updated profile
-        int newTotalStars = totalStars;
+        int newTotalStars = progressStars;
         String newTitle = _getStatusTitleForStars(newTotalStars);
         int newEvo = getEvolutionStageForStars(newTotalStars);
 
@@ -1695,7 +2081,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     int effectiveNewStars = newBestStars;
 
     if (effectiveNewStars > effectiveOldStars) {
-      int oldTotalStars = totalStars;
+      int oldTotalStars = progressStars;
       String oldTitle = _getStatusTitleForStars(oldTotalStars);
       int oldEvo = getEvolutionStageForStars(oldTotalStars);
 
@@ -1703,7 +2089,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
       newStarsMap[levelId] = effectiveNewStars;
       _updateCurrentProfile(levelStars: newStarsMap);
 
-      int newTotalStars = totalStars;
+      int newTotalStars = progressStars;
       String newTitle = _getStatusTitleForStars(newTotalStars);
       int newEvo = getEvolutionStageForStars(newTotalStars);
 

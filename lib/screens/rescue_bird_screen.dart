@@ -134,7 +134,10 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
       if (_wrongGuesses >= _maxWrong) {
         Future.delayed(const Duration(milliseconds: 680), () {
           if (mounted) {
-            setState(() => _isFailed = true);
+            setState(() {
+              _isFailed = true;
+              _currentPuzzleIndex++;
+            });
             _birdEventController.forward();
           }
         });

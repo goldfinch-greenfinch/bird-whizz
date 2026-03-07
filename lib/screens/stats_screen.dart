@@ -49,61 +49,100 @@ class StatsScreen extends StatelessWidget {
                             'Adventurer',
                             provider.currentProfile?.name ?? 'Unknown',
                           ),
-                          _StatRow('Level', provider.userStatusTitle),
+                          _StatRow('Rank', provider.userStatusTitle),
                           _StatRow('Started On', firstPlay),
                           _StatRow('Time Played', timePlayed),
+                          _StatRow(
+                            'Total Stars',
+                            '${provider.progressStars} / ${provider.maxStars}',
+                          ),
                           const SizedBox(height: 8),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                          if (provider.isMaxCompletion)
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10,
+                                horizontal: 16,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.amber.withValues(alpha: 0.15),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(
+                                  color: Colors.amber,
+                                  width: 2,
+                                ),
+                              ),
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    'To Next Level',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey[600],
-                                    ),
+                                  Icon(
+                                    Icons.workspace_premium_rounded,
+                                    color: Colors.amber,
+                                    size: 22,
                                   ),
+                                  SizedBox(width: 8),
                                   Text(
-                                    '${(provider.nextLevelProgress * 100).toInt()}%',
+                                    '100% Complete!',
                                     style: TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 16,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.teal[700],
+                                      color: Colors.amber,
                                     ),
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 8),
-                              LinearProgressIndicator(
-                                value: provider.nextLevelProgress,
-                                backgroundColor: Colors.teal.withValues(
-                                  alpha: 0.2,
+                            )
+                          else
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'To Next Rank',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                    Text(
+                                      '${(provider.nextLevelProgress * 100).toInt()}%',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.teal[700],
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                color: Colors.teal,
-                                minHeight: 8,
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                            ],
-                          ),
+                                const SizedBox(height: 8),
+                                LinearProgressIndicator(
+                                  value: provider.nextLevelProgress,
+                                  backgroundColor: Colors.teal.withValues(
+                                    alpha: 0.2,
+                                  ),
+                                  color: Colors.teal,
+                                  minHeight: 8,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ],
+                            ),
                         ],
                       ),
                       const SizedBox(height: 16),
                       _StatSection(
-                        title: 'Text Quiz Mastery',
+                        title: 'Text Quiz',
                         icon: Icons.quiz_rounded,
                         color: Colors.blueAccent,
                         children: [
                           _StatRow(
-                            'Stars Earned',
-                            '${provider.totalStars} / ${provider.maxStars}',
+                            'Stars',
+                            '${provider.textQuizTotalStars} / ${provider.textQuizMaxStars}',
                           ),
                           _StatRow(
                             'Sections Mastered',
-                            '${provider.completedCategoriesCount} / ${provider.allLevels.isNotEmpty ? 8 : 0}',
+                            '${provider.completedCategoriesCount} / 8',
                           ),
                           _StatRow(
                             'Total Correct',
@@ -118,7 +157,11 @@ class StatsScreen extends StatelessWidget {
                         color: Colors.orangeAccent.shade700,
                         children: [
                           _StatRow(
-                            'High Score',
+                            'Stars',
+                            '${provider.birdIdTotalStars} / ${provider.birdIdMaxStars}',
+                          ),
+                          _StatRow(
+                            'Best Session Score',
                             '${provider.birdIdHighScore} / 10',
                           ),
                           _StatRow(
@@ -129,17 +172,57 @@ class StatsScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       _StatSection(
-                        title: 'Unscramble Games',
+                        title: 'Word Games',
                         icon: Icons.spellcheck_rounded,
                         color: Colors.deepPurpleAccent,
                         children: [
                           _StatRow(
-                            'High Score',
+                            'Unscramble Stars',
+                            '${provider.unscrambleTotalStars} / ${provider.unscrambleMaxStars}',
+                          ),
+                          _StatRow(
+                            'Best Unscramble Score',
                             '${provider.unscrambleHighScore} / 10',
                           ),
                           _StatRow(
                             'Words Unscrambled',
                             '${provider.totalUnscrambledWords}',
+                          ),
+                          _StatRow(
+                            'Crossbird Stars',
+                            '${provider.crossbirdTotalStars} / ${provider.crossbirdMaxStars}',
+                          ),
+                          _StatRow(
+                            'Crosswords Solved',
+                            '${provider.totalCrosswordsSolved}',
+                          ),
+                          _StatRow(
+                            'Rescue Stars',
+                            '${provider.rescueTotalStars} / ${provider.rescueMaxStars}',
+                          ),
+                          _StatRow(
+                            'Birds Rescued',
+                            '${provider.totalRescuedBirds}',
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      _StatSection(
+                        title: 'Special Modes',
+                        icon: Icons.auto_awesome_rounded,
+                        color: Colors.indigo,
+                        children: [
+                          _StatRow(
+                            'Guess the Bird Stars',
+                            '${provider.guessBirdTotalStars} / ${provider.guessBirdMaxStars}',
+                          ),
+                          _StatRow(
+                            'Speed Challenge Stars',
+                            '${provider.speedChallengeTotalStars} / ${provider.speedChallengeMaxStars}',
+                          ),
+                          _StatRow(
+                            'Endless Best Streak',
+                            '${provider.endlessHighScore}',
                           ),
                         ],
                       ),
@@ -284,7 +367,7 @@ class _Header extends StatelessWidget {
             ],
           ),
           child: Column(
-            children: [const CommonProfileHeader(isStatsScreen: true)],
+            children: [const CommonProfileHeader(isStatsScreen: true, sectionTitle: 'My Stats')],
           ),
         );
       },

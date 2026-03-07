@@ -21,11 +21,59 @@ class SubheadingItem extends AchievementItem {
 class AchievementsBookScreen extends StatefulWidget {
   const AchievementsBookScreen({super.key});
 
+  // Builds the inner image/icon child for a stamp circle, handling all three
+  // icon types: evolution images, Material icons, and bird asset images.
+  static Widget buildStampIconChild(
+    Stamp stamp,
+    bool isUnlocked,
+    String? companionBirdId, {
+    double iconSize = 48,
+  }) {
+    if (stamp.evolutionStage != null) {
+      final bird = companionBirdId ?? 'robin';
+      final path = 'assets/bird_evolution/${bird}_${stamp.evolutionStage}.webp';
+      return isUnlocked
+          ? Image.asset(path, fit: BoxFit.cover)
+          : Opacity(
+              opacity: 0.2,
+              child: ColorFiltered(
+                colorFilter: const ColorFilter.mode(
+                  Colors.brown,
+                  BlendMode.srcIn,
+                ),
+                child: Image.asset(path, fit: BoxFit.cover),
+              ),
+            );
+    } else if (stamp.iconData != null) {
+      return Opacity(
+        opacity: isUnlocked ? 1.0 : 0.15,
+        child: Center(
+          child: Icon(stamp.iconData, size: iconSize, color: Colors.brown[800]),
+        ),
+      );
+    } else {
+      return isUnlocked
+          ? Image.asset(stamp.iconPath, fit: BoxFit.cover)
+          : Opacity(
+              opacity: 0.2,
+              child: ColorFiltered(
+                colorFilter: const ColorFilter.mode(
+                  Colors.brown,
+                  BlendMode.srcIn,
+                ),
+                child: Image.asset(stamp.iconPath, fit: BoxFit.cover),
+              ),
+            );
+    }
+  }
+
   static void showStampDialog(
     BuildContext context,
     Stamp stamp,
     bool isUnlocked,
   ) {
+    final companionBirdId =
+        Provider.of<QuizProvider>(context, listen: false).selectedBirdId;
     showDialog(
       context: context,
       builder: (context) {
@@ -62,21 +110,12 @@ class AchievementsBookScreen extends StatefulWidget {
                     ],
                   ),
                   child: ClipOval(
-                    child: isUnlocked
-                        ? Image.asset(stamp.iconPath, fit: BoxFit.cover)
-                        : Opacity(
-                            opacity: 0.2, // Faint placeholder
-                            child: ColorFiltered(
-                              colorFilter: const ColorFilter.mode(
-                                Colors.brown,
-                                BlendMode.srcIn,
-                              ),
-                              child: Image.asset(
-                                stamp.iconPath,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
+                    child: buildStampIconChild(
+                      stamp,
+                      isUnlocked,
+                      companionBirdId,
+                      iconSize: 70,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -250,6 +289,53 @@ class AchievementsBookScreen extends StatefulWidget {
       'first_login',
       'login_streak_3',
       'login_streak_7',
+    ]);
+
+    // 8. Endless Mode
+    addSection('Endless Mode', [
+      'endless_streak_10',
+      'endless_streak_20',
+      'endless_streak_50',
+      'endless_streak_100',
+    ]);
+
+    // 9. Crossbird
+    addSection('Crossbird', [
+      'crossbird_first',
+      'crossbird_master',
+      'crossbird_perfectionist',
+    ]);
+
+    // 10. Rescue the Bird
+    addSection('Rescue the Bird', [
+      'rescue_rookie',
+      'rescue_ranger',
+      'rescue_hero',
+    ]);
+
+    // 11. Speed Challenge
+    addSection('Speed Challenge', [
+      'speed_first',
+      'speed_all_5',
+      'speed_perfect',
+      'speed_legend_3stars',
+    ]);
+
+    // 12. Guess the Bird
+    addSection('Guess the Bird', [
+      'guess_bird_first',
+      'guess_bird_all_5',
+      'guess_bird_perfect',
+      'guess_bird_legend',
+    ]);
+
+    // 13. Companion Evolution
+    addSection('Companion Evolution', [
+      'evolution_stage_1',
+      'evolution_stage_2',
+      'evolution_stage_3',
+      'evolution_stage_4',
+      'evolution_stage_5',
     ]);
 
     // Ensure even number of pages so bottom page index is always valid
@@ -584,6 +670,7 @@ class AchievementsBookScreen extends StatefulWidget {
   static Widget buildStamp(BuildContext context, Stamp stamp) {
     final provider = Provider.of<QuizProvider>(context);
     final isUnlocked = provider.unlockedStamps.contains(stamp.id);
+    final companionBirdId = provider.selectedBirdId;
 
     return GestureDetector(
       onTap: () {
@@ -610,21 +697,7 @@ class AchievementsBookScreen extends StatefulWidget {
                   color: isUnlocked ? Colors.white : Colors.transparent,
                 ),
                 child: ClipOval(
-                  child: isUnlocked
-                      ? Image.asset(stamp.iconPath, fit: BoxFit.cover)
-                      : Opacity(
-                          opacity: 0.2, // Faint placeholder
-                          child: ColorFiltered(
-                            colorFilter: const ColorFilter.mode(
-                              Colors.brown,
-                              BlendMode.srcIn,
-                            ),
-                            child: Image.asset(
-                              stamp.iconPath,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
+                  child: buildStampIconChild(stamp, isUnlocked, companionBirdId),
                 ),
               ),
             ),

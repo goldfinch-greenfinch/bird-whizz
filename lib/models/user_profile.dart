@@ -15,6 +15,13 @@ class UserProfile {
 
   // Word game specific stats
   final int totalRescuedBirds;
+  final int totalCrosswordsSolved;
+
+  // Guess the Bird game stats
+  final int totalGuessBirdBirdsGuessed;
+
+  // Speed Challenge game stats
+  final int totalSpeedChallengeCorrect;
 
   // Daily Challenge & Login Tracking
   final DateTime? lastDailyChallengeDate;
@@ -42,6 +49,9 @@ class UserProfile {
     this.lastLoginDate,
     this.currentLoginStreak = 0,
     this.totalRescuedBirds = 0,
+    this.totalCrosswordsSolved = 0,
+    this.totalGuessBirdBirdsGuessed = 0,
+    this.totalSpeedChallengeCorrect = 0,
   });
 
   Map<String, dynamic> toJson() {
@@ -64,6 +74,9 @@ class UserProfile {
       'lastLoginDate': lastLoginDate?.toIso8601String(),
       'currentLoginStreak': currentLoginStreak,
       'totalRescuedBirds': totalRescuedBirds,
+      'totalCrosswordsSolved': totalCrosswordsSolved,
+      'totalGuessBirdBirdsGuessed': totalGuessBirdBirdsGuessed,
+      'totalSpeedChallengeCorrect': totalSpeedChallengeCorrect,
     };
   }
 
@@ -110,6 +123,9 @@ class UserProfile {
           : null,
       currentLoginStreak: json['currentLoginStreak'] as int? ?? 0,
       totalRescuedBirds: json['totalRescuedBirds'] as int? ?? 0,
+      totalCrosswordsSolved: json['totalCrosswordsSolved'] as int? ?? 0,
+      totalGuessBirdBirdsGuessed: json['totalGuessBirdBirdsGuessed'] as int? ?? 0,
+      totalSpeedChallengeCorrect: json['totalSpeedChallengeCorrect'] as int? ?? 0,
     );
   }
 
@@ -132,6 +148,9 @@ class UserProfile {
     DateTime? lastLoginDate,
     int? currentLoginStreak,
     int? totalRescuedBirds,
+    int? totalCrosswordsSolved,
+    int? totalGuessBirdBirdsGuessed,
+    int? totalSpeedChallengeCorrect,
   }) {
     return UserProfile(
       id: id ?? this.id,
@@ -157,6 +176,12 @@ class UserProfile {
       lastLoginDate: lastLoginDate ?? this.lastLoginDate,
       currentLoginStreak: currentLoginStreak ?? this.currentLoginStreak,
       totalRescuedBirds: totalRescuedBirds ?? this.totalRescuedBirds,
+      totalCrosswordsSolved:
+          totalCrosswordsSolved ?? this.totalCrosswordsSolved,
+      totalGuessBirdBirdsGuessed:
+          totalGuessBirdBirdsGuessed ?? this.totalGuessBirdBirdsGuessed,
+      totalSpeedChallengeCorrect:
+          totalSpeedChallengeCorrect ?? this.totalSpeedChallengeCorrect,
     );
   }
 }

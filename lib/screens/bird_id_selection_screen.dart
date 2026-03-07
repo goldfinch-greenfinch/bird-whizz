@@ -252,7 +252,7 @@ class _Header extends StatelessWidget {
           ),
           child: Column(
             children: [
-              const CommonProfileHeader(),
+              const CommonProfileHeader(sectionTitle: 'Bird Identification'),
               const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,

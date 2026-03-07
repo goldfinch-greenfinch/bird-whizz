@@ -9,7 +9,7 @@ import '../services/audio_service.dart';
 import 'bird_id_selection_screen.dart';
 import 'word_games_selection_screen.dart';
 import 'quiz_screen.dart';
-import 'endless_quiz_screen.dart';
+import 'special_quiz_selection_screen.dart';
 
 class MainSelectionScreen extends StatefulWidget {
   const MainSelectionScreen({super.key});
@@ -206,7 +206,7 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
                         },
                       ),
                       _FeatureCard(
-                        title: 'Bird Quiz (Text)',
+                        title: 'Bird Whizz',
                         icon: Icons.quiz_rounded,
                         color: Colors.teal,
                         description:
@@ -242,7 +242,8 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
                         title: 'Bird Word Games',
                         icon: Icons.spellcheck_rounded,
                         color: Colors.deepPurpleAccent,
-                        description: 'Unscramble birds or rescue them from eggs!',
+                        description:
+                            'Unscramble birds, rescue them from nests or solve cross-birds!',
                         onTap: () {
                           context.read<AudioService>().playUiTap();
                           Navigator.push(
@@ -255,22 +256,18 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
                       ),
                       const SizedBox(height: 24),
                       _FeatureCard(
-                        title: 'Endless Mode',
-                        icon: Icons.all_inclusive,
-                        color: Colors.redAccent,
+                        title: 'Special Quiz Modes',
+                        icon: Icons.auto_awesome_rounded,
+                        color: Colors.indigo,
                         description:
-                            'Survive as long as you can with 3 strikes!',
+                            'Survival Mode & Guess the Bird — unique challenges!',
                         onTap: () {
-                          final provider = Provider.of<QuizProvider>(
-                            context,
-                            listen: false,
-                          );
-                          provider.startEndlessMode();
-                          context.read<AudioService>().playTransition();
+                          context.read<AudioService>().playUiTap();
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => const EndlessQuizScreen(),
+                              builder: (_) =>
+                                  const SpecialQuizSelectionScreen(),
                             ),
                           );
                         },
@@ -371,7 +368,7 @@ class _Header extends StatelessWidget {
     return Consumer<QuizProvider>(
       builder: (context, provider, child) {
         return Container(
-          padding: const EdgeInsets.fromLTRB(16, 20, 16, 30),
+          padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
           decoration: BoxDecoration(
             color: Colors.teal,
             borderRadius: const BorderRadius.only(
@@ -399,10 +396,36 @@ class _Header extends StatelessWidget {
                   );
                 },
               ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildStatItem(Icons.quiz_rounded, '${provider.textQuizTotalStars}/${provider.textQuizMaxStars}', 'Quiz', Colors.amber),
+                  _buildDivider(),
+                  _buildStatItem(Icons.visibility_rounded, '${provider.birdIdTotalStars}/${provider.birdIdMaxStars}', 'Bird ID', Colors.orangeAccent),
+                  _buildDivider(),
+                  _buildStatItem(Icons.spellcheck_rounded, '${provider.wordGamesTotalStars}/${provider.wordGamesMaxStars}', 'Words', Colors.tealAccent),
+                  _buildDivider(),
+                  _buildStatItem(Icons.auto_awesome_rounded, '${provider.speedChallengeTotalStars + provider.guessBirdTotalStars}/${provider.speedChallengeMaxStars + provider.guessBirdMaxStars}', 'Special', Colors.lightBlueAccent),
+                ],
+              ),
             ],
           ),
         );
       },
     );
   }
+
+  Widget _buildStatItem(IconData icon, String value, String label, Color color) {
+    return Column(
+      children: [
+        Icon(icon, color: color, size: 26),
+        const SizedBox(height: 4),
+        Text(value, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+        Text(label, style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 10)),
+      ],
+    );
+  }
+
+  Widget _buildDivider() => Container(height: 30, width: 1, color: Colors.white.withValues(alpha: 0.2));
 }

@@ -4,8 +4,8 @@ import '../providers/quiz_provider.dart';
 import '../services/audio_service.dart';
 import 'unscramble_game_screen.dart';
 import 'rescue_bird_screen.dart';
+import 'crossbird_screen.dart';
 import '../widgets/common_profile_header.dart';
-import '../widgets/navigation_utils.dart';
 
 class WordGamesSelectionScreen extends StatelessWidget {
   const WordGamesSelectionScreen({super.key});
@@ -69,6 +69,23 @@ class WordGamesSelectionScreen extends StatelessWidget {
                         );
                       },
                     ),
+                    const SizedBox(height: 20),
+                    _GameCard(
+                      title: 'Crossbird',
+                      subtitle:
+                          'Mini crosswords with bird facts as clues.',
+                      icon: Icons.grid_on_rounded,
+                      color: Colors.teal,
+                      onTap: () {
+                        context.read<AudioService>().playUiTap();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const _CrossbirdLevelsScreen(),
+                          ),
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -86,6 +103,7 @@ class _GameCard extends StatelessWidget {
   final IconData icon;
   final Color color;
   final VoidCallback onTap;
+  final Widget? trailing;
 
   const _GameCard({
     required this.title,
@@ -93,6 +111,7 @@ class _GameCard extends StatelessWidget {
     required this.icon,
     required this.color,
     required this.onTap,
+    this.trailing,
   });
 
   @override
@@ -145,7 +164,7 @@ class _GameCard extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey[300]),
+            trailing ?? Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey[300]),
           ],
         ),
       ),
@@ -178,7 +197,7 @@ class _Header extends StatelessWidget {
           ),
           child: Column(
             children: [
-              const CommonProfileHeader(),
+              const CommonProfileHeader(sectionTitle: 'Bird Word Games'),
               const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -192,16 +211,16 @@ class _Header extends StatelessWidget {
                   _buildContainerLine(),
                   _buildStatItem(
                     Icons.emoji_events_rounded,
-                    '${provider.unscrambleCompletedLevels + provider.rescueCompletedLevels}',
-                    'Word Levels',
+                    '${provider.unscrambleCompletedLevels + provider.rescueCompletedLevels + provider.crossbirdCompletedPuzzles}',
+                    'Levels Done',
                     Colors.orangeAccent,
                   ),
                   _buildContainerLine(),
                   _buildStatItem(
-                    Icons.spellcheck_rounded,
-                    '${provider.totalUnscrambledWords + provider.totalRescuedBirds}',
-                    'Words & Birds',
-                    Colors.greenAccent,
+                    Icons.grid_on_rounded,
+                    '${provider.crossbirdTotalStars}/${provider.crossbirdMaxStars}',
+                    'Cross Stars',
+                    Colors.tealAccent,
                   ),
                 ],
               ),
@@ -246,6 +265,174 @@ class _Header extends StatelessWidget {
       height: 30,
       width: 1,
       color: Colors.white.withValues(alpha: 0.2),
+    );
+  }
+}
+
+class _CrossbirdLevelsScreen extends StatelessWidget {
+  const _CrossbirdLevelsScreen();
+
+  static const _puzzleTitles = [
+    'Night & Day',
+    'Woodland & Shore',
+    'Meadow & Heath',
+    'World Birds',
+  ];
+  static const _puzzleSubtitles = [
+    'Six birds spanning dusk to dawn — from Wren to Nightjar',
+    'Six birds of wood, wetland and estuary to discover',
+    'Five birds of meadow, heath and open skies',
+    'Five birds from across the globe — from Quetzal to Loon',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.teal[50],
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildHeader(context),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: ListView.separated(
+                  itemCount: _puzzleTitles.length,
+                  separatorBuilder: (context, index) => const SizedBox(height: 16),
+                  itemBuilder: (context, index) =>
+                      _buildPuzzleCard(context, index),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    return Consumer<QuizProvider>(
+      builder: (context, provider, _) {
+        return Container(
+          padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
+          decoration: BoxDecoration(
+            color: Colors.teal,
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(30),
+              bottomRight: Radius.circular(30),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.teal.withValues(alpha: 0.3),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Column(
+            children: [
+              const CommonProfileHeader(sectionTitle: 'Cross-Bird Puzzles'),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildStat(
+                    Icons.star_rounded,
+                    '${provider.crossbirdTotalStars}/${provider.crossbirdMaxStars}',
+                    'Stars',
+                    Colors.amber,
+                  ),
+                  _buildDivider(),
+                  _buildStat(
+                    Icons.grid_on_rounded,
+                    '${provider.crossbirdCompletedPuzzles}/4',
+                    'Puzzles Done',
+                    Colors.tealAccent,
+                  ),
+                  _buildDivider(),
+                  _buildStat(
+                    Icons.check_circle_rounded,
+                    '${provider.totalCrosswordsSolved}',
+                    'Words Solved',
+                    Colors.greenAccent,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildStat(IconData icon, String value, String label, Color color) {
+    return Column(
+      children: [
+        Icon(icon, color: color, size: 26),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 17,
+          ),
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.white.withValues(alpha: 0.8),
+            fontSize: 11,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDivider() => Container(
+        height: 30,
+        width: 1,
+        color: Colors.white.withValues(alpha: 0.2),
+      );
+
+  Widget _buildPuzzleCard(BuildContext context, int index) {
+    return Consumer<QuizProvider>(
+      builder: (context, provider, _) {
+        final levelKey = 'crossbird_puzzle_$index';
+        final stars = provider.levelStars(levelKey);
+        return _GameCard(
+          title: 'Puzzle ${index + 1}: ${_puzzleTitles[index]}',
+          subtitle: _puzzleSubtitles[index],
+          icon: Icons.grid_on_rounded,
+          color: Colors.teal,
+          trailing: stars > 0
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(
+                    3,
+                    (i) => Icon(
+                      i < stars ? Icons.star_rounded : Icons.star_outline_rounded,
+                      color: Colors.amber,
+                      size: 18,
+                    ),
+                  ),
+                )
+              : null,
+          onTap: () {
+            context.read<AudioService>().playTransition();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => CrossbirdScreen(puzzleIndex: index),
+              ),
+            ).then((_) {
+              if (context.mounted) {
+                context.read<AudioService>().playMenuMusic();
+              }
+            });
+          },
+        );
+      },
     );
   }
 }
@@ -336,7 +523,7 @@ class _UnscrambleLevelsScreen extends StatelessWidget {
           ),
           child: Column(
             children: [
-              const CommonProfileHeader(),
+              const CommonProfileHeader(sectionTitle: 'Bird Unscramble'),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,

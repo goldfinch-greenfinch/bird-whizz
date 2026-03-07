@@ -26,7 +26,7 @@ class BirdQuizApp extends StatefulWidget {
   State<BirdQuizApp> createState() => _BirdQuizAppState();
 }
 
-class _BirdQuizAppState extends State<BirdQuizApp> {
+class _BirdQuizAppState extends State<BirdQuizApp> with WidgetsBindingObserver {
   late final QuizProvider _quizProvider;
   late final AudioService _audioService;
   late final Future<void> _initFuture;
@@ -35,6 +35,7 @@ class _BirdQuizAppState extends State<BirdQuizApp> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _quizProvider = QuizProvider();
     _audioService = AudioService();
     _initFuture = Future.wait([
@@ -44,7 +45,19 @@ class _BirdQuizAppState extends State<BirdQuizApp> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden ||
+        state == AppLifecycleState.detached) {
+      _audioService.pauseAll();
+    } else if (state == AppLifecycleState.resumed) {
+      _audioService.resumeAll();
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _audioService.dispose();
     super.dispose();
   }

@@ -149,7 +149,7 @@ class _CategoryHeader extends StatelessWidget {
           ),
           child: Column(
             children: [
-              const CommonProfileHeader(),
+              const CommonProfileHeader(sectionTitle: 'Bird Whizz'),
               const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,

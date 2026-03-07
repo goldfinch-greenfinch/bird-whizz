@@ -74,6 +74,18 @@ class AudioService extends ChangeNotifier {
     await _playMusic(randomTrack, volume: 0.2);
   }
 
+  void pauseAll() {
+    if (_musicHandle != null) {
+      SoLoud.instance.setPause(_musicHandle!, true);
+    }
+  }
+
+  void resumeAll() {
+    if (!_isMuted && _musicHandle != null) {
+      SoLoud.instance.setPause(_musicHandle!, false);
+    }
+  }
+
   Future<void> stopMusic() async {
     try {
       if (_musicHandle != null) {

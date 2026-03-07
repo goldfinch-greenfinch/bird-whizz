@@ -1,14 +1,20 @@
+import 'package:flutter/material.dart';
+
 class Stamp {
   final String id;
   final String title;
   final String description;
   final String iconPath;
+  final IconData? iconData; // Material icon, used when no bird image available
+  final int? evolutionStage; // 1-5, renders companion bird evolution image dynamically
 
   const Stamp({
     required this.id,
     required this.title,
     required this.description,
-    required this.iconPath,
+    this.iconPath = '',
+    this.iconData,
+    this.evolutionStage,
   });
 }
 
@@ -377,56 +383,56 @@ final List<Stamp> gameStamps = [
     id: 'daily_bonus_1',
     title: 'Early Riser',
     description: 'Complete your first Daily Bird Challenge.',
-    iconPath: 'assets/bird_icons/robin.webp',
+    iconPath: 'assets/bird_icons/redwing.webp',
   ),
   const Stamp(
     id: 'daily_bonus_5',
     title: 'Daily Dedication',
     description: 'Complete 5 Daily Bird Challenges.',
-    iconPath: 'assets/bird_icons/jay.webp',
+    iconPath: 'assets/bird_icons/reed_bunting.webp',
   ),
   const Stamp(
     id: 'daily_bonus_20',
     title: 'Habitual Hatchling',
     description: 'Complete 20 Daily Bird Challenges.',
-    iconPath: 'assets/bird_icons/woodpecker.webp',
+    iconData: Icons.wb_sunny_rounded,
   ),
   const Stamp(
     id: 'daily_bonus_50',
     title: 'Routine Raptor',
     description: 'Complete 50 Daily Bird Challenges.',
-    iconPath: 'assets/bird_icons/puffin.webp',
+    iconData: Icons.date_range_rounded,
   ),
   const Stamp(
     id: 'daily_bonus_100',
     title: 'Centurion Scholar',
     description: 'Complete 100 Daily Bird Challenges.',
-    iconPath: 'assets/bird_icons/barn_owl.webp',
+    iconData: Icons.military_tech_rounded,
   ),
   const Stamp(
     id: 'daily_bonus_365',
     title: 'Year-Round Birder',
     description: 'Complete 365 Daily Bird Challenges.',
-    iconPath: 'assets/bird_icons/red_kite.webp',
+    iconData: Icons.calendar_month_rounded,
   ),
   // -- Login Streak Stamps --
   const Stamp(
     id: 'first_login',
     title: 'First Sighting',
     description: 'Log into the app for the very first time.',
-    iconPath: 'assets/bird_icons/house_sparrow.webp',
+    iconPath: 'assets/bird_icons/willow_tit.webp',
   ),
   const Stamp(
     id: 'login_streak_3',
     title: 'Returning Flock',
     description: 'Log in for 3 days in a row.',
-    iconPath: 'assets/bird_icons/gull.webp',
+    iconPath: 'assets/bird_icons/sandpiper.webp',
   ),
   const Stamp(
     id: 'login_streak_7',
     title: 'Weekly Wings',
     description: 'Log in for 7 days in a row.',
-    iconPath: 'assets/bird_icons/lapwing.webp',
+    iconPath: 'assets/bird_icons/shelduck.webp',
   ),
   // -- Vocabulary / Scramble Stamps --
   const Stamp(
@@ -440,43 +446,143 @@ final List<Stamp> gameStamps = [
     id: 'endless_streak_10',
     title: 'Endless Hatchling',
     description: 'Reach a streak of 10 in Endless Mode.',
-    iconPath: 'assets/bird_icons/robin.webp',
+    iconData: Icons.loop_rounded,
   ),
   const Stamp(
     id: 'endless_streak_20',
     title: 'Endless Glider',
     description: 'Reach a streak of 20 in Endless Mode.',
-    iconPath: 'assets/bird_icons/jay.webp',
+    iconData: Icons.air_rounded,
   ),
   const Stamp(
     id: 'endless_streak_50',
     title: 'Endless Soarer',
     description: 'Reach a streak of 50 in Endless Mode.',
-    iconPath: 'assets/bird_icons/barn_owl.webp',
+    iconData: Icons.flight_rounded,
   ),
   const Stamp(
     id: 'endless_streak_100',
     title: 'Endless Legend',
     description: 'Answer 100 Endless Mode questions in a row.',
-    iconPath: 'assets/bird_icons/red_kite.webp',
+    iconData: Icons.emoji_events_rounded,
+  ),
+  // -- Crossbird Stamps --
+  const Stamp(
+    id: 'crossbird_first',
+    title: 'Wordcross Hatchling',
+    description: 'Solve your first Crossbird puzzle.',
+    iconPath: 'assets/bird_icons/long_tailed_tit.webp',
+  ),
+  const Stamp(
+    id: 'crossbird_master',
+    title: 'Crossbird Master',
+    description: 'Complete all 3 Crossbird puzzles.',
+    iconData: Icons.grid_on_rounded,
+  ),
+  const Stamp(
+    id: 'crossbird_perfectionist',
+    title: 'Crossbird Champion',
+    description: 'Earn 3 stars on every Crossbird puzzle.',
+    iconData: Icons.workspace_premium_rounded,
   ),
   // -- Rescue the Bird Stamps --
   const Stamp(
     id: 'rescue_rookie',
     title: 'Rescue Rookie',
     description: 'Rescue your very first bird from its egg.',
-    iconPath: 'assets/bird_icons/robin.webp',
+    iconPath: 'assets/bird_icons/shag.webp',
   ),
   const Stamp(
     id: 'rescue_ranger',
     title: 'Rescue Ranger',
     description: 'Rescue 10 birds in the Rescue the Bird game.',
-    iconPath: 'assets/bird_icons/greenfinch.webp',
+    iconData: Icons.volunteer_activism_rounded,
   ),
   const Stamp(
     id: 'rescue_hero',
     title: 'Rescue Hero',
     description: 'Rescue 25 birds in the Rescue the Bird game.',
-    iconPath: 'assets/bird_icons/barn_owl.webp',
+    iconData: Icons.shield_rounded,
+  ),
+  // -- Speed Challenge Stamps --
+  const Stamp(
+    id: 'speed_first',
+    title: 'Speed Hatchling',
+    description: 'Complete your first Speed Challenge level.',
+    iconData: Icons.speed_rounded,
+  ),
+  const Stamp(
+    id: 'speed_all_5',
+    title: 'Speed Legend',
+    description: 'Complete all 5 Speed Challenge levels.',
+    iconData: Icons.flash_on_rounded,
+  ),
+  const Stamp(
+    id: 'speed_perfect',
+    title: 'Speed Perfectionist',
+    description: 'Earn 3 stars on any Speed Challenge level.',
+    iconData: Icons.stars_rounded,
+  ),
+  const Stamp(
+    id: 'speed_legend_3stars',
+    title: 'Lightning Legend',
+    description: 'Earn 3 stars on the Legend (Level 5) Speed Challenge.',
+    iconData: Icons.bolt_rounded,
+  ),
+  // -- Guess the Bird Stamps --
+  const Stamp(
+    id: 'guess_bird_first',
+    title: 'Bird Spotter',
+    description: 'Complete your first Guess the Bird level.',
+    iconData: Icons.image_search_rounded,
+  ),
+  const Stamp(
+    id: 'guess_bird_all_5',
+    title: 'Bird Expert',
+    description: 'Complete all 5 Guess the Bird levels.',
+    iconData: Icons.photo_library_rounded,
+  ),
+  const Stamp(
+    id: 'guess_bird_perfect',
+    title: 'Bird Genius',
+    description: 'Earn 3 stars on any Guess the Bird level.',
+    iconData: Icons.grade_rounded,
+  ),
+  const Stamp(
+    id: 'guess_bird_legend',
+    title: 'Bird Legend',
+    description: 'Earn 3 stars on the hardest Guess the Bird level.',
+    iconData: Icons.auto_awesome_rounded,
+  ),
+  // -- Companion Evolution Stamps --
+  const Stamp(
+    id: 'evolution_stage_1',
+    title: 'Hatchling',
+    description: 'Your companion has hatched! Welcome to the adventure.',
+    evolutionStage: 1,
+  ),
+  const Stamp(
+    id: 'evolution_stage_2',
+    title: 'Fledgling',
+    description: 'Your companion spreads their wings for the first time.',
+    evolutionStage: 2,
+  ),
+  const Stamp(
+    id: 'evolution_stage_3',
+    title: 'Juvenile',
+    description: 'Your companion grows into a bold and curious juvenile.',
+    evolutionStage: 3,
+  ),
+  const Stamp(
+    id: 'evolution_stage_4',
+    title: 'Adult',
+    description: 'Your companion has become a proud and capable adult.',
+    evolutionStage: 4,
+  ),
+  const Stamp(
+    id: 'evolution_stage_5',
+    title: 'Full Plumage',
+    description: 'Your companion reaches their magnificent final form.',
+    evolutionStage: 5,
   ),
 ];

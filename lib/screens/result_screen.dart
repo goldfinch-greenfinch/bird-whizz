@@ -45,12 +45,6 @@ class _ResultScreenState extends State<ResultScreen> {
     int total = provider.totalQuestions;
     int score = provider.score;
 
-    if (provider.currentCategory == 'daily_challenge') {
-      _stars = score == 1 ? 1 : 0;
-      _message = score == 1 ? "Great job!" : "Try again tomorrow!";
-      return;
-    }
-
     if (score == total && total > 0) {
       _stars = 3;
       _message =
@@ -231,7 +225,7 @@ class _ResultScreenState extends State<ResultScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
-              provider.currentCategory == 'daily_challenge' ? 1 : 3,
+              3,
               (index) {
                 return Icon(
                   index < _stars ? Icons.star : Icons.star_border,

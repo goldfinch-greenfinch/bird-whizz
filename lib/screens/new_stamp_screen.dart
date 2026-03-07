@@ -196,9 +196,10 @@ class _NewStampScreenState extends State<NewStampScreen>
                         ],
                       ),
                       child: ClipOval(
-                        child: Image.asset(
-                          renderStamp.iconPath,
-                          fit: BoxFit.cover,
+                        child: AchievementsBookScreen.buildStampIconChild(
+                          renderStamp,
+                          true,
+                          context.read<QuizProvider>().selectedBirdId,
                         ),
                       ),
                     ), // Container

@@ -112,16 +112,15 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
     return Scaffold(
       backgroundColor: Colors.teal[50],
       body: SafeArea(
-        child: Column(
-          children: [
-            const _Header(),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const _Header(),
+              Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                       Consumer<QuizProvider>(
                         builder: (context, provider, child) {
                           if (!provider.isDailyChallengeAvailable) {
@@ -272,12 +271,11 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
                           );
                         },
                       ),
-                    ],
-                  ),
+                  ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -22,24 +22,22 @@ class StatsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.teal[50],
       body: SafeArea(
-        child: Column(
-          children: [
-            const _Header(),
-            Expanded(
-              child: Consumer<QuizProvider>(
-                builder: (context, provider, child) {
-                  final String firstPlay = provider.firstPlayDate != null
-                      ? DateFormat(
-                          'MMM d, yyyy',
-                        ).format(provider.firstPlayDate!)
-                      : 'Unknown';
-                  final String timePlayed = _formatDuration(
-                    provider.totalTimePlayingSeconds,
-                  );
-
-                  return ListView(
+        child: Consumer<QuizProvider>(
+          builder: (context, provider, child) {
+            final String firstPlay = provider.firstPlayDate != null
+                ? DateFormat('MMM d, yyyy').format(provider.firstPlayDate!)
+                : 'Unknown';
+            final String timePlayed = _formatDuration(
+              provider.totalTimePlayingSeconds,
+            );
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  const _Header(),
+                  Padding(
                     padding: const EdgeInsets.all(16.0),
-                    children: [
+                    child: Column(
+                      children: [
                       _StatSection(
                         title: 'Total Journey',
                         icon: Icons.explore_rounded,
@@ -226,12 +224,13 @@ class StatsScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                    ],
-                  );
-                },
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

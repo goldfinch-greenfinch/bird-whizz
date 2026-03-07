@@ -18,13 +18,13 @@ class SpecialQuizSelectionScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.indigo[50],
       body: SafeArea(
-        child: Column(
-          children: [
-            const _Header(),
-            Expanded(
-              child: Padding(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const _Header(),
+              Padding(
                 padding: const EdgeInsets.all(24.0),
-                child: ListView(
+                child: Column(
                   children: [
                     Text(
                       'Special Quiz Modes',
@@ -99,8 +99,8 @@ class SpecialQuizSelectionScreen extends StatelessWidget {
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

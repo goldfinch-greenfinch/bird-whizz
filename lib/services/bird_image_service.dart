@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../models/question.dart';
 import '../data/identification_data.dart';
 import '../data/bird_difficulty.dart';
+import 'logging_service.dart';
 
 class BirdImageService {
   List<String> _birdImagePaths = [];
@@ -44,12 +45,8 @@ class BirdImageService {
           .toList();
 
       _isInitialized = true;
-      // print(
-      //   'BirdImageService initialized. Found ${_birdImagePaths.length} images.',
-      // );
-      // print('Sample paths: ${_birdImagePaths.take(3).toList()}');
     } catch (e) {
-      // print('Error initializing BirdImageService with AssetManifest class: $e');
+      LoggingService.warning('BirdImageService: AssetManifest class failed, trying JSON fallback', e);
       // Fallback to manual JSON parsing if class fails (unlikely on new Flutter)
       try {
         final manifestContent = await rootBundle.loadString(
@@ -71,11 +68,8 @@ class BirdImageService {
             )
             .toList();
         _isInitialized = true;
-        // print(
-        //   'BirdImageService initialized via JSON fallback. Found ${_birdImagePaths.length} images.',
-        // );
       } catch (e2) {
-        // print('Error initializing BirdImageService fallback: $e2');
+        LoggingService.error('BirdImageService: JSON fallback also failed', e2);
       }
     }
   }

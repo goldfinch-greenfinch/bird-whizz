@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../models/stamp.dart';
 import '../providers/quiz_provider.dart';
@@ -155,7 +156,7 @@ class AchievementsBookScreen extends StatefulWidget {
                       vertical: 12,
                     ),
                   ),
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () => context.pop(),
                   child: const Text(
                     'Close',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),

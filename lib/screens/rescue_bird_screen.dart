@@ -2,13 +2,14 @@ import 'dart:math' as math;
 
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../models/bird.dart';
 import '../providers/quiz_provider.dart';
+import '../router/app_router.dart';
 import '../services/audio_service.dart';
 import '../widgets/navigation_utils.dart';
-import 'result_screen.dart';
 
 class RescueBirdScreen extends StatefulWidget {
   const RescueBirdScreen({super.key});
@@ -165,10 +166,7 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
         _rescuedThisSession,
         totalPuzzles: _puzzlesPerSession,
       );
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const ResultScreen()),
-      );
+      context.pushReplacement(AppRoutes.result);
       return;
     }
     _startNewPuzzle();

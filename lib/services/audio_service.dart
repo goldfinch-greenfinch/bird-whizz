@@ -1,6 +1,7 @@
 import 'dart:math';
-import 'package:flutter_soloud/flutter_soloud.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_soloud/flutter_soloud.dart';
+import 'logging_service.dart';
 
 class AudioService extends ChangeNotifier {
   final Random _random = Random();
@@ -30,7 +31,7 @@ class AudioService extends ChangeNotifier {
     try {
       await SoLoud.instance.init();
     } catch (e) {
-      if (kDebugMode) print('Error initializing SoLoud: $e');
+      LoggingService.error('Error initializing SoLoud', e);
     }
   }
 
@@ -98,7 +99,7 @@ class AudioService extends ChangeNotifier {
       }
       _currentMusicPath = null;
     } catch (e) {
-      if (kDebugMode) print('Error stopping music: $e');
+      LoggingService.error('Error stopping music', e);
     }
   }
 
@@ -123,7 +124,7 @@ class AudioService extends ChangeNotifier {
       );
       _currentMusicPath = path;
     } catch (e) {
-      if (kDebugMode) print('Error playing music ($path): $e');
+      LoggingService.error('Error playing music ($path)', e);
     }
   }
 
@@ -146,7 +147,7 @@ class AudioService extends ChangeNotifier {
       _voiceSource = await SoLoud.instance.loadAsset('assets/$path');
       _voiceHandle = await SoLoud.instance.play(_voiceSource!);
     } catch (e) {
-      if (kDebugMode) print('Error playing voiceover ($path): $e');
+      LoggingService.error('Error playing voiceover ($path)', e);
     }
   }
 
@@ -212,7 +213,7 @@ class AudioService extends ChangeNotifier {
       _sfxSource = await SoLoud.instance.loadAsset('assets/$path');
       _sfxHandle = await SoLoud.instance.play(_sfxSource!);
     } catch (e) {
-      if (kDebugMode) print('Error playing SFX ($path): $e');
+      LoggingService.error('Error playing SFX ($path)', e);
     }
   }
 
@@ -259,7 +260,7 @@ class AudioService extends ChangeNotifier {
         }
       }
     } catch (e) {
-      if (kDebugMode) print('Error playing sequence: $e');
+      LoggingService.error('Error playing sequence', e);
     }
   }
 
@@ -268,7 +269,7 @@ class AudioService extends ChangeNotifier {
     try {
       SoLoud.instance.deinit();
     } catch (e) {
-      if (kDebugMode) print('Error deinit SoLoud: $e');
+      LoggingService.error('Error deinit SoLoud', e);
     }
     super.dispose();
   }

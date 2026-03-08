@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../data/guess_bird_data.dart';
 import '../data/speed_challenge_data.dart';
 import '../providers/quiz_provider.dart';
+import '../router/app_router.dart';
 import '../services/audio_service.dart';
 import '../widgets/common_profile_header.dart';
-import 'endless_quiz_screen.dart';
-import 'guess_bird_screen.dart';
-import 'speed_challenge_screen.dart';
 
 class SpecialQuizSelectionScreen extends StatelessWidget {
   const SpecialQuizSelectionScreen({super.key});
@@ -50,16 +49,7 @@ class SpecialQuizSelectionScreen extends StatelessWidget {
                         final provider = context.read<QuizProvider>();
                         provider.startEndlessMode();
                         context.read<AudioService>().playTransition();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const EndlessQuizScreen(),
-                          ),
-                        ).then((_) {
-                          if (context.mounted) {
-                            context.read<AudioService>().playMenuMusic();
-                          }
-                        });
+                        context.push(AppRoutes.endless);
                       },
                     ),
                     const SizedBox(height: 20),
@@ -416,16 +406,7 @@ class _GuessBirdLevelsScreen extends StatelessWidget {
         return InkWell(
           onTap: () {
             context.read<AudioService>().playTransition();
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => GuessBirdScreen(levelIndex: index),
-              ),
-            ).then((_) {
-              if (context.mounted) {
-                context.read<AudioService>().playMenuMusic();
-              }
-            });
+            context.push('${AppRoutes.special}/guess-bird/$index');
           },
           borderRadius: BorderRadius.circular(20),
           child: Container(
@@ -641,16 +622,7 @@ class _SpeedChallengeLevelsScreen extends StatelessWidget {
         return InkWell(
           onTap: () {
             context.read<AudioService>().playTransition();
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => SpeedChallengeScreen(levelIndex: index),
-              ),
-            ).then((_) {
-              if (context.mounted) {
-                context.read<AudioService>().playMenuMusic();
-              }
-            });
+            context.push('${AppRoutes.special}/speed-challenge/$index');
           },
           borderRadius: BorderRadius.circular(20),
           child: Container(

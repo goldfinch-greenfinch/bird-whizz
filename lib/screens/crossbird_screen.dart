@@ -1,13 +1,14 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../data/crossbird_data.dart';
 import '../providers/quiz_provider.dart';
+import '../router/app_router.dart';
 import '../services/audio_service.dart';
 import '../widgets/navigation_utils.dart';
-import 'result_screen.dart';
 
 class CrossbirdScreen extends StatefulWidget {
   final int puzzleIndex;
@@ -239,10 +240,7 @@ class _CrossbirdScreenState extends State<CrossbirdScreen>
 
     Future.delayed(const Duration(milliseconds: 1800), () {
       if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const ResultScreen()),
-        );
+        context.pushReplacement(AppRoutes.result);
       }
     });
   }

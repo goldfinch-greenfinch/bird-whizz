@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../models/user_profile.dart';
 import '../models/bird.dart';
-import 'bird_selection_screen.dart';
-import 'main_selection_screen.dart';
+import '../router/app_router.dart';
 import '../services/audio_service.dart';
 
 class ProfileSelectionScreen extends StatefulWidget {
@@ -54,12 +54,7 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
                   const SizedBox(height: 24),
                   ElevatedButton.icon(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const BirdSelectionScreen(),
-                        ),
-                      );
+                      context.push(AppRoutes.birdSelect);
                     },
                     icon: const Icon(Icons.add),
                     label: const Text('Create Profile'),
@@ -86,12 +81,7 @@ class _ProfileSelectionScreenState extends State<ProfileSelectionScreen> {
                   padding: const EdgeInsets.only(top: 16.0),
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const BirdSelectionScreen(),
-                        ),
-                      );
+                      context.push(AppRoutes.birdSelect);
                     },
                     icon: const Icon(Icons.add),
                     label: const Text('New Adventurer'),
@@ -142,10 +132,7 @@ class _ProfileCard extends StatelessWidget {
           final provider = Provider.of<QuizProvider>(context, listen: false);
           await provider.selectProfile(profile.id);
           if (context.mounted) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const MainSelectionScreen()),
-            );
+            context.go(AppRoutes.main);
           }
         },
         borderRadius: BorderRadius.circular(16),

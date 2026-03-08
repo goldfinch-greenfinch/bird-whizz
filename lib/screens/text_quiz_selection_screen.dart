@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../services/audio_service.dart';
-import 'home_screen.dart';
+import '../router/app_router.dart';
 import '../widgets/common_profile_header.dart';
 
 class TextQuizSelectionScreen extends StatelessWidget {
@@ -103,12 +104,7 @@ class TextQuizSelectionScreen extends StatelessWidget {
                           onTap: () {
                             context.read<AudioService>().playUiTap();
                             provider.selectCategory(cat['id'] as String);
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const HomeScreen(),
-                              ),
-                            );
+                            context.push(AppRoutes.textQuizLevels);
                           },
                         );
                       },

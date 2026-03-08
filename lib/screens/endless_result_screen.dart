@@ -1,15 +1,12 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/quiz_provider.dart';
+import '../router/app_router.dart';
 import '../services/audio_service.dart';
 import '../widgets/navigation_utils.dart';
 import '../widgets/particle_overlay.dart';
-import 'level_up_screen.dart';
-import 'character_evolve_screen.dart';
-import 'new_stamp_screen.dart';
 
 class EndlessResultScreen extends StatefulWidget {
   const EndlessResultScreen({super.key});
@@ -282,41 +279,15 @@ class _EndlessResultScreenState extends State<EndlessResultScreen> {
           elevation: 5,
         ),
         onPressed: () {
-          Widget? chainScreen;
-
-          if (provider.newlyUnlockedStamps.isNotEmpty) {
-            chainScreen = NewStampScreen(
-              stamps: List.from(provider.newlyUnlockedStamps),
-            );
-          }
-
-          if (provider.hasEvolved) {
-            chainScreen = CharacterEvolveScreen(
-              oldStage: provider.oldEvolutionStage!,
-              newStage: provider.newEvolutionStage!,
-              nextScreen: chainScreen,
-            );
-          }
-
           if (provider.hasLeveledUp) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (_) => LevelUpScreen(
-                  oldRank: provider.oldLevelTitle ?? 'Unknown',
-                  newRank: provider.newLevelTitle ?? 'Bird Wizard',
-                  nextScreen: chainScreen,
-                ),
-              ),
-            );
-          } else if (chainScreen != null) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => chainScreen!),
-            );
+            context.pushReplacement(AppRoutes.levelUp);
+          } else if (provider.hasEvolved) {
+            context.pushReplacement(AppRoutes.evolve);
+          } else if (provider.newlyUnlockedStamps.isNotEmpty) {
+            context.pushReplacement(AppRoutes.stamp);
           } else {
             provider.resetQuiz();
-            Navigator.pop(context);
+            context.pop();
           }
         },
         child: Text(

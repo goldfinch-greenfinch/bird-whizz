@@ -3,9 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:device_preview/device_preview.dart';
 import 'providers/quiz_provider.dart';
-import 'screens/profile_selection_screen.dart';
-import 'screens/loading_screen.dart';
 import 'services/audio_service.dart';
+import 'router/app_router.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,8 +28,7 @@ class BirdQuizApp extends StatefulWidget {
 class _BirdQuizAppState extends State<BirdQuizApp> with WidgetsBindingObserver {
   late final QuizProvider _quizProvider;
   late final AudioService _audioService;
-  late final Future<void> _initFuture;
-  bool _hasStarted = false;
+  late final AppRouter _appRouter;
 
   @override
   void initState() {
@@ -38,10 +36,9 @@ class _BirdQuizAppState extends State<BirdQuizApp> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     _quizProvider = QuizProvider();
     _audioService = AudioService();
-    _initFuture = Future.wait([
-      _quizProvider.init(),
-      _audioService.playIntroMusic(),
-    ]);
+    _appRouter = AppRouter(_quizProvider);
+    _quizProvider.init().then((_) {}); // fire and forget — LoadingScreen handles the ready state
+    _audioService.playIntroMusic();
   }
 
   @override
@@ -69,7 +66,7 @@ class _BirdQuizAppState extends State<BirdQuizApp> with WidgetsBindingObserver {
         ChangeNotifierProvider.value(value: _quizProvider),
         ChangeNotifierProvider.value(value: _audioService),
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
         title: 'Bird Whizz',
         locale: DevicePreview.locale(context),
         builder: DevicePreview.appBuilder,
@@ -77,23 +74,7 @@ class _BirdQuizAppState extends State<BirdQuizApp> with WidgetsBindingObserver {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
           useMaterial3: true,
         ),
-        home: FutureBuilder(
-          future: _initFuture,
-          builder: (context, snapshot) {
-            // Check if initialization is complete
-            final isLoaded = snapshot.connectionState == ConnectionState.done;
-            return _hasStarted
-                ? const ProfileSelectionScreen()
-                : LoadingScreen(
-                    isLoaded: isLoaded,
-                    onStart: () {
-                      setState(() {
-                        _hasStarted = true;
-                      });
-                    },
-                  );
-          },
-        ),
+        routerConfig: _appRouter.router,
       ),
     );
   }

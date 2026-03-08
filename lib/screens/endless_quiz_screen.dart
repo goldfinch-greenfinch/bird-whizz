@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/quiz_provider.dart';
 import '../models/question.dart';
+import '../router/app_router.dart';
 import '../widgets/navigation_utils.dart';
 import '../widgets/quiz_animations.dart';
 import '../services/audio_service.dart';
-import 'endless_result_screen.dart';
 
 class EndlessQuizScreen extends StatefulWidget {
   const EndlessQuizScreen({super.key});
@@ -40,12 +41,7 @@ class _EndlessQuizScreenState extends State<EndlessQuizScreen> {
           _pushedResult = true;
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (!mounted) return;
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (_) => const EndlessResultScreen(),
-              ),
-            );
+            context.pushReplacement(AppRoutes.endlessResult);
           });
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),

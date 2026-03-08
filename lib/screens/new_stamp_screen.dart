@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../models/stamp.dart';
@@ -7,10 +8,7 @@ import '../services/audio_service.dart';
 import 'achievements_book_screen.dart';
 
 class NewStampScreen extends StatefulWidget {
-  final List<Stamp> stamps;
-  final Widget? nextScreen;
-
-  const NewStampScreen({super.key, required this.stamps, this.nextScreen});
+  const NewStampScreen({super.key});
 
   @override
   State<NewStampScreen> createState() => _NewStampScreenState();
@@ -18,6 +16,8 @@ class NewStampScreen extends StatefulWidget {
 
 class _NewStampScreenState extends State<NewStampScreen>
     with TickerProviderStateMixin {
+  List<Stamp> _stamps = [];
+  bool _stampsInitialized = false;
   int _currentIndex = 0;
 
   late AnimationController _stampAnimController;
@@ -83,6 +83,15 @@ class _NewStampScreenState extends State<NewStampScreen>
     });
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_stampsInitialized) {
+      _stamps = List.from(Provider.of<QuizProvider>(context, listen: false).newlyUnlockedStamps);
+      _stampsInitialized = true;
+    }
+  }
+
   void _playEntryAnimation() async {
     setState(() {
       _hasShook = false;
@@ -109,7 +118,7 @@ class _NewStampScreenState extends State<NewStampScreen>
   }
 
   void _nextStamp() {
-    if (_currentIndex < widget.stamps.length - 1) {
+    if (_currentIndex < _stamps.length - 1) {
       setState(() {
         _currentIndex++;
       });
@@ -122,16 +131,8 @@ class _NewStampScreenState extends State<NewStampScreen>
   void _finish() {
     final provider = Provider.of<QuizProvider>(context, listen: false);
     provider.consumeNewlyUnlockedStamps();
-
-    if (widget.nextScreen != null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => widget.nextScreen!),
-      );
-    } else {
-      provider.resetQuiz();
-      Navigator.pop(context); // Return to home
-    }
+    provider.resetQuiz();
+    context.pop();
   }
 
   int _getSpreadIndexForStamp(String stampId) {
@@ -152,7 +153,7 @@ class _NewStampScreenState extends State<NewStampScreen>
     Stamp renderStamp,
     bool isUnlocked,
   ) {
-    final isTheNewStamp = renderStamp.id == widget.stamps[_currentIndex].id;
+    final isTheNewStamp = renderStamp.id == _stamps[_currentIndex].id;
 
     if (!isTheNewStamp) {
       // Just normal rendering for other stamps on the spread
@@ -238,11 +239,11 @@ class _NewStampScreenState extends State<NewStampScreen>
 
   @override
   Widget build(BuildContext context) {
-    if (widget.stamps.isEmpty) {
+    if (_stamps.isEmpty) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    final currentStamp = widget.stamps[_currentIndex];
+    final currentStamp = _stamps[_currentIndex];
     final spreadIndex = _getSpreadIndexForStamp(currentStamp.id);
 
     return Scaffold(
@@ -308,7 +309,7 @@ class _NewStampScreenState extends State<NewStampScreen>
                     duration: const Duration(milliseconds: 300),
                     child: IgnorePointer(
                       ignoring: !_animationComplete,
-                      child: _currentIndex < widget.stamps.length - 1
+                      child: _currentIndex < _stamps.length - 1
                           ? ElevatedButton(
                               onPressed: _nextStamp,
                               style: ElevatedButton.styleFrom(

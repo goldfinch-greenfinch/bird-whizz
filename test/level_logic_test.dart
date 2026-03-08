@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:fake_async/fake_async.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bird_quiz/providers/quiz_provider.dart';
+import 'package:bird_quiz/services/storage_service.dart';
 import 'package:bird_quiz/data/sections/trivia_data.dart';
 
 void main() {
@@ -15,7 +16,7 @@ void main() {
   });
 
   test('Initial state has only level1 unlocked', () async {
-    final provider = QuizProvider();
+    final provider = QuizProvider(StorageService());
     await Future.delayed(Duration.zero); // Allow async load
 
     expect(provider.isLevelUnlocked('level1'), true);
@@ -24,7 +25,7 @@ void main() {
 
   test('Unlocking next level works', () {
     fakeAsync((async) {
-      final provider = QuizProvider();
+      final provider = QuizProvider(StorageService());
       // provider.init() is async, but we can just create a profile directly
       provider.createProfile('Test', 'bird1');
 

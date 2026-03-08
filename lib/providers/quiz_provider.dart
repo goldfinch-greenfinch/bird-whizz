@@ -17,7 +17,6 @@ import '../data/sections/families_data.dart';
 import '../data/sections/migration_data.dart';
 import '../data/sections/colours_data.dart';
 import '../services/bird_image_service.dart';
-import '../services/logging_service.dart';
 import '../models/daily_question.dart';
 import '../data/daily_questions_data.dart';
 

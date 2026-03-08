@@ -1,15 +1,14 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../services/audio_service.dart';
-
+import '../router/app_router.dart';
+import '../theme/app_theme.dart';
 import '../widgets/navigation_utils.dart';
 import '../data/result_messages.dart';
 import '../widgets/particle_overlay.dart';
-import 'level_up_screen.dart';
-import 'character_evolve_screen.dart';
-import 'new_stamp_screen.dart';
 
 class ResultScreen extends StatefulWidget {
   const ResultScreen({super.key});
@@ -73,7 +72,7 @@ class _ResultScreenState extends State<ResultScreen> {
     final provider = Provider.of<QuizProvider>(context, listen: false);
 
     return Scaffold(
-      backgroundColor: Colors.teal[50], // Light background
+      backgroundColor: AppColors.primaryLight,
       body: Stack(
         children: [
           // Background Effects
@@ -125,10 +124,10 @@ class _ResultScreenState extends State<ResultScreen> {
                           const SizedBox(height: 20),
                           Text(
                             'Level Complete!',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
-                              color: Colors.teal[900],
+                              color: AppColors.primaryDeep,
                             ),
                           ),
                           const SizedBox(height: 30),
@@ -215,10 +214,10 @@ class _ResultScreenState extends State<ResultScreen> {
           const SizedBox(height: 10),
           Text(
             '${provider.score} / ${provider.totalQuestions}',
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 48,
               fontWeight: FontWeight.bold,
-              color: Colors.teal[800],
+              color: AppColors.primaryDark,
             ),
           ),
           const SizedBox(height: 15),
@@ -229,7 +228,7 @@ class _ResultScreenState extends State<ResultScreen> {
               (index) {
                 return Icon(
                   index < _stars ? Icons.star : Icons.star_border,
-                  color: Colors.amber,
+                  color: AppColors.star,
                   size: 48,
                 );
               },
@@ -271,7 +270,7 @@ class _ResultScreenState extends State<ResultScreen> {
       width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.teal,
+          backgroundColor: AppColors.primary,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
@@ -279,41 +278,15 @@ class _ResultScreenState extends State<ResultScreen> {
           elevation: 5,
         ),
         onPressed: () {
-          Widget? chainScreen;
-
-          if (provider.newlyUnlockedStamps.isNotEmpty) {
-            chainScreen = NewStampScreen(
-              stamps: List.from(provider.newlyUnlockedStamps),
-            );
-          }
-
-          if (provider.hasEvolved) {
-            chainScreen = CharacterEvolveScreen(
-              oldStage: provider.oldEvolutionStage!,
-              newStage: provider.newEvolutionStage!,
-              nextScreen: chainScreen,
-            );
-          }
-
           if (provider.hasLeveledUp) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (_) => LevelUpScreen(
-                  oldRank: provider.oldLevelTitle ?? 'Unknown',
-                  newRank: provider.newLevelTitle ?? 'Bird Wizard',
-                  nextScreen: chainScreen,
-                ),
-              ),
-            );
-          } else if (chainScreen != null) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => chainScreen!),
-            );
+            context.pushReplacement(AppRoutes.levelUp);
+          } else if (provider.hasEvolved) {
+            context.pushReplacement(AppRoutes.evolve);
+          } else if (provider.newlyUnlockedStamps.isNotEmpty) {
+            context.pushReplacement(AppRoutes.stamp);
           } else {
             provider.resetQuiz();
-            Navigator.pop(context);
+            context.pop();
           }
         },
         child: Text(

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../models/bird.dart';
 import '../providers/quiz_provider.dart';
+import '../router/app_router.dart';
 import '../services/audio_service.dart';
 import '../widgets/navigation_utils.dart';
 import 'package:confetti/confetti.dart';
-import 'result_screen.dart';
 
 class UnscrambleGameScreen extends StatefulWidget {
   final int minLength;
@@ -102,10 +103,7 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
       totalQuestions: _totalQuestions,
     );
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const ResultScreen()),
-    );
+    context.pushReplacement(AppRoutes.result);
   }
 
   void _onLetterTapped(String letter) {

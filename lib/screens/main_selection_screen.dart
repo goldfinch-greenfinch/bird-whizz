@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../widgets/common_profile_header.dart';
-import 'text_quiz_selection_screen.dart';
-
-import 'profile_selection_screen.dart';
 import '../services/audio_service.dart';
-import 'bird_id_selection_screen.dart';
-import 'word_games_selection_screen.dart';
-import 'quiz_screen.dart';
-import 'special_quiz_selection_screen.dart';
+import '../router/app_router.dart';
+import '../theme/app_theme.dart';
 
 class MainSelectionScreen extends StatefulWidget {
   const MainSelectionScreen({super.key});
@@ -64,7 +60,7 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
               style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: Colors.amber,
+                color: AppColors.star,
               ),
             ),
             content: const Text(
@@ -87,13 +83,10 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.pop(context); // close dialog
+                  context.pop(); // close dialog
                   provider.startDailyChallenge();
                   context.read<AudioService>().playTransition();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => const QuizScreen()),
-                  );
+                  context.push(AppRoutes.quiz);
                 },
                 child: const Text(
                   'Play Now',
@@ -110,7 +103,7 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.teal[50],
+      backgroundColor: AppColors.primaryLight,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -211,68 +204,47 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
                       _FeatureCard(
                         title: 'Bird Whizz',
                         icon: Icons.quiz_rounded,
-                        color: Colors.teal,
+                        color: AppColors.primary,
                         description:
                             'Test your knowledge with multiple choice!',
                         onTap: () {
                           context.read<AudioService>().playUiTap();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const TextQuizSelectionScreen(),
-                            ),
-                          );
+                          context.push(AppRoutes.textQuiz);
                         },
                       ),
                       const SizedBox(height: 24),
                       _FeatureCard(
                         title: 'Bird Identification',
                         icon: Icons.visibility_rounded,
-                        color: Colors.orangeAccent.shade700,
+                        color: AppColors.birdId,
                         description: 'Identify birds from pictures!',
                         onTap: () {
                           context.read<AudioService>().playUiTap();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const BirdIdSelectionScreen(),
-                            ),
-                          );
+                          context.push(AppRoutes.birdId);
                         },
                       ),
                       const SizedBox(height: 24),
                       _FeatureCard(
                         title: 'Bird Word Games',
                         icon: Icons.spellcheck_rounded,
-                        color: Colors.deepPurpleAccent,
+                        color: AppColors.wordGames,
                         description:
                             'Unscramble birds, rescue them from nests or solve cross-birds!',
                         onTap: () {
                           context.read<AudioService>().playUiTap();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const WordGamesSelectionScreen(),
-                            ),
-                          );
+                          context.push(AppRoutes.wordGames);
                         },
                       ),
                       const SizedBox(height: 24),
                       _FeatureCard(
                         title: 'Special Quiz Modes',
                         icon: Icons.auto_awesome_rounded,
-                        color: Colors.indigo,
+                        color: AppColors.guessBird,
                         description:
                             'Survival Mode & Guess the Bird — unique challenges!',
                         onTap: () {
                           context.read<AudioService>().playUiTap();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  const SpecialQuizSelectionScreen(),
-                            ),
-                          );
+                          context.push(AppRoutes.special);
                         },
                       ),
                   ],
@@ -374,14 +346,14 @@ class _Header extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
           decoration: BoxDecoration(
-            color: Colors.teal,
+            color: AppColors.primary,
             borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(30),
               bottomRight: Radius.circular(30),
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.teal.withValues(alpha: 0.3),
+                color: AppColors.primary.withValues(alpha: 0.3),
                 blurRadius: 10,
                 offset: const Offset(0, 5),
               ),
@@ -391,13 +363,7 @@ class _Header extends StatelessWidget {
             children: [
               CommonProfileHeader(
                 onBackButtonPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const ProfileSelectionScreen(),
-                    ),
-                    (route) => false,
-                  );
+                  context.go(AppRoutes.profiles);
                 },
               ),
               const SizedBox(height: 20),

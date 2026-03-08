@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:confetti/confetti.dart';
 import '../providers/quiz_provider.dart';
+import '../router/app_router.dart';
 import '../widgets/navigation_utils.dart';
 import '../widgets/particle_overlay.dart';
 import '../models/bird.dart';
@@ -9,16 +11,7 @@ import '../models/bird.dart';
 import '../services/audio_service.dart';
 
 class LevelUpScreen extends StatefulWidget {
-  final String oldRank;
-  final String newRank;
-  final Widget? nextScreen;
-
-  const LevelUpScreen({
-    super.key,
-    required this.oldRank,
-    required this.newRank,
-    this.nextScreen,
-  });
+  const LevelUpScreen({super.key});
 
   @override
   State<LevelUpScreen> createState() => _LevelUpScreenState();
@@ -166,7 +159,7 @@ class _LevelUpScreenState extends State<LevelUpScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      widget.oldRank,
+                      provider.oldLevelTitle ?? 'Unknown',
                       style: TextStyle(
                         color: Colors.teal[800],
                         fontSize: 24,
@@ -196,7 +189,7 @@ class _LevelUpScreenState extends State<LevelUpScreen> {
                       ),
                     ),
                     child: Text(
-                      widget.newRank,
+                      provider.newLevelTitle ?? 'Bird Wizard',
                       style: TextStyle(
                         color: Colors.amber[700],
                         fontSize: 36,
@@ -220,15 +213,13 @@ class _LevelUpScreenState extends State<LevelUpScreen> {
                         listen: false,
                       );
                       provider.consumeLevelUp();
-
-                      if (widget.nextScreen != null) {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (_) => widget.nextScreen!),
-                        );
+                      if (provider.hasEvolved) {
+                        context.pushReplacement(AppRoutes.evolve);
+                      } else if (provider.newlyUnlockedStamps.isNotEmpty) {
+                        context.pushReplacement(AppRoutes.stamp);
                       } else {
                         provider.resetQuiz();
-                        Navigator.pop(context);
+                        context.pop();
                       }
                     },
                     style: ElevatedButton.styleFrom(

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../services/audio_service.dart';
+import '../router/app_router.dart';
 import 'unscramble_game_screen.dart';
-import 'rescue_bird_screen.dart';
 import 'crossbird_screen.dart';
 import '../widgets/common_profile_header.dart';
 
@@ -65,12 +66,7 @@ class WordGamesSelectionScreen extends StatelessWidget {
                       color: Colors.orangeAccent,
                       onTap: () {
                         context.read<AudioService>().playTransition();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const RescueBirdScreen(),
-                          ),
-                        );
+                        context.push('${AppRoutes.wordGames}/rescue');
                       },
                     ),
                     const SizedBox(height: 20),

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../services/audio_service.dart';
-import 'quiz_screen.dart';
+import '../router/app_router.dart';
 import '../widgets/common_profile_header.dart';
 
 class BirdIdSelectionScreen extends StatelessWidget {
@@ -220,10 +221,7 @@ class _DifficultyButton extends StatelessWidget {
         await provider.startBirdIdQuiz(title, difficulty);
         if (context.mounted) {
           context.read<AudioService>().playTransition();
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const QuizScreen()),
-          );
+          context.push(AppRoutes.quiz);
         }
       },
       child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),

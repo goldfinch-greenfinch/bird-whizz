@@ -18,6 +18,7 @@ import '../data/sections/families_data.dart';
 import '../data/sections/migration_data.dart';
 import '../data/sections/colours_data.dart';
 import '../services/bird_image_service.dart';
+import '../services/logging_service.dart';
 import '../models/daily_question.dart';
 import '../data/daily_questions_data.dart';
 
@@ -33,6 +34,8 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
   int? _newEvolutionStage;
 
   bool _hasShownDailyChallengeThisSession = false;
+  bool _isInitialized = false;
+  bool get isInitialized => _isInitialized;
 
   // Stamps
   final List<Stamp> _newlyUnlockedStamps = [];
@@ -98,12 +101,13 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
         final List<dynamic> decoded = jsonDecode(profilesJson);
         _profiles = decoded.map((json) => UserProfile.fromJson(json)).toList();
       } catch (e) {
-        // print('Error loading profiles: $e');
+        LoggingService.error('Failed to load profiles', e);
       }
     }
 
     // Attempt to restore last session if needed, but for now we start at profile selection
     _sessionStartTime = DateTime.now();
+    _isInitialized = true;
     notifyListeners();
   }
 

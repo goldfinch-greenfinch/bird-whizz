@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import '../providers/quiz_provider.dart';
+import '../router/app_router.dart';
 import '../services/audio_service.dart';
 
 class LoadingScreen extends StatefulWidget {
-  final bool isLoaded;
-  final VoidCallback? onStart;
-
-  const LoadingScreen({super.key, this.isLoaded = false, this.onStart});
+  const LoadingScreen({super.key});
 
   @override
   State<LoadingScreen> createState() => _LoadingScreenState();
@@ -44,14 +44,12 @@ class _LoadingScreenState extends State<LoadingScreen>
   }
 
   void _handleStart() {
-    if (widget.onStart != null) {
-      widget.onStart!();
-      // Transition music
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!mounted) return;
-        context.read<AudioService>().playMenuMusic();
-      });
-    }
+    context.go(AppRoutes.profiles);
+    // Transition music
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      context.read<AudioService>().playMenuMusic();
+    });
   }
 
   @override
@@ -154,7 +152,7 @@ class _LoadingScreenState extends State<LoadingScreen>
           Container(
             color: Colors.white.withValues(alpha: 0.1),
             child: GestureDetector(
-              onTap: widget.isLoaded ? _handleStart : null,
+              onTap: context.watch<QuizProvider>().isInitialized ? _handleStart : null,
               behavior: HitTestBehavior.opaque,
               child: Center(
                 child: Column(
@@ -196,7 +194,7 @@ class _LoadingScreenState extends State<LoadingScreen>
                     // Loading text and indicator
                     AnimatedSwitcher(
                       duration: const Duration(milliseconds: 500),
-                      child: widget.isLoaded
+                      child: context.watch<QuizProvider>().isInitialized
                           ? Column(
                               key: const ValueKey('loaded'),
                               children: [

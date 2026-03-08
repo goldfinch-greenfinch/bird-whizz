@@ -1,23 +1,16 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../models/bird.dart';
+import '../router/app_router.dart';
 import '../widgets/navigation_utils.dart';
 import '../widgets/radial_particle_burst.dart';
 import '../services/audio_service.dart';
 
 class CharacterEvolveScreen extends StatefulWidget {
-  final int oldStage;
-  final int newStage;
-  final Widget? nextScreen;
-
-  const CharacterEvolveScreen({
-    super.key,
-    required this.oldStage,
-    required this.newStage,
-    this.nextScreen,
-  });
+  const CharacterEvolveScreen({super.key});
 
   @override
   State<CharacterEvolveScreen> createState() => _CharacterEvolveScreenState();
@@ -234,7 +227,7 @@ class _CharacterEvolveScreenState extends State<CharacterEvolveScreen>
                                         scale: _popAnimation.value,
                                         child: Image.asset(
                                           bird!.getEvolvedImagePath(
-                                            widget.newStage,
+                                            provider.newEvolutionStage!,
                                           ),
                                           fit: BoxFit.contain,
                                         ),
@@ -246,7 +239,7 @@ class _CharacterEvolveScreenState extends State<CharacterEvolveScreen>
                                         ),
                                         child: Image.asset(
                                           bird!.getEvolvedImagePath(
-                                            widget.oldStage,
+                                            provider.oldEvolutionStage!,
                                           ),
                                           fit: BoxFit.contain,
                                         ),
@@ -270,16 +263,11 @@ class _CharacterEvolveScreenState extends State<CharacterEvolveScreen>
                             child: ElevatedButton(
                               onPressed: isDone
                                   ? () {
-                                      if (widget.nextScreen != null) {
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (_) => widget.nextScreen!,
-                                          ),
-                                        );
+                                      if (provider.newlyUnlockedStamps.isNotEmpty) {
+                                        context.pushReplacement(AppRoutes.stamp);
                                       } else {
                                         provider.resetQuiz();
-                                        Navigator.pop(context);
+                                        context.pop();
                                       }
                                     }
                                   : null,

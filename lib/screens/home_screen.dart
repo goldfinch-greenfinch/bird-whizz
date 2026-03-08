@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../models/level.dart';
 import '../services/audio_service.dart';
-import 'quiz_screen.dart';
-
+import '../router/app_router.dart';
+import '../theme/app_theme.dart';
 import '../widgets/common_profile_header.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.teal[50], // ... rest of build method
+      backgroundColor: AppColors.primaryLight,
       body: SafeArea(
         child: Column(
           children: [
@@ -64,25 +65,15 @@ class _HomeScreenState extends State<HomeScreen> {
                               onTap: () {
                                 if (isUnlocked) {
                                   provider.startLevel(level);
-                                  context
-                                      .read<AudioService>()
-                                      .playTransition();
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => const QuizScreen(),
-                                    ),
-                                  );
+                                  context.read<AudioService>().playTransition();
+                                  context.push(AppRoutes.quiz);
                                 } else {
-                                  ScaffoldMessenger.of(
-                                    context,
-                                  ).showSnackBar(
+                                  ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text(
                                         'Get at least 1 star in previous level to unlock!',
                                       ),
-                                      duration:
-                                          Duration(milliseconds: 1500),
+                                      duration: Duration(milliseconds: 1500),
                                     ),
                                   );
                                 }
@@ -113,14 +104,14 @@ class _HomeHeader extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
           decoration: BoxDecoration(
-            color: Colors.teal,
+            color: AppColors.primary,
             borderRadius: const BorderRadius.only(
               bottomLeft: Radius.circular(30),
               bottomRight: Radius.circular(30),
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.teal.withValues(alpha: 0.3),
+                color: AppColors.primary.withValues(alpha: 0.3),
                 blurRadius: 10,
                 offset: const Offset(0, 5),
               ),
@@ -174,18 +165,11 @@ class _HomeHeader extends StatelessWidget {
         const SizedBox(height: 6),
         Text(
           value,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
+          style: AppTextStyles.statValue,
         ),
         Text(
           label,
-          style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.8),
-            fontSize: 11,
-          ),
+          style: AppTextStyles.statLabel,
         ),
       ],
     );

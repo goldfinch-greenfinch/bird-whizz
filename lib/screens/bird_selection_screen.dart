@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../models/bird.dart';
 import '../providers/quiz_provider.dart';
-import 'main_selection_screen.dart';
+import '../router/app_router.dart';
 
 class BirdSelectionScreen extends StatefulWidget {
   const BirdSelectionScreen({super.key});
@@ -35,11 +36,7 @@ class _BirdSelectionScreenState extends State<BirdSelectionScreen> {
       try {
         await quizProvider.createProfile(name, _selectedId!);
         if (mounted) {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (_) => const MainSelectionScreen()),
-            (route) => false,
-          );
+          context.go(AppRoutes.main);
         }
       } catch (e) {
         if (mounted) {

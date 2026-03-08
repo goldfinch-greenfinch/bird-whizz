@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../models/question.dart';
-import 'result_screen.dart';
+import '../router/app_router.dart';
 import '../widgets/navigation_utils.dart';
 import '../widgets/quiz_animations.dart';
 import '../services/audio_service.dart';
@@ -36,10 +37,7 @@ class _QuizScreenState extends State<QuizScreen> {
         // Handle Quiz Completion
         if (provider.isQuizFinished) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const ResultScreen()),
-            );
+            context.pushReplacement(AppRoutes.result);
           });
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),

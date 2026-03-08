@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../data/guess_bird_data.dart';
 import '../providers/quiz_provider.dart';
+import '../router/app_router.dart';
 import '../services/audio_service.dart';
 import '../widgets/common_profile_header.dart';
 import '../widgets/quiz_animations.dart';
-import 'result_screen.dart';
 
 class GuessBirdScreen extends StatefulWidget {
   final int levelIndex;
@@ -176,10 +177,7 @@ class _GuessBirdScreenState extends State<GuessBirdScreen>
       _level.questions.length,
     );
     context.read<AudioService>().playMenuMusic();
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const ResultScreen()),
-    );
+    context.pushReplacement(AppRoutes.result);
   }
 
   @override

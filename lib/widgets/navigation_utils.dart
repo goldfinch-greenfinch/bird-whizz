@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '../screens/profile_selection_screen.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../services/audio_service.dart';
-import '../screens/achievements_book_screen.dart';
+import '../router/app_router.dart';
+import '../theme/app_theme.dart';
 
 class NavigationUtils {
   static Widget buildProfileMenu(
@@ -15,19 +16,12 @@ class NavigationUtils {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       onSelected: (value) {
         if (value == 'profile') {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (_) => const ProfileSelectionScreen()),
-            (route) => false,
-          );
+          context.go(AppRoutes.profiles);
         } else if (value == 'sound') {
           // Toggle sound
           context.read<AudioService>().toggleMute();
         } else if (value == 'achievements') {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const AchievementsBookScreen()),
-          );
+          context.push(AppRoutes.achievements);
         } else if (value == 'acknowledgements') {
           _showAcknowledgementsDialog(context);
         } else if (value == 'about') {
@@ -45,7 +39,7 @@ class NavigationUtils {
               children: [
                 Icon(
                   isMuted ? Icons.volume_off_rounded : Icons.volume_up_rounded,
-                  color: Colors.teal,
+                  color: AppColors.primary,
                 ),
                 const SizedBox(width: 12),
                 Text(isMuted ? 'Sound Off' : 'Sound On'),
@@ -56,7 +50,7 @@ class NavigationUtils {
             value: 'achievements',
             child: Row(
               children: [
-                Icon(Icons.menu_book, color: Colors.teal),
+                Icon(Icons.menu_book, color: AppColors.primary),
                 SizedBox(width: 12),
                 Text('Achievements Book'),
               ],
@@ -66,7 +60,7 @@ class NavigationUtils {
             value: 'about',
             child: Row(
               children: [
-                Icon(Icons.info_outline_rounded, color: Colors.teal),
+                Icon(Icons.info_outline_rounded, color: AppColors.primary),
                 SizedBox(width: 12),
                 Text('About'),
               ],
@@ -76,7 +70,7 @@ class NavigationUtils {
             value: 'acknowledgements',
             child: Row(
               children: [
-                Icon(Icons.favorite_border_rounded, color: Colors.teal),
+                Icon(Icons.favorite_border_rounded, color: AppColors.primary),
                 SizedBox(width: 12),
                 Text('Acknowledgements'),
               ],
@@ -86,7 +80,7 @@ class NavigationUtils {
             value: 'profile',
             child: Row(
               children: [
-                Icon(Icons.people_outline, color: Colors.teal),
+                Icon(Icons.people_outline, color: AppColors.primary),
                 SizedBox(width: 12),
                 Text('Back to Profiles'),
               ],
@@ -113,7 +107,7 @@ class NavigationUtils {
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 20, 8, 16),
                 decoration: const BoxDecoration(
-                  color: Colors.teal,
+                  color: AppColors.primary,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                 ),
                 child: Row(
@@ -123,16 +117,12 @@ class NavigationUtils {
                     const Expanded(
                       child: Text(
                         'About Bird Whizz',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: AppTextStyles.dialogTitle,
                       ),
                     ),
                     IconButton(
                       icon: const Icon(Icons.close, color: Colors.white),
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () => context.pop(),
                     ),
                   ],
                 ),
@@ -191,7 +181,7 @@ class NavigationUtils {
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 20, 8, 16),
                 decoration: const BoxDecoration(
-                  color: Colors.teal,
+                  color: AppColors.primary,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                 ),
                 child: Row(
@@ -201,16 +191,12 @@ class NavigationUtils {
                     const Expanded(
                       child: Text(
                         'Acknowledgements',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: AppTextStyles.dialogTitle,
                       ),
                     ),
                     IconButton(
                       icon: const Icon(Icons.close, color: Colors.white),
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () => context.pop(),
                     ),
                   ],
                 ),
@@ -328,23 +314,18 @@ class NavigationUtils {
         children: [
           Row(
             children: [
-              Icon(icon, size: 16, color: Colors.teal),
+              Icon(icon, size: 16, color: AppColors.primary),
               const SizedBox(width: 6),
               Text(
                 title,
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.teal,
-                  letterSpacing: 0.4,
-                ),
+                style: AppTextStyles.sectionHeader,
               ),
             ],
           ),
           const SizedBox(height: 6),
           Container(
             decoration: BoxDecoration(
-              border: Border(left: BorderSide(color: Colors.teal, width: 2)),
+              border: Border(left: BorderSide(color: AppColors.primary, width: 2)),
             ),
             padding: const EdgeInsets.only(left: 12),
             child: Column(
@@ -363,7 +344,7 @@ class NavigationUtils {
     VoidCallback? onPressed,
   }) {
     return IconButton(
-      onPressed: onPressed ?? () => Navigator.maybePop(context),
+      onPressed: onPressed ?? () => context.pop(),
       icon: const Icon(Icons.arrow_back_ios_new_rounded),
       color: color,
       tooltip: 'Back',
@@ -382,7 +363,7 @@ class _AboutParagraph extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Text(
         text,
-        style: const TextStyle(fontSize: 13, color: Colors.black87, height: 1.5),
+        style: AppTextStyles.bodyCaption,
       ),
     );
   }

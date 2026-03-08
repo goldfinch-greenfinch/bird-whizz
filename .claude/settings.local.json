@@ -4,7 +4,9 @@
       "Bash(flutter analyze:*)",
       "mcp__ide__getDiagnostics",
       "Bash(taskkill:*)",
-      "Bash(cmd.exe:*)"
+      "Bash(cmd.exe:*)",
+      "Bash(grep:*)",
+      "Bash(flutter pub:*)"
     ]
   }
 }

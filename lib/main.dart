@@ -5,6 +5,7 @@ import 'package:device_preview/device_preview.dart';
 import 'providers/quiz_provider.dart';
 import 'services/audio_service.dart';
 import 'router/app_router.dart';
+import 'services/storage_service.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +35,7 @@ class _BirdQuizAppState extends State<BirdQuizApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _quizProvider = QuizProvider();
+    _quizProvider = QuizProvider(StorageService());
     _audioService = AudioService();
     _appRouter = AppRouter(_quizProvider);
     _quizProvider.init().then((_) {}); // fire and forget — LoadingScreen handles the ready state
@@ -43,12 +44,16 @@ class _BirdQuizAppState extends State<BirdQuizApp> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused ||
-        state == AppLifecycleState.hidden ||
-        state == AppLifecycleState.detached) {
-      _audioService.pauseAll();
-    } else if (state == AppLifecycleState.resumed) {
-      _audioService.resumeAll();
+    switch (state) {
+      case AppLifecycleState.paused:
+      case AppLifecycleState.hidden:
+        _audioService.pauseAll();
+      case AppLifecycleState.detached:
+        _audioService.stopAll();
+      case AppLifecycleState.resumed:
+        _audioService.resumeAll();
+      case AppLifecycleState.inactive:
+        break;
     }
   }
 

@@ -76,14 +76,59 @@ class AudioService extends ChangeNotifier {
   }
 
   void pauseAll() {
-    if (_musicHandle != null) {
-      SoLoud.instance.setPause(_musicHandle!, true);
+    _sequenceId++; // Cancel any running sequence loop
+    try {
+      if (_musicHandle != null &&
+          SoLoud.instance.getIsValidVoiceHandle(_musicHandle!)) {
+        SoLoud.instance.setPause(_musicHandle!, true);
+      }
+      if (_voiceHandle != null &&
+          SoLoud.instance.getIsValidVoiceHandle(_voiceHandle!)) {
+        SoLoud.instance.stop(_voiceHandle!);
+        _voiceHandle = null;
+      }
+      if (_sfxHandle != null &&
+          SoLoud.instance.getIsValidVoiceHandle(_sfxHandle!)) {
+        SoLoud.instance.stop(_sfxHandle!);
+        _sfxHandle = null;
+      }
+    } catch (e) {
+      if (kDebugMode) print('Error in pauseAll: $e');
     }
   }
 
   void resumeAll() {
-    if (!_isMuted && _musicHandle != null) {
-      SoLoud.instance.setPause(_musicHandle!, false);
+    if (_isMuted) return;
+    try {
+      if (_musicHandle != null &&
+          SoLoud.instance.getIsValidVoiceHandle(_musicHandle!)) {
+        SoLoud.instance.setPause(_musicHandle!, false);
+      }
+    } catch (e) {
+      if (kDebugMode) print('Error in resumeAll: $e');
+    }
+  }
+
+  void stopAll() {
+    _sequenceId++;
+    try {
+      if (_musicHandle != null &&
+          SoLoud.instance.getIsValidVoiceHandle(_musicHandle!)) {
+        SoLoud.instance.stop(_musicHandle!);
+        _musicHandle = null;
+      }
+      if (_voiceHandle != null &&
+          SoLoud.instance.getIsValidVoiceHandle(_voiceHandle!)) {
+        SoLoud.instance.stop(_voiceHandle!);
+        _voiceHandle = null;
+      }
+      if (_sfxHandle != null &&
+          SoLoud.instance.getIsValidVoiceHandle(_sfxHandle!)) {
+        SoLoud.instance.stop(_sfxHandle!);
+        _sfxHandle = null;
+      }
+    } catch (e) {
+      if (kDebugMode) print('Error in stopAll: $e');
     }
   }
 

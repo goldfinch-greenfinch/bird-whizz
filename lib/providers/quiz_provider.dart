@@ -1,13 +1,12 @@
-import 'dart:convert';
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:uuid/uuid.dart'; // Removed
 import '../models/question.dart';
 import '../models/level.dart';
 import '../models/user_profile.dart';
 import '../models/stamp.dart';
+import '../services/storage_service.dart';
 
 import '../data/sections/trivia_data.dart';
 import '../data/sections/biology_data.dart';
@@ -23,6 +22,7 @@ import '../models/daily_question.dart';
 import '../data/daily_questions_data.dart';
 
 class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
+  final StorageService _storage;
   final Random _random = Random();
   List<UserProfile> _profiles = [];
   UserProfile? _currentProfile;
@@ -59,8 +59,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
   Question? _endlessCurrentQuestion;
   int _lastEndlessStreak = 0;
 
-  // Initialize SharedPreferences
-  QuizProvider() {
+  QuizProvider(this._storage) {
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -93,30 +92,14 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
   }
 
   Future<void> init() async {
-    final prefs = await SharedPreferences.getInstance();
-    final profilesJson = prefs.getString('user_profiles');
-
-    if (profilesJson != null) {
-      try {
-        final List<dynamic> decoded = jsonDecode(profilesJson);
-        _profiles = decoded.map((json) => UserProfile.fromJson(json)).toList();
-      } catch (e) {
-        LoggingService.error('Failed to load profiles', e);
-      }
-    }
-
-    // Attempt to restore last session if needed, but for now we start at profile selection
+    _profiles = await _storage.loadProfiles();
     _sessionStartTime = DateTime.now();
     _isInitialized = true;
     notifyListeners();
   }
 
   Future<void> _saveProfiles() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String encoded = jsonEncode(
-      _profiles.map((p) => p.toJson()).toList(),
-    );
-    await prefs.setString('user_profiles', encoded);
+    await _storage.saveProfiles(_profiles);
   }
 
   // --- Profile Management ---

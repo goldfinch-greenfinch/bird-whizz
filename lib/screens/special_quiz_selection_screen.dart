@@ -22,7 +22,11 @@ class SpecialQuizSelectionScreen extends StatelessWidget {
           child: Column(
             children: [
               const _Header(),
-              Padding(
+              Align(
+                alignment: Alignment.topCenter,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 720),
+                  child: Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
                   children: [
@@ -97,6 +101,8 @@ class SpecialQuizSelectionScreen extends StatelessWidget {
                       },
                     ),
                   ],
+                ),
+              ),
                 ),
               ),
             ],

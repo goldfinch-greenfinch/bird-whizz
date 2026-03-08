@@ -302,8 +302,10 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
       animation: Listenable.merge(
           [_catController, _birdEventController, _idleController]),
       builder: (context, _) {
+        final sceneHeight = (MediaQuery.of(context).size.shortestSide * 0.55)
+            .clamp(200.0, 420.0);
         return SizedBox(
-          height: 260,
+          height: sceneHeight,
           width: double.infinity,
           child: CustomPaint(
             painter: _RescueScenePainter(
@@ -332,11 +334,13 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
         const SizedBox(width: 6),
         ...List.generate(_maxWrong, (i) {
           final used = i < _wrongGuesses;
+          final dotSize = (MediaQuery.of(context).size.width * 0.055)
+              .clamp(22.0, 38.0);
           return AnimatedContainer(
             duration: const Duration(milliseconds: 250),
             margin: const EdgeInsets.symmetric(horizontal: 3),
-            width: 24,
-            height: 24,
+            width: dotSize,
+            height: dotSize,
             decoration: BoxDecoration(
               color: used
                   ? Colors.redAccent.withValues(alpha: 0.85)
@@ -344,7 +348,7 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
               shape: BoxShape.circle,
             ),
             child: used
-                ? const Icon(Icons.close_rounded, color: Colors.white, size: 15)
+                ? Icon(Icons.close_rounded, color: Colors.white, size: dotSize * 0.6)
                 : null,
           );
         }),
@@ -357,15 +361,25 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
 
   Widget _buildWordBlanks() {
     final chars = _displayName.split('');
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: SizedBox(
-        width: double.infinity,
-        child: FittedBox(
-          fit: BoxFit.scaleDown,
+    final letterCount = chars.where((c) => c.contains(RegExp(r'[A-Z]'))).length;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Compute tile width so all letters fill available width, capped sensibly
+        final spacing = 6.0;
+        final hPad = 12.0;
+        final available = constraints.maxWidth - hPad * 2;
+        final tileW = letterCount > 0
+            ? ((available - spacing * (letterCount - 1)) / letterCount)
+                .clamp(30.0, 56.0)
+            : 38.0;
+        final tileH = tileW * 1.26;
+        final fontSize = tileW * 0.55;
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Wrap(
             alignment: WrapAlignment.center,
-            spacing: 6,
+            spacing: spacing,
             runSpacing: 8,
             children: chars.map((ch) {
               if (!ch.contains(RegExp(r'[A-Z]'))) {
@@ -373,8 +387,8 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 3, vertical: 8),
                   child: Text(ch,
-                      style: const TextStyle(
-                          fontSize: 26,
+                      style: TextStyle(
+                          fontSize: fontSize,
                           fontWeight: FontWeight.bold,
                           color: Colors.white54)),
                 );
@@ -382,8 +396,8 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
               final isRevealed = _guessedLetters.contains(ch);
               return AnimatedContainer(
                 duration: const Duration(milliseconds: 300),
-                width: 38,
-                height: 48,
+                width: tileW,
+                height: tileH,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: isRevealed
@@ -404,7 +418,7 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
                 child: Text(
                   (isRevealed || _isFailed) ? ch : '',
                   style: TextStyle(
-                    fontSize: 21,
+                    fontSize: fontSize,
                     fontWeight: FontWeight.bold,
                     color: isRevealed
                         ? Colors.greenAccent
@@ -414,58 +428,72 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
               );
             }).toList(),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
   Widget _buildKeyboard() {
-    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const rows = ['ABCDEFGHIJKLM', 'NOPQRSTUVWXYZ'];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Wrap(
-        alignment: WrapAlignment.center,
-        spacing: 5,
-        runSpacing: 5,
-        children: letters.split('').map((letter) {
-          final guessed = _guessedLetters.contains(letter);
-          final correct = guessed && _lettersInWord.contains(letter);
-          final wrong = guessed && !correct;
-          return GestureDetector(
-            onTap: guessed ? null : () => _onLetterTapped(letter),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 180),
-              width: 34,
-              height: 38,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: correct
-                    ? Colors.greenAccent.withValues(alpha: 0.25)
-                    : wrong
-                        ? Colors.redAccent.withValues(alpha: 0.12)
-                        : Colors.white.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(7),
-                border: Border.all(
-                  color: correct
-                      ? Colors.greenAccent
-                      : wrong
-                          ? Colors.redAccent.withValues(alpha: 0.3)
-                          : Colors.white38,
-                  width: 1.5,
-                ),
-              ),
-              child: Text(
-                letter,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: correct
-                      ? Colors.greenAccent
-                      : wrong
-                          ? Colors.white24
-                          : Colors.white,
-                ),
-              ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: rows.map((row) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 5),
+            child: Row(
+              children: row.split('').map((letter) {
+                final guessed = _guessedLetters.contains(letter);
+                final correct = guessed && _lettersInWord.contains(letter);
+                final wrong = guessed && !correct;
+                return Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2.5),
+                    child: AspectRatio(
+                      aspectRatio: 0.9,
+                      child: GestureDetector(
+                        onTap: guessed ? null : () => _onLetterTapped(letter),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 180),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: correct
+                                ? Colors.greenAccent.withValues(alpha: 0.25)
+                                : wrong
+                                    ? Colors.redAccent.withValues(alpha: 0.12)
+                                    : Colors.white.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(7),
+                            border: Border.all(
+                              color: correct
+                                  ? Colors.greenAccent
+                                  : wrong
+                                      ? Colors.redAccent.withValues(alpha: 0.3)
+                                      : Colors.white38,
+                              width: 1.5,
+                            ),
+                          ),
+                          child: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Text(
+                              letter,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: correct
+                                    ? Colors.greenAccent
+                                    : wrong
+                                        ? Colors.white24
+                                        : Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
             ),
           );
         }).toList(),

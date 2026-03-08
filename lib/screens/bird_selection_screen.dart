@@ -97,21 +97,22 @@ class _BirdSelectionScreenState extends State<BirdSelectionScreen> {
               Expanded(
                 child: Consumer<QuizProvider>(
                   builder: (context, provider, child) {
+                    final screenWidth = MediaQuery.of(context).size.width;
+                    final crossAxisCount =
+                        (screenWidth / 180).clamp(2, 5).round();
+                    final evolvableBirds = availableBirds
+                        .where((b) => b.hasEvolution)
+                        .toList();
                     return GridView.builder(
                       gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
+                          SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: crossAxisCount,
                             crossAxisSpacing: 16,
                             mainAxisSpacing: 16,
                             childAspectRatio: 0.85,
                           ),
-                      itemCount: availableBirds
-                          .where((b) => b.hasEvolution)
-                          .length,
+                      itemCount: evolvableBirds.length,
                       itemBuilder: (context, index) {
-                        final evolvableBirds = availableBirds
-                            .where((b) => b.hasEvolution)
-                            .toList();
                         final bird = evolvableBirds[index];
                         final isTaken = provider.isBirdTaken(bird.id);
                         final isSelected = _selectedId == bird.id;
@@ -160,13 +161,15 @@ class _BirdSelectionScreenState extends State<BirdSelectionScreen> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Image.asset(
-                                          bird.getEvolvedImagePath(1),
-                                          width: 80,
-                                          height: 80,
-                                          fit: BoxFit.contain,
+                                        Flexible(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(12),
+                                            child: Image.asset(
+                                              bird.getEvolvedImagePath(1),
+                                              fit: BoxFit.contain,
+                                            ),
+                                          ),
                                         ),
-                                        const SizedBox(height: 8),
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
                                             horizontal: 4.0,

@@ -150,7 +150,11 @@ class _EndlessQuizScreenState extends State<EndlessQuizScreen> {
                 ],
               ),
               body: SafeArea(
-                child: Padding(
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 720),
+                    child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 20.0,
                     vertical: 10.0,
@@ -320,6 +324,8 @@ class _EndlessQuizScreenState extends State<EndlessQuizScreen> {
                         ),
                       ],
                     ),
+                  ),
+                ),
                   ),
                 ),
               ),

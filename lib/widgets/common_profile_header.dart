@@ -75,8 +75,10 @@ class CommonProfileHeader extends StatelessWidget {
                           selectedBird.getEvolvedImagePath(
                             provider.userEvolutionStage,
                           ),
-                          width: 68,
-                          height: 68,
+                          width: (MediaQuery.of(context).size.width * 0.16)
+                              .clamp(60.0, 96.0),
+                          height: (MediaQuery.of(context).size.width * 0.16)
+                              .clamp(60.0, 96.0),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -225,7 +227,8 @@ class CommonProfileHeader extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             Container(
-              height: 68,
+              height: (MediaQuery.of(context).size.width * 0.16)
+                  .clamp(60.0, 96.0),
               alignment: Alignment.topRight,
               child: NavigationUtils.buildProfileMenu(
                 context,

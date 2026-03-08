@@ -289,31 +289,38 @@ class _SpeedChallengeScreenState extends State<SpeedChallengeScreen>
 
     return Column(
       children: [
-        // Timer ring
-        SizedBox(
-          width: 88,
-          height: 88,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              CircularProgressIndicator(
-                value: frac.clamp(0.0, 1.0),
-                strokeWidth: 8,
-                backgroundColor: Colors.orange[100],
-                valueColor: AlwaysStoppedAnimation<Color>(ringColor),
-              ),
-              Center(
-                child: Text(
-                  _timeLeft <= 0 ? '0' : _timeLeft.ceil().toString(),
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    color: isLow ? Colors.red[700] : _accent,
+        // Timer ring — scales with screen width
+        LayoutBuilder(
+          builder: (context, constraints) {
+            final ringSize = (MediaQuery.of(context).size.width * 0.22)
+                .clamp(72.0, 120.0);
+            final fontSize = ringSize * 0.34;
+            return SizedBox(
+              width: ringSize,
+              height: ringSize,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  CircularProgressIndicator(
+                    value: frac.clamp(0.0, 1.0),
+                    strokeWidth: ringSize * 0.09,
+                    backgroundColor: Colors.orange[100],
+                    valueColor: AlwaysStoppedAnimation<Color>(ringColor),
                   ),
-                ),
+                  Center(
+                    child: Text(
+                      _timeLeft <= 0 ? '0' : _timeLeft.ceil().toString(),
+                      style: TextStyle(
+                        fontSize: fontSize,
+                        fontWeight: FontWeight.bold,
+                        color: isLow ? Colors.red[700] : _accent,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         ),
         const SizedBox(height: 16),
         _buildQuestionCard(),

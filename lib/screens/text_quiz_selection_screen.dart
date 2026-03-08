@@ -72,18 +72,12 @@ class TextQuizSelectionScreen extends StatelessWidget {
                       },
                     ];
 
-                    return GridView.builder(
+                    return ListView.separated(
                       itemCount: categories.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
-                            childAspectRatio: 0.85,
-                          ),
+                      separatorBuilder: (_, __) =>
+                          const SizedBox(height: 14),
                       itemBuilder: (context, index) {
                         final cat = categories[index];
-                        // Gradient from Teal 300 to Teal 900
                         final color =
                             Color.lerp(
                               Colors.teal.shade300,
@@ -91,15 +85,11 @@ class TextQuizSelectionScreen extends StatelessWidget {
                               index / (categories.length - 1),
                             ) ??
                             Colors.teal;
+                        final stars = provider.getSectionStarRating(
+                          cat['id'] as String,
+                        );
 
-                        return _CategoryCard(
-                          title: cat['title'] as String,
-                          icon: cat['icon'] as IconData,
-                          color: color,
-                          description: cat['description'] as String,
-                          starRating: provider.getSectionStarRating(
-                            cat['id'] as String,
-                          ),
+                        return InkWell(
                           onTap: () {
                             context.read<AudioService>().playUiTap();
                             provider.selectCategory(cat['id'] as String);
@@ -110,6 +100,87 @@ class TextQuizSelectionScreen extends StatelessWidget {
                               ),
                             );
                           },
+                          borderRadius: BorderRadius.circular(20),
+                          child: Container(
+                            padding: const EdgeInsets.all(18),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(20),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: color.withValues(alpha: 0.2),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 5),
+                                ),
+                              ],
+                              border: Border.all(
+                                color: color.withValues(alpha: 0.3),
+                                width: 1,
+                              ),
+                            ),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 54,
+                                  height: 54,
+                                  decoration: BoxDecoration(
+                                    color: color.withValues(alpha: 0.12),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    cat['icon'] as IconData,
+                                    color: color,
+                                    size: 28,
+                                  ),
+                                ),
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        cat['title'] as String,
+                                        style: const TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        cat['description'] as String,
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                      if (stars > 0) ...[
+                                        const SizedBox(height: 6),
+                                        Row(
+                                          children: List.generate(
+                                            3,
+                                            (i) => Icon(
+                                              i < stars
+                                                  ? Icons.star_rounded
+                                                  : Icons.star_outline_rounded,
+                                              color: Colors.amber,
+                                              size: 18,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  color: Colors.grey[300],
+                                  size: 16,
+                                ),
+                              ],
+                            ),
+                          ),
                         );
                       },
                     );
@@ -221,97 +292,3 @@ class _CategoryHeader extends StatelessWidget {
   }
 }
 
-class _CategoryCard extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final Color color;
-  final String description;
-  final VoidCallback onTap;
-  final int starRating;
-
-  const _CategoryCard({
-    required this.title,
-    required this.icon,
-    required this.color,
-    required this.description,
-    required this.onTap,
-    this.starRating = 0,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: color.withValues(alpha: 0.4),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.2),
-            width: 1,
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.2),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(icon, color: Colors.white, size: 28),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              description,
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.white.withValues(alpha: 0.9),
-              ),
-            ),
-            if (starRating > 0) ...[
-              const SizedBox(height: 8),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(3, (index) {
-                  return Icon(
-                    index < starRating
-                        ? Icons.star_rounded
-                        : Icons.star_outline_rounded,
-                    color: index < starRating
-                        ? Colors.amber
-                        : Colors.white.withValues(alpha: 0.5),
-                    size: 16,
-                  );
-                }),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-}

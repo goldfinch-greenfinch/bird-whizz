@@ -17,7 +17,11 @@ class BirdIdSelectionScreen extends StatelessWidget {
           child: Column(
             children: [
               const _Header(),
-              Padding(
+              Align(
+                alignment: Alignment.topCenter,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 720),
+                  child: Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
                   children: [
@@ -36,9 +40,8 @@ class BirdIdSelectionScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 32),
                     // Theme Levels
-                    Expanded(
-                      child: ListView(
-                        children: const [
+                    Column(
+                      children: const [
                           _ThemeCard(
                             title: 'Waterfowl',
                             icon: Icons.water_drop_rounded,
@@ -91,8 +94,9 @@ class BirdIdSelectionScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                    ),
                   ],
+                ),
+              ),
                 ),
               ),
             ],

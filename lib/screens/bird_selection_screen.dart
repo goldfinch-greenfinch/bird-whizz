@@ -95,19 +95,19 @@ class _BirdSelectionScreenState extends State<BirdSelectionScreen> {
                 child: Consumer<QuizProvider>(
                   builder: (context, provider, child) {
                     final screenWidth = MediaQuery.of(context).size.width;
-                    final crossAxisCount =
-                        (screenWidth / 180).clamp(2, 5).round();
+                    final crossAxisCount = (screenWidth / 180)
+                        .clamp(2, 5)
+                        .round();
                     final evolvableBirds = availableBirds
                         .where((b) => b.hasEvolution)
                         .toList();
                     return GridView.builder(
-                      gridDelegate:
-                          SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: crossAxisCount,
-                            crossAxisSpacing: 16,
-                            mainAxisSpacing: 16,
-                            childAspectRatio: 0.85,
-                          ),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: crossAxisCount,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                        childAspectRatio: 0.85,
+                      ),
                       itemCount: evolvableBirds.length,
                       itemBuilder: (context, index) {
                         final bird = evolvableBirds[index];

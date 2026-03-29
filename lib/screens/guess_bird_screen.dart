@@ -37,11 +37,9 @@ class _GuessBirdScreenState extends State<GuessBirdScreen>
   final GlobalKey<ConfettiOverlayState> _confettiKey = GlobalKey();
 
   GuessBirdLevel get _level => guessBirdLevels[widget.levelIndex];
-  GuessBirdQuestion get _currentQuestion =>
-      _level.questions[_questionIndex];
+  GuessBirdQuestion get _currentQuestion => _level.questions[_questionIndex];
 
-  bool get _isLastQuestion =>
-      _questionIndex >= _level.questions.length - 1;
+  bool get _isLastQuestion => _questionIndex >= _level.questions.length - 1;
 
   bool get _showRevealButton => !_isAnswered && _wrongAttempts >= 2;
 
@@ -81,10 +79,7 @@ class _GuessBirdScreenState extends State<GuessBirdScreen>
         weight: 1,
       ),
       TweenSequenceItem(
-        tween: Tween(
-          begin: const Offset(-0.03, 0),
-          end: const Offset(0.03, 0),
-        ),
+        tween: Tween(begin: const Offset(-0.03, 0), end: const Offset(0.03, 0)),
         weight: 2,
       ),
       TweenSequenceItem(
@@ -109,8 +104,11 @@ class _GuessBirdScreenState extends State<GuessBirdScreen>
   }
 
   bool _isCorrectAnswer(String input) {
-    String normalize(String s) =>
-        s.trim().toLowerCase().replaceAll('-', ' ').replaceAll(RegExp(r'\s+'), ' ');
+    String normalize(String s) => s
+        .trim()
+        .toLowerCase()
+        .replaceAll('-', ' ')
+        .replaceAll(RegExp(r'\s+'), ' ');
 
     final normalizedInput = normalize(input);
     final normalizedCorrect = normalize(_currentQuestion.birdName);
@@ -197,6 +195,18 @@ class _GuessBirdScreenState extends State<GuessBirdScreen>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 16),
+                        child: Text(
+                          'Guess the Bird',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.indigo,
+                          ),
+                        ),
+                      ),
                       _buildProgressBar(),
                       const SizedBox(height: 16),
                       _buildQuestionCard(),
@@ -351,7 +361,9 @@ class _GuessBirdScreenState extends State<GuessBirdScreen>
           AnimatedBuilder(
             animation: _photoRevealAnimation,
             builder: (context, child) {
-              if (_photoRevealAnimation.value == 0) return const SizedBox.shrink();
+              if (_photoRevealAnimation.value == 0) {
+                return const SizedBox.shrink();
+              }
               return Opacity(
                 opacity: _photoRevealAnimation.value,
                 child: Transform.scale(
@@ -398,7 +410,11 @@ class _GuessBirdScreenState extends State<GuessBirdScreen>
             ),
             child: Row(
               children: [
-                Icon(Icons.lightbulb_outline, color: Colors.amber[700], size: 18),
+                Icon(
+                  Icons.lightbulb_outline,
+                  color: Colors.amber[700],
+                  size: 18,
+                ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -490,10 +506,7 @@ class _GuessBirdScreenState extends State<GuessBirdScreen>
                     vertical: 14,
                   ),
                 ),
-                child: const Text(
-                  'Reveal',
-                  style: TextStyle(fontSize: 14),
-                ),
+                child: const Text('Reveal', style: TextStyle(fontSize: 14)),
               ),
             ],
           ],

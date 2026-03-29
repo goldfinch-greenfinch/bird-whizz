@@ -6,6 +6,9 @@ import '../widgets/common_profile_header.dart';
 import '../services/audio_service.dart';
 import '../router/app_router.dart';
 import '../theme/app_theme.dart';
+import '../widgets/stat_item_widget.dart';
+import '../models/stamp.dart';
+import '../screens/achievements_book_screen.dart';
 
 class MainSelectionScreen extends StatefulWidget {
   const MainSelectionScreen({super.key});
@@ -114,142 +117,159 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 720),
                   child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                      Consumer<QuizProvider>(
-                        builder: (context, provider, child) {
-                          if (!provider.isDailyChallengeAvailable) {
-                            return const SizedBox.shrink();
-                          }
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 24.0),
-                            child: InkWell(
-                              onTap: () {
-                                _launchDailyChallenge(context, provider);
-                              },
-                              borderRadius: BorderRadius.circular(24),
-                              child: Container(
-                                padding: const EdgeInsets.all(20),
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Colors.amber.shade300,
-                                      Colors.orange.shade400,
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Main Menu',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primary,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Choose a game to play and learn about birds!',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        Consumer<QuizProvider>(
+                          builder: (context, provider, child) {
+                            if (!provider.isDailyChallengeAvailable) {
+                              return const SizedBox.shrink();
+                            }
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 24.0),
+                              child: InkWell(
+                                onTap: () {
+                                  _launchDailyChallenge(context, provider);
+                                },
+                                borderRadius: BorderRadius.circular(24),
+                                child: Container(
+                                  padding: const EdgeInsets.all(20),
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.amber.shade300,
+                                        Colors.orange.shade400,
+                                      ],
+                                    ),
+                                    borderRadius: BorderRadius.circular(24),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.black12,
+                                        blurRadius: 15,
+                                        offset: Offset(0, 8),
+                                      ),
                                     ],
                                   ),
-                                  borderRadius: BorderRadius.circular(24),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Colors.black12,
-                                      blurRadius: 15,
-                                      offset: Offset(0, 8),
-                                    ),
-                                  ],
-                                ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.all(12),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white.withValues(
-                                          alpha: 0.2,
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withValues(
+                                            alpha: 0.2,
+                                          ),
+                                          shape: BoxShape.circle,
                                         ),
-                                        shape: BoxShape.circle,
+                                        child: const Icon(
+                                          Icons.star,
+                                          color: Colors.white,
+                                          size: 32,
+                                        ),
                                       ),
-                                      child: const Icon(
-                                        Icons.star,
+                                      const SizedBox(width: 20),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: const [
+                                            Text(
+                                              'Daily Bird Challenge',
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            SizedBox(height: 6),
+                                            Text(
+                                              'Tap to play today\'s challenge!',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const Icon(
+                                        Icons.arrow_forward_ios_rounded,
                                         color: Colors.white,
-                                        size: 32,
+                                        size: 20,
                                       ),
-                                    ),
-                                    const SizedBox(width: 20),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: const [
-                                          Text(
-                                            'Daily Bird Challenge',
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          SizedBox(height: 6),
-                                          Text(
-                                            'Tap to play today\'s challenge!',
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    const Icon(
-                                      Icons.arrow_forward_ios_rounded,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
-                      ),
-                      _FeatureCard(
-                        title: 'Bird Whizz',
-                        icon: Icons.quiz_rounded,
-                        color: AppColors.primary,
-                        description:
-                            'Test your knowledge with multiple choice!',
-                        onTap: () {
-                          context.read<AudioService>().playUiTap();
-                          context.push(AppRoutes.textQuiz);
-                        },
-                      ),
-                      const SizedBox(height: 24),
-                      _FeatureCard(
-                        title: 'Bird Identification',
-                        icon: Icons.visibility_rounded,
-                        color: AppColors.birdId,
-                        description: 'Identify birds from pictures!',
-                        onTap: () {
-                          context.read<AudioService>().playUiTap();
-                          context.push(AppRoutes.birdId);
-                        },
-                      ),
-                      const SizedBox(height: 24),
-                      _FeatureCard(
-                        title: 'Bird Word Games',
-                        icon: Icons.spellcheck_rounded,
-                        color: AppColors.wordGames,
-                        description:
-                            'Unscramble birds, rescue them from nests or solve cross-birds!',
-                        onTap: () {
-                          context.read<AudioService>().playUiTap();
-                          context.push(AppRoutes.wordGames);
-                        },
-                      ),
-                      const SizedBox(height: 24),
-                      _FeatureCard(
-                        title: 'Special Quiz Modes',
-                        icon: Icons.auto_awesome_rounded,
-                        color: AppColors.guessBird,
-                        description:
-                            'Survival Mode & Guess the Bird — unique challenges!',
-                        onTap: () {
-                          context.read<AudioService>().playUiTap();
-                          context.push(AppRoutes.special);
-                        },
-                      ),
-                  ],
-                ),
-              ),
+                            );
+                          },
+                        ),
+                        _FeatureCard(
+                          title: 'Bird Whizz',
+                          icon: Icons.quiz_rounded,
+                          color: AppColors.primary,
+                          description:
+                              'Test your knowledge with multiple choice!',
+                          onTap: () {
+                            context.read<AudioService>().playUiTap();
+                            context.push(AppRoutes.textQuiz);
+                          },
+                        ),
+                        const SizedBox(height: 24),
+                        _FeatureCard(
+                          title: 'Bird Identification',
+                          icon: Icons.visibility_rounded,
+                          color: AppColors.birdId,
+                          description: 'Identify birds from pictures!',
+                          onTap: () {
+                            context.read<AudioService>().playUiTap();
+                            context.push(AppRoutes.birdId);
+                          },
+                        ),
+                        const SizedBox(height: 24),
+                        _FeatureCard(
+                          title: 'Bird Word Games',
+                          icon: Icons.spellcheck_rounded,
+                          color: AppColors.wordGames,
+                          description:
+                              'Unscramble birds, rescue them from nests or solve cross-birds!',
+                          onTap: () {
+                            context.read<AudioService>().playUiTap();
+                            context.push(AppRoutes.wordGames);
+                          },
+                        ),
+                        const SizedBox(height: 24),
+                        _FeatureCard(
+                          title: 'Special Quiz Modes',
+                          icon: Icons.auto_awesome_rounded,
+                          color: AppColors.guessBird,
+                          description:
+                              'Survival Mode & Guess the Bird — unique challenges!',
+                          onTap: () {
+                            context.read<AudioService>().playUiTap();
+                            context.push(AppRoutes.special);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],
@@ -343,59 +363,104 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<QuizProvider>(
       builder: (context, provider, child) {
-        return Container(
-          padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
-          decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(30),
-              bottomRight: Radius.circular(30),
+        final isExpanded = provider.isBannerExpanded;
+        return GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            provider.toggleBannerExpanded();
+          },
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.primary.withValues(alpha: 0.3),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
             ),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primary.withValues(alpha: 0.3),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              CommonProfileHeader(
-                onBackButtonPressed: () {
-                  context.go(AppRoutes.profiles);
-                },
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildStatItem(Icons.quiz_rounded, '${provider.textQuizTotalStars}/${provider.textQuizMaxStars}', 'Quiz', Colors.amber),
-                  _buildDivider(),
-                  _buildStatItem(Icons.visibility_rounded, '${provider.birdIdTotalStars}/${provider.birdIdMaxStars}', 'Bird ID', Colors.orangeAccent),
-                  _buildDivider(),
-                  _buildStatItem(Icons.spellcheck_rounded, '${provider.wordGamesTotalStars}/${provider.wordGamesMaxStars}', 'Words', Colors.tealAccent),
-                  _buildDivider(),
-                  _buildStatItem(Icons.auto_awesome_rounded, '${provider.speedChallengeTotalStars + provider.guessBirdTotalStars}/${provider.speedChallengeMaxStars + provider.guessBirdMaxStars}', 'Special', Colors.lightBlueAccent),
-                ],
-              ),
-            ],
+            child: Column(
+              children: [
+                CommonProfileHeader(
+                  onBackButtonPressed: () {
+                    context.go(AppRoutes.profiles);
+                  },
+                ),
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  child: isExpanded
+                      ? Column(
+                          children: [
+                            const SizedBox(height: 20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                StatItemWidget(
+                                  icon: Icons.quiz_rounded,
+                                  value:
+                                      '${provider.textQuizTotalStars}/${provider.textQuizMaxStars}',
+                                  label: 'Quiz',
+                                  color: Colors.amber,
+                                ),
+                                buildStatDivider(),
+                                StatItemWidget(
+                                  icon: Icons.visibility_rounded,
+                                  value:
+                                      '${provider.birdIdTotalStars}/${provider.birdIdMaxStars}',
+                                  label: 'Bird ID',
+                                  color: Colors.orangeAccent,
+                                ),
+                                buildStatDivider(),
+                                StatItemWidget(
+                                  icon: Icons.spellcheck_rounded,
+                                  value:
+                                      '${provider.wordGamesTotalStars}/${provider.wordGamesMaxStars}',
+                                  label: 'Words',
+                                  color: Colors.tealAccent,
+                                ),
+                                buildStatDivider(),
+                                StatItemWidget(
+                                  icon: Icons.auto_awesome_rounded,
+                                  value:
+                                      '${provider.speedChallengeTotalStars + provider.guessBirdTotalStars}/${provider.speedChallengeMaxStars + provider.guessBirdMaxStars}',
+                                  label: 'Special',
+                                  color: Colors.lightBlueAccent,
+                                ),
+                                buildStatDivider(),
+                                StatItemWidget(
+                                  icon: Icons.menu_book,
+                                  value:
+                                      '${provider.unlockedStamps.length}/${gameStamps.length}',
+                                  label: 'Badges',
+                                  color: Colors.pinkAccent,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) =>
+                                            const AchievementsBookScreen(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      : const SizedBox.shrink(),
+                ),
+              ],
+            ),
           ),
         );
       },
     );
   }
-
-  Widget _buildStatItem(IconData icon, String value, String label, Color color) {
-    return Column(
-      children: [
-        Icon(icon, color: color, size: 26),
-        const SizedBox(height: 4),
-        Text(value, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
-        Text(label, style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 10)),
-      ],
-    );
-  }
-
-  Widget _buildDivider() => Container(height: 30, width: 1, color: Colors.white.withValues(alpha: 0.2));
 }

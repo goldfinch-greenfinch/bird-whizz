@@ -121,180 +121,193 @@ class _QuizScreenState extends State<QuizScreen> {
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: 720),
                     child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 20.0,
-                    vertical: 10.0,
-                  ),
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    switchInCurve: Curves.easeInOut,
-                    switchOutCurve: Curves.easeInOut,
-                    transitionBuilder: (child, animation) {
-                      final inAnimation = Tween<Offset>(
-                        begin: const Offset(1.2, 0.0),
-                        end: Offset.zero,
-                      ).animate(animation);
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0,
+                        vertical: 10.0,
+                      ),
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        switchInCurve: Curves.easeInOut,
+                        switchOutCurve: Curves.easeInOut,
+                        transitionBuilder: (child, animation) {
+                          final inAnimation = Tween<Offset>(
+                            begin: const Offset(1.2, 0.0),
+                            end: Offset.zero,
+                          ).animate(animation);
 
-                      final outAnimation = Tween<Offset>(
-                        begin: const Offset(-1.2, 0.0),
-                        end: Offset.zero,
-                      ).animate(animation);
+                          final outAnimation = Tween<Offset>(
+                            begin: const Offset(-1.2, 0.0),
+                            end: Offset.zero,
+                          ).animate(animation);
 
-                      if (child.key ==
-                          ValueKey(provider.currentQuestionIndex)) {
-                        return SlideTransition(
-                          position: inAnimation,
-                          child: child,
-                        );
-                      } else {
-                        return SlideTransition(
-                          position: outAnimation,
-                          child: child,
-                        );
-                      }
-                    },
-                    layoutBuilder: (currentChild, previousChildren) {
-                      return Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          ...previousChildren,
-                          // ignore: use_null_aware_elements
-                          if (currentChild != null) currentChild,
-                        ],
-                      );
-                    },
-                    child: Column(
-                      key: ValueKey(provider.currentQuestionIndex),
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        // Question Card
-                        Expanded(
-                          flex: 4,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.9),
-                              borderRadius: BorderRadius.circular(20),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.1),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 5),
-                                ),
-                              ],
-                            ),
-                            padding: const EdgeInsets.all(20),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                if (question.imagePath != null) ...[
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(15),
-                                    child: Image.asset(
-                                      question.imagePath!,
-                                      height: 180,
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (ctx, error, stackTrace) =>
-                                          const SizedBox(
-                                            height: 50,
-                                            child: Icon(
-                                              Icons.broken_image,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
+                          if (child.key ==
+                              ValueKey(provider.currentQuestionIndex)) {
+                            return SlideTransition(
+                              position: inAnimation,
+                              child: child,
+                            );
+                          } else {
+                            return SlideTransition(
+                              position: outAnimation,
+                              child: child,
+                            );
+                          }
+                        },
+                        layoutBuilder: (currentChild, previousChildren) {
+                          return Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              ...previousChildren,
+                              // ignore: use_null_aware_elements
+                              if (currentChild != null) currentChild,
+                            ],
+                          );
+                        },
+                        child: Column(
+                          key: ValueKey(provider.currentQuestionIndex),
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            // Question Card
+                            Expanded(
+                              flex: 4,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.9),
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.1,
+                                      ),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 5),
                                     ),
-                                  ),
-                                  const SizedBox(height: 20),
-                                ],
-                                Consumer<AudioService>(
-                                  builder: (context, audioService, _) {
-                                    return Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 40.0,
-                                          ),
-                                          child: Text(
-                                            question.text,
-                                            textAlign: TextAlign.center,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headlineSmall
-                                                ?.copyWith(
-                                                  color: const Color(
-                                                    0xFF2C3E50,
-                                                  ),
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                          ),
-                                        ),
-                                        Positioned(
-                                          right: 0,
-                                          bottom: 0,
-                                          top: 0,
-                                          child: Center(
-                                            child: IconButton(
-                                              icon: const Icon(
-                                                Icons.volume_up_rounded,
-                                                color: Colors.teal,
-                                              ),
-                                              onPressed: () {
-                                                final sequence = [
-                                                  question.questionAudioPath,
-                                                  for (
-                                                    int i = 0;
-                                                    i < question.options.length;
-                                                    i++
-                                                  )
-                                                    question.getAnswerAudioPath(
-                                                      i,
-                                                    ),
-                                                ];
-                                                audioService.playSequence(
-                                                  sequence,
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  },
+                                  ],
                                 ),
-                              ],
+                                padding: const EdgeInsets.all(20),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    if (question.imagePath != null) ...[
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(15),
+                                        child: Image.asset(
+                                          question.imagePath!,
+                                          height: 180,
+                                          fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (ctx, error, stackTrace) =>
+                                                  const SizedBox(
+                                                    height: 50,
+                                                    child: Icon(
+                                                      Icons.broken_image,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                    ],
+                                    Consumer<AudioService>(
+                                      builder: (context, audioService, _) {
+                                        return Stack(
+                                          alignment: Alignment.center,
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 40.0,
+                                                  ),
+                                              child: Text(
+                                                question.text,
+                                                textAlign: TextAlign.center,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headlineSmall
+                                                    ?.copyWith(
+                                                      color: const Color(
+                                                        0xFF2C3E50,
+                                                      ),
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              right: 0,
+                                              bottom: 0,
+                                              top: 0,
+                                              child: Center(
+                                                child: IconButton(
+                                                  icon: const Icon(
+                                                    Icons.volume_up_rounded,
+                                                    color: Colors.teal,
+                                                  ),
+                                                  onPressed: () {
+                                                    final sequence = [
+                                                      question
+                                                          .questionAudioPath,
+                                                      for (
+                                                        int i = 0;
+                                                        i <
+                                                            question
+                                                                .options
+                                                                .length;
+                                                        i++
+                                                      )
+                                                        question
+                                                            .getAnswerAudioPath(
+                                                              i,
+                                                            ),
+                                                    ];
+                                                    audioService.playSequence(
+                                                      sequence,
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
+                            const SizedBox(height: 20),
 
-                        // Options
-                        Expanded(
-                          flex: 5,
-                          child: ShakeWidget(
-                            key: GlobalObjectKey<ShakeWidgetState>(
-                              provider.currentQuestionIndex,
-                            ),
-                            child: Column(
-                              children: List.generate(question.options.length, (
-                                index,
-                              ) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 12.0),
-                                  child: _buildOptionButton(
-                                    context,
-                                    provider,
-                                    index,
-                                    question,
+                            // Options
+                            Expanded(
+                              flex: 5,
+                              child: ShakeWidget(
+                                key: GlobalObjectKey<ShakeWidgetState>(
+                                  provider.currentQuestionIndex,
+                                ),
+                                child: Column(
+                                  children: List.generate(
+                                    question.options.length,
+                                    (index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.only(
+                                          bottom: 12.0,
+                                        ),
+                                        child: _buildOptionButton(
+                                          context,
+                                          provider,
+                                          index,
+                                          question,
+                                        ),
+                                      );
+                                    },
                                   ),
-                                );
-                              }),
+                                ),
+                              ),
                             ),
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
                   ),
                 ),
               ),

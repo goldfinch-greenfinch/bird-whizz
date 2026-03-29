@@ -263,11 +263,15 @@ class _CharacterEvolveScreenState extends State<CharacterEvolveScreen>
                             child: ElevatedButton(
                               onPressed: isDone
                                   ? () {
-                                      if (provider.newlyUnlockedStamps.isNotEmpty) {
-                                        context.pushReplacement(AppRoutes.stamp);
+                                      if (provider
+                                          .newlyUnlockedStamps
+                                          .isNotEmpty) {
+                                        context.pushReplacement(
+                                          AppRoutes.stamp,
+                                        );
                                       } else {
                                         provider.resetQuiz();
-                                        context.pop();
+                                        context.go(AppRoutes.main);
                                       }
                                     }
                                   : null,

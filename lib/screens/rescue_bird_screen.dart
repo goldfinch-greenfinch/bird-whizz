@@ -32,7 +32,7 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
   Bird? _currentBird;
   String _displayName = '';
   Set<String> _lettersInWord = {};
-  Set<String> _guessedLetters = {};
+  final Set<String> _guessedLetters = {};
 
   int _wrongGuesses = 0;
   int _rescuedThisSession = 0;
@@ -42,10 +42,15 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
 
   // Variation indices — randomised each puzzle
   int _birdVariation = 0; // 0-6
-  int _foeVariation = 0;  // 0-5
+  int _foeVariation = 0; // 0-5
 
   static const List<String> _foeNames = [
-    'cat', 'snake', 'fox', 'raccoon', 'spider', 'hawk',
+    'cat',
+    'snake',
+    'fox',
+    'raccoon',
+    'spider',
+    'hawk',
   ];
 
   String get _foeName => _foeNames[_foeVariation];
@@ -54,8 +59,9 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
   void initState() {
     super.initState();
 
-    _confettiController =
-        ConfettiController(duration: const Duration(seconds: 3));
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 3),
+    );
 
     _catController = AnimationController(
       vsync: this,
@@ -111,9 +117,10 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
 
   void _animateCatTo(double target) {
     final from = _catClimb.value;
-    _catClimb = Tween<double>(begin: from, end: target).animate(
-      CurvedAnimation(parent: _catController, curve: Curves.easeOut),
-    );
+    _catClimb = Tween<double>(
+      begin: from,
+      end: target,
+    ).animate(CurvedAnimation(parent: _catController, curve: Curves.easeOut));
     _catController.forward(from: 0);
   }
 
@@ -190,14 +197,16 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
               children: [
                 _buildHeader(context),
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 5,
+                  ),
                   child: Text(
                     _isCompleted || _isFailed
                         ? ''
                         : 'Guess letters to reveal the bird — '
-                            '${_maxWrong - _wrongGuesses} wrong guesses '
-                            'before the $_foeName reaches the nest!',
+                              '${_maxWrong - _wrongGuesses} wrong guesses '
+                              'before the $_foeName reaches the nest!',
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     style: TextStyle(
@@ -228,8 +237,11 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
               blastDirectionality: BlastDirectionality.explosive,
               shouldLoop: false,
               colors: const [
-                Colors.yellow, Colors.green, Colors.blue,
-                Colors.orange, Colors.pink,
+                Colors.yellow,
+                Colors.green,
+                Colors.blue,
+                Colors.orange,
+                Colors.pink,
               ],
             ),
           ),
@@ -276,8 +288,11 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.emoji_nature,
-                    color: Colors.yellowAccent, size: 18),
+                const Icon(
+                  Icons.emoji_nature,
+                  color: Colors.yellowAccent,
+                  size: 18,
+                ),
                 const SizedBox(width: 4),
                 Text(
                   '$_rescuedThisSession saved',
@@ -297,8 +312,11 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
 
   Widget _buildScene() {
     return AnimatedBuilder(
-      animation: Listenable.merge(
-          [_catController, _birdEventController, _idleController]),
+      animation: Listenable.merge([
+        _catController,
+        _birdEventController,
+        _idleController,
+      ]),
       builder: (context, _) {
         final sceneHeight = (MediaQuery.of(context).size.shortestSide * 0.55)
             .clamp(200.0, 420.0);
@@ -327,13 +345,14 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.pets,
-            color: Colors.white.withValues(alpha: 0.5), size: 15),
+        Icon(Icons.pets, color: Colors.white.withValues(alpha: 0.5), size: 15),
         const SizedBox(width: 6),
         ...List.generate(_maxWrong, (i) {
           final used = i < _wrongGuesses;
-          final dotSize = (MediaQuery.of(context).size.width * 0.055)
-              .clamp(22.0, 38.0);
+          final dotSize = (MediaQuery.of(context).size.width * 0.055).clamp(
+            22.0,
+            38.0,
+          );
           return AnimatedContainer(
             duration: const Duration(milliseconds: 250),
             margin: const EdgeInsets.symmetric(horizontal: 3),
@@ -346,13 +365,20 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
               shape: BoxShape.circle,
             ),
             child: used
-                ? Icon(Icons.close_rounded, color: Colors.white, size: dotSize * 0.6)
+                ? Icon(
+                    Icons.close_rounded,
+                    color: Colors.white,
+                    size: dotSize * 0.6,
+                  )
                 : null,
           );
         }),
         const SizedBox(width: 6),
-        Icon(Icons.egg_alt_rounded,
-            color: Colors.white.withValues(alpha: 0.5), size: 15),
+        Icon(
+          Icons.egg_alt_rounded,
+          color: Colors.white.withValues(alpha: 0.5),
+          size: 15,
+        ),
       ],
     );
   }
@@ -367,8 +393,10 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
         final hPad = 12.0;
         final available = constraints.maxWidth - hPad * 2;
         final tileW = letterCount > 0
-            ? ((available - spacing * (letterCount - 1)) / letterCount)
-                .clamp(30.0, 56.0)
+            ? ((available - spacing * (letterCount - 1)) / letterCount).clamp(
+                30.0,
+                56.0,
+              )
             : 38.0;
         final tileH = tileW * 1.26;
         final fontSize = tileW * 0.55;
@@ -382,13 +410,18 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
             children: chars.map((ch) {
               if (!ch.contains(RegExp(r'[A-Z]'))) {
                 return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 3, vertical: 8),
-                  child: Text(ch,
-                      style: TextStyle(
-                          fontSize: fontSize,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white54)),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 3,
+                    vertical: 8,
+                  ),
+                  child: Text(
+                    ch,
+                    style: TextStyle(
+                      fontSize: fontSize,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white54,
+                    ),
+                  ),
                 );
               }
               final isRevealed = _guessedLetters.contains(ch);
@@ -401,15 +434,15 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
                   color: isRevealed
                       ? Colors.greenAccent.withValues(alpha: 0.25)
                       : _isFailed
-                          ? Colors.redAccent.withValues(alpha: 0.2)
-                          : Colors.white.withValues(alpha: 0.1),
+                      ? Colors.redAccent.withValues(alpha: 0.2)
+                      : Colors.white.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
                     color: isRevealed
                         ? Colors.greenAccent
                         : _isFailed
-                            ? Colors.redAccent.shade100
-                            : Colors.white38,
+                        ? Colors.redAccent.shade100
+                        : Colors.white38,
                     width: 2,
                   ),
                 ),
@@ -459,15 +492,15 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
                             color: correct
                                 ? Colors.greenAccent.withValues(alpha: 0.25)
                                 : wrong
-                                    ? Colors.redAccent.withValues(alpha: 0.12)
-                                    : Colors.white.withValues(alpha: 0.15),
+                                ? Colors.redAccent.withValues(alpha: 0.12)
+                                : Colors.white.withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(7),
                             border: Border.all(
                               color: correct
                                   ? Colors.greenAccent
                                   : wrong
-                                      ? Colors.redAccent.withValues(alpha: 0.3)
-                                      : Colors.white38,
+                                  ? Colors.redAccent.withValues(alpha: 0.3)
+                                  : Colors.white38,
                               width: 1.5,
                             ),
                           ),
@@ -481,8 +514,8 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
                                 color: correct
                                     ? Colors.greenAccent
                                     : wrong
-                                        ? Colors.white24
-                                        : Colors.white,
+                                    ? Colors.white24
+                                    : Colors.white,
                               ),
                             ),
                           ),
@@ -505,43 +538,52 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
       child: Column(
         children: [
           if (_isCompleted)
-            const Text('Bird Rescued!',
-                style: TextStyle(
-                    color: Colors.greenAccent,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold))
+            const Text(
+              'Bird Rescued!',
+              style: TextStyle(
+                color: Colors.greenAccent,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            )
           else ...[
-            Text('The $_foeName got it...',
-                style: TextStyle(
-                    color: Colors.redAccent.shade100,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold)),
+            Text(
+              'The $_foeName got it...',
+              style: TextStyle(
+                color: Colors.redAccent.shade100,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 4),
-            Text('The bird was: ${_currentBird!.name}',
-                style:
-                    const TextStyle(color: Colors.white70, fontSize: 14)),
+            Text(
+              'The bird was: ${_currentBird!.name}',
+              style: const TextStyle(color: Colors.white70, fontSize: 14),
+            ),
           ],
           const SizedBox(height: 12),
           ElevatedButton.icon(
             onPressed: _onNextPressed,
             style: ElevatedButton.styleFrom(
-              backgroundColor:
-                  _isCompleted ? Colors.greenAccent : Colors.white70,
+              backgroundColor: _isCompleted
+                  ? Colors.greenAccent
+                  : Colors.white70,
               foregroundColor: Colors.black87,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 28, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 10),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
+                borderRadius: BorderRadius.circular(20),
+              ),
             ),
-            icon: Icon(_currentPuzzleIndex >= _puzzlesPerSession
-                ? Icons.check_rounded
-                : Icons.arrow_forward_rounded),
+            icon: Icon(
+              _currentPuzzleIndex >= _puzzlesPerSession
+                  ? Icons.check_rounded
+                  : Icons.arrow_forward_rounded,
+            ),
             label: Text(
               _currentPuzzleIndex >= _puzzlesPerSession
                   ? 'View Results'
                   : 'Next Bird',
-              style: const TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -555,15 +597,15 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _RescueScenePainter extends CustomPainter {
-  final double catClimb;   // 0 = foe at base / start  →  1 = foe at nest
-  final double birdEvent;  // 0→1: fly (win) or captured (fail) animation
-  final double idlePulse;  // 0→1 looping idle
+  final double catClimb; // 0 = foe at base / start  →  1 = foe at nest
+  final double birdEvent; // 0→1: fly (win) or captured (fail) animation
+  final double idlePulse; // 0→1 looping idle
   final bool isCompleted;
   final bool isFailed;
   final int wrongGuesses;
   final int maxWrong;
   final int birdVariation; // 0-6
-  final int foeVariation;  // 0-5
+  final int foeVariation; // 0-5
 
   const _RescueScenePainter({
     required this.catClimb,
@@ -580,33 +622,33 @@ class _RescueScenePainter extends CustomPainter {
   // ── Bird colour palettes ────────────────────────────────────────────────────
 
   static const List<Color> _birdBody = [
-    Colors.yellowAccent,          // 0 canary
-    Color(0xFFE53935),            // 1 robin
-    Color(0xFF1E88E5),            // 2 blue tit
-    Color(0xFF43A047),            // 3 parrot
-    Color(0xFF8E24AA),            // 4 purple
-    Colors.white,                 // 5 dove
-    Color(0xFF212121),            // 6 toucan
+    Colors.yellowAccent, // 0 canary
+    Color(0xFFE53935), // 1 robin
+    Color(0xFF1E88E5), // 2 blue tit
+    Color(0xFF43A047), // 3 parrot
+    Color(0xFF8E24AA), // 4 purple
+    Colors.white, // 5 dove
+    Color(0xFF212121), // 6 toucan
   ];
 
   static const List<Color> _birdWing = [
-    Color(0xFFFFD54F),            // 0
-    Color(0xFFB71C1C),            // 1
-    Color(0xFF0D47A1),            // 2
-    Color(0xFF1B5E20),            // 3
-    Color(0xFF4A148C),            // 4
-    Color(0xFFE0E0E0),            // 5
-    Color(0xFF1A1A1A),            // 6
+    Color(0xFFFFD54F), // 0
+    Color(0xFFB71C1C), // 1
+    Color(0xFF0D47A1), // 2
+    Color(0xFF1B5E20), // 3
+    Color(0xFF4A148C), // 4
+    Color(0xFFE0E0E0), // 5
+    Color(0xFF1A1A1A), // 6
   ];
 
   static const List<Color> _birdBeak = [
-    Colors.orange,                // 0
-    Color(0xFFFF8F00),            // 1
-    Colors.yellow,                // 2
-    Color(0xFFE53935),            // 3
-    Colors.yellow,                // 4
-    Color(0xFFEC407A),            // 5 pink
-    Colors.orange,                // 6 (overridden for toucan)
+    Colors.orange, // 0
+    Color(0xFFFF8F00), // 1
+    Colors.yellow, // 2
+    Color(0xFFE53935), // 3
+    Colors.yellow, // 4
+    Color(0xFFEC407A), // 5 pink
+    Colors.orange, // 6 (overridden for toucan)
   ];
 
   // ── Main paint ─────────────────────────────────────────────────────────────
@@ -645,12 +687,24 @@ class _RescueScenePainter extends CustomPainter {
       _drawBird(canvas, bx, by, flying: true, flap: birdEvent, alpha: 1.0);
     } else if (isFailed) {
       final alpha = (1.0 - birdEvent * 3.0).clamp(0.0, 1.0);
-      _drawBird(canvas, nestX, nestY - 10,
-          flying: false, flap: 0, alpha: alpha);
+      _drawBird(
+        canvas,
+        nestX,
+        nestY - 10,
+        flying: false,
+        flap: 0,
+        alpha: alpha,
+      );
     } else {
       final bob = math.sin(idlePulse * math.pi) * 2.5;
-      _drawBird(canvas, nestX, nestY - 10 + bob,
-          flying: false, flap: 0, alpha: 1.0);
+      _drawBird(
+        canvas,
+        nestX,
+        nestY - 10 + bob,
+        flying: false,
+        flap: 0,
+        alpha: 1.0,
+      );
     }
   }
 
@@ -662,20 +716,38 @@ class _RescueScenePainter extends CustomPainter {
 
     if (isFailed) {
       topColor = Color.lerp(
-          const Color(0xFF1565C0), const Color(0xFF4A0000), birdEvent)!;
+        const Color(0xFF1565C0),
+        const Color(0xFF4A0000),
+        birdEvent,
+      )!;
       bottomColor = Color.lerp(
-          const Color(0xFF1E88E5), const Color(0xFF8B0000), birdEvent)!;
+        const Color(0xFF1E88E5),
+        const Color(0xFF8B0000),
+        birdEvent,
+      )!;
     } else if (foeVariation == 4) {
       // Spider — dark midnight sky with purple tint
       topColor = Color.lerp(
-          const Color(0xFF0D0D2B), const Color(0xFF1A0030), danger * 0.8)!;
+        const Color(0xFF0D0D2B),
+        const Color(0xFF1A0030),
+        danger * 0.8,
+      )!;
       bottomColor = Color.lerp(
-          const Color(0xFF1A1040), const Color(0xFF3A0050), danger * 0.6)!;
+        const Color(0xFF1A1040),
+        const Color(0xFF3A0050),
+        danger * 0.6,
+      )!;
     } else {
       topColor = Color.lerp(
-          const Color(0xFF1565C0), const Color(0xFF5D1A1A), danger * 0.65)!;
+        const Color(0xFF1565C0),
+        const Color(0xFF5D1A1A),
+        danger * 0.65,
+      )!;
       bottomColor = Color.lerp(
-          const Color(0xFF1E88E5), const Color(0xFF7B3311), danger * 0.5)!;
+        const Color(0xFF1E88E5),
+        const Color(0xFF7B3311),
+        danger * 0.5,
+      )!;
     }
 
     canvas.drawRect(
@@ -722,8 +794,13 @@ class _RescueScenePainter extends CustomPainter {
 
   // ── Tree ───────────────────────────────────────────────────────────────────
 
-  void _drawTree(Canvas canvas, double x, double treeTop, double treeBottom,
-      double danger) {
+  void _drawTree(
+    Canvas canvas,
+    double x,
+    double treeTop,
+    double treeBottom,
+    double danger,
+  ) {
     final trunkPaint = Paint()..color = const Color(0xFF5D4037);
 
     canvas.drawRRect(
@@ -743,16 +820,27 @@ class _RescueScenePainter extends CustomPainter {
     );
 
     final canopyMain = Color.lerp(
-        const Color(0xFF2E7D32), const Color(0xFF3E2723), danger * 0.75)!;
+      const Color(0xFF2E7D32),
+      const Color(0xFF3E2723),
+      danger * 0.75,
+    )!;
     final canopyEdge = Color.lerp(
-        const Color(0xFF388E3C), const Color(0xFF4E342E), danger * 0.6)!;
+      const Color(0xFF388E3C),
+      const Color(0xFF4E342E),
+      danger * 0.6,
+    )!;
 
+    canvas.drawCircle(Offset(x, treeTop + 44), 54, Paint()..color = canopyMain);
     canvas.drawCircle(
-        Offset(x, treeTop + 44), 54, Paint()..color = canopyMain);
-    canvas.drawCircle(Offset(x - 18, treeTop + 34), 34,
-        Paint()..color = canopyEdge.withValues(alpha: 0.65));
-    canvas.drawCircle(Offset(x + 22, treeTop + 32), 30,
-        Paint()..color = canopyEdge.withValues(alpha: 0.65));
+      Offset(x - 18, treeTop + 34),
+      34,
+      Paint()..color = canopyEdge.withValues(alpha: 0.65),
+    );
+    canvas.drawCircle(
+      Offset(x + 22, treeTop + 32),
+      30,
+      Paint()..color = canopyEdge.withValues(alpha: 0.65),
+    );
   }
 
   // ── Nest ───────────────────────────────────────────────────────────────────
@@ -767,7 +855,9 @@ class _RescueScenePainter extends CustomPainter {
   void _drawNestRim(Canvas canvas, double cx, double cy) {
     canvas.drawArc(
       Rect.fromCenter(center: Offset(cx, cy + 5), width: 34, height: 16),
-      math.pi, math.pi, false,
+      math.pi,
+      math.pi,
+      false,
       Paint()
         ..color = const Color(0xFF8D6E63)
         ..style = PaintingStyle.stroke
@@ -778,8 +868,14 @@ class _RescueScenePainter extends CustomPainter {
 
   // ── Bird ───────────────────────────────────────────────────────────────────
 
-  void _drawBird(Canvas canvas, double x, double y,
-      {required bool flying, required double flap, required double alpha}) {
+  void _drawBird(
+    Canvas canvas,
+    double x,
+    double y, {
+    required bool flying,
+    required double flap,
+    required double alpha,
+  }) {
     if (alpha <= 0) return;
 
     final bv = birdVariation;
@@ -797,10 +893,16 @@ class _RescueScenePainter extends CustomPainter {
     canvas.drawCircle(Offset(x, y), 9, Paint()..color = bodyColor);
 
     // Eye
-    canvas.drawCircle(Offset(x + 5, y - 3), 2.5,
-        Paint()..color = Colors.black.withValues(alpha: alpha));
-    canvas.drawCircle(Offset(x + 5.5, y - 3.5), 1.0,
-        Paint()..color = Colors.white.withValues(alpha: alpha));
+    canvas.drawCircle(
+      Offset(x + 5, y - 3),
+      2.5,
+      Paint()..color = Colors.black.withValues(alpha: alpha),
+    );
+    canvas.drawCircle(
+      Offset(x + 5.5, y - 3.5),
+      1.0,
+      Paint()..color = Colors.white.withValues(alpha: alpha),
+    );
 
     // Beak
     canvas.drawPath(
@@ -816,35 +918,59 @@ class _RescueScenePainter extends CustomPainter {
     if (flying) {
       final fo = (math.sin(flap * math.pi * 7) * 6).abs();
       canvas.drawOval(
-          Rect.fromCenter(
-              center: Offset(x - 5, y - 4 - fo), width: 14, height: 7),
-          wp);
+        Rect.fromCenter(
+          center: Offset(x - 5, y - 4 - fo),
+          width: 14,
+          height: 7,
+        ),
+        wp,
+      );
       canvas.drawOval(
-          Rect.fromCenter(
-              center: Offset(x - 5, y + 4 + fo), width: 14, height: 7),
-          wp);
+        Rect.fromCenter(
+          center: Offset(x - 5, y + 4 + fo),
+          width: 14,
+          height: 7,
+        ),
+        wp,
+      );
     } else {
       canvas.drawOval(
-          Rect.fromCenter(center: Offset(x - 4, y + 3), width: 12, height: 6),
-          wp);
+        Rect.fromCenter(center: Offset(x - 4, y + 3), width: 12, height: 6),
+        wp,
+      );
     }
   }
 
-  void _drawToucan(Canvas canvas, double x, double y,
-      {required bool flying, required double flap, required double alpha}) {
+  void _drawToucan(
+    Canvas canvas,
+    double x,
+    double y, {
+    required bool flying,
+    required double flap,
+    required double alpha,
+  }) {
     // Black body
-    canvas.drawCircle(Offset(x, y), 9,
-        Paint()..color = const Color(0xFF212121).withValues(alpha: alpha));
+    canvas.drawCircle(
+      Offset(x, y),
+      9,
+      Paint()..color = const Color(0xFF212121).withValues(alpha: alpha),
+    );
     // White chest patch
     canvas.drawOval(
       Rect.fromCenter(center: Offset(x + 3, y + 1), width: 8, height: 10),
       Paint()..color = Colors.white.withValues(alpha: alpha),
     );
     // Eye
-    canvas.drawCircle(Offset(x + 5, y - 3), 2.5,
-        Paint()..color = Colors.white.withValues(alpha: alpha));
-    canvas.drawCircle(Offset(x + 5.5, y - 3.5), 1.0,
-        Paint()..color = Colors.black.withValues(alpha: alpha));
+    canvas.drawCircle(
+      Offset(x + 5, y - 3),
+      2.5,
+      Paint()..color = Colors.white.withValues(alpha: alpha),
+    );
+    canvas.drawCircle(
+      Offset(x + 5.5, y - 3.5),
+      1.0,
+      Paint()..color = Colors.black.withValues(alpha: alpha),
+    );
     // Big beak — orange outer, yellow inner
     canvas.drawPath(
       Path()
@@ -863,29 +989,44 @@ class _RescueScenePainter extends CustomPainter {
       Paint()..color = Colors.yellow.withValues(alpha: alpha),
     );
     // Wings
-    final wp =
-        Paint()..color = const Color(0xFF1A1A1A).withValues(alpha: alpha);
+    final wp = Paint()
+      ..color = const Color(0xFF1A1A1A).withValues(alpha: alpha);
     if (flying) {
       final fo = (math.sin(flap * math.pi * 7) * 6).abs();
       canvas.drawOval(
-          Rect.fromCenter(
-              center: Offset(x - 5, y - 4 - fo), width: 14, height: 7),
-          wp);
+        Rect.fromCenter(
+          center: Offset(x - 5, y - 4 - fo),
+          width: 14,
+          height: 7,
+        ),
+        wp,
+      );
       canvas.drawOval(
-          Rect.fromCenter(
-              center: Offset(x - 5, y + 4 + fo), width: 14, height: 7),
-          wp);
+        Rect.fromCenter(
+          center: Offset(x - 5, y + 4 + fo),
+          width: 14,
+          height: 7,
+        ),
+        wp,
+      );
     } else {
       canvas.drawOval(
-          Rect.fromCenter(center: Offset(x - 4, y + 3), width: 12, height: 6),
-          wp);
+        Rect.fromCenter(center: Offset(x - 4, y + 3), width: 12, height: 6),
+        wp,
+      );
     }
   }
 
   // ── Foe dispatcher ─────────────────────────────────────────────────────────
 
-  void _drawFoe(Canvas canvas, Size size, double treeX, double treeBottom,
-      double nestX, double nestY) {
+  void _drawFoe(
+    Canvas canvas,
+    Size size,
+    double treeX,
+    double treeBottom,
+    double nestX,
+    double nestY,
+  ) {
     final h = size.height;
     final w = size.width;
 
@@ -906,10 +1047,14 @@ class _RescueScenePainter extends CustomPainter {
         final climberNestY = nestY + 12;
         final foeY = climberBaseY + (climberNestY - climberBaseY) * catClimb;
         switch (foeVariation) {
-          case 0: _drawCat(canvas, treeX, foeY);
-          case 1: _drawSnake(canvas, treeX, foeY, treeBottom);
-          case 2: _drawFox(canvas, treeX, foeY);
-          case 3: _drawRaccoon(canvas, treeX, foeY);
+          case 0:
+            _drawCat(canvas, treeX, foeY);
+          case 1:
+            _drawSnake(canvas, treeX, foeY, treeBottom);
+          case 2:
+            _drawFox(canvas, treeX, foeY);
+          case 3:
+            _drawRaccoon(canvas, treeX, foeY);
         }
     }
   }
@@ -921,24 +1066,28 @@ class _RescueScenePainter extends CustomPainter {
     final bp = Paint()..color = baseColor;
 
     canvas.drawOval(
-        Rect.fromCenter(center: Offset(x, y + 9), width: 26, height: 20), bp);
+      Rect.fromCenter(center: Offset(x, y + 9), width: 26, height: 20),
+      bp,
+    );
     canvas.drawCircle(Offset(x + 7, y - 5), 13, bp);
 
     void ear(double ex, double ey) {
       canvas.drawPath(
-          Path()
-            ..moveTo(ex - 5, ey)
-            ..lineTo(ex, ey - 10)
-            ..lineTo(ex + 5, ey)
-            ..close(),
-          bp);
+        Path()
+          ..moveTo(ex - 5, ey)
+          ..lineTo(ex, ey - 10)
+          ..lineTo(ex + 5, ey)
+          ..close(),
+        bp,
+      );
       canvas.drawPath(
-          Path()
-            ..moveTo(ex - 3, ey - 1)
-            ..lineTo(ex, ey - 7)
-            ..lineTo(ex + 3, ey - 1)
-            ..close(),
-          Paint()..color = Colors.pink.shade200);
+        Path()
+          ..moveTo(ex - 3, ey - 1)
+          ..lineTo(ex, ey - 7)
+          ..lineTo(ex + 3, ey - 1)
+          ..close(),
+        Paint()..color = Colors.pink.shade200,
+      );
     }
 
     ear(x + 2, y - 15);
@@ -949,22 +1098,33 @@ class _RescueScenePainter extends CustomPainter {
         : Color.lerp(Colors.greenAccent, Colors.redAccent, catClimb)!;
     canvas.drawCircle(Offset(x + 4, y - 6), 3, Paint()..color = eyeColor);
     canvas.drawCircle(Offset(x + 11, y - 6), 3, Paint()..color = eyeColor);
+    canvas.drawCircle(Offset(x + 4, y - 6), 1.5, Paint()..color = Colors.black);
     canvas.drawCircle(
-        Offset(x + 4, y - 6), 1.5, Paint()..color = Colors.black);
+      Offset(x + 11, y - 6),
+      1.5,
+      Paint()..color = Colors.black,
+    );
     canvas.drawCircle(
-        Offset(x + 11, y - 6), 1.5, Paint()..color = Colors.black);
-    canvas.drawCircle(
-        Offset(x + 7.5, y - 1.5), 2, Paint()..color = Colors.pink.shade300);
+      Offset(x + 7.5, y - 1.5),
+      2,
+      Paint()..color = Colors.pink.shade300,
+    );
 
     final wp = Paint()
       ..color = Colors.white54
       ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke;
     for (final d in [-1, 0, 1]) {
-      canvas.drawLine(Offset(x + 1, y - 1 + d * 3.0),
-          Offset(x - 14, y - 2 + d * 1.5), wp);
-      canvas.drawLine(Offset(x + 14, y - 1 + d * 3.0),
-          Offset(x + 26, y - 2 + d * 1.5), wp);
+      canvas.drawLine(
+        Offset(x + 1, y - 1 + d * 3.0),
+        Offset(x - 14, y - 2 + d * 1.5),
+        wp,
+      );
+      canvas.drawLine(
+        Offset(x + 14, y - 1 + d * 3.0),
+        Offset(x + 26, y - 2 + d * 1.5),
+        wp,
+      );
     }
 
     canvas.drawPath(
@@ -1008,26 +1168,35 @@ class _RescueScenePainter extends CustomPainter {
 
     // Head
     canvas.drawCircle(
-        Offset(x, headY), 9, Paint()..color = const Color(0xFF2E7D32));
+      Offset(x, headY),
+      9,
+      Paint()..color = const Color(0xFF2E7D32),
+    );
 
     // Scales pattern on head
     canvas.drawCircle(
-        Offset(x, headY), 9,
-        Paint()
-          ..color = const Color(0xFF1B5E20)
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 1);
+      Offset(x, headY),
+      9,
+      Paint()
+        ..color = const Color(0xFF1B5E20)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1,
+    );
 
     // Eyes
     final eyeColor = isFailed ? Colors.redAccent : Colors.yellowAccent;
+    canvas.drawCircle(Offset(x - 3, headY - 3), 2.5, Paint()..color = eyeColor);
+    canvas.drawCircle(Offset(x + 3, headY - 3), 2.5, Paint()..color = eyeColor);
     canvas.drawCircle(
-        Offset(x - 3, headY - 3), 2.5, Paint()..color = eyeColor);
+      Offset(x - 3, headY - 3),
+      1.2,
+      Paint()..color = Colors.black,
+    );
     canvas.drawCircle(
-        Offset(x + 3, headY - 3), 2.5, Paint()..color = eyeColor);
-    canvas.drawCircle(
-        Offset(x - 3, headY - 3), 1.2, Paint()..color = Colors.black);
-    canvas.drawCircle(
-        Offset(x + 3, headY - 3), 1.2, Paint()..color = Colors.black);
+      Offset(x + 3, headY - 3),
+      1.2,
+      Paint()..color = Colors.black,
+    );
 
     // Forked tongue (flicks with idle)
     final tongueLen = 8 + math.sin(idlePulse * math.pi) * 4;
@@ -1036,12 +1205,17 @@ class _RescueScenePainter extends CustomPainter {
       ..strokeWidth = 1.5
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
+    canvas.drawLine(Offset(x, headY - 9), Offset(x, headY - 9 - tongueLen), tp);
     canvas.drawLine(
-        Offset(x, headY - 9), Offset(x, headY - 9 - tongueLen), tp);
-    canvas.drawLine(Offset(x, headY - 9 - tongueLen),
-        Offset(x - 4, headY - 9 - tongueLen - 5), tp);
-    canvas.drawLine(Offset(x, headY - 9 - tongueLen),
-        Offset(x + 4, headY - 9 - tongueLen - 5), tp);
+      Offset(x, headY - 9 - tongueLen),
+      Offset(x - 4, headY - 9 - tongueLen - 5),
+      tp,
+    );
+    canvas.drawLine(
+      Offset(x, headY - 9 - tongueLen),
+      Offset(x + 4, headY - 9 - tongueLen - 5),
+      tp,
+    );
   }
 
   // ── Fox ────────────────────────────────────────────────────────────────────
@@ -1052,7 +1226,9 @@ class _RescueScenePainter extends CustomPainter {
 
     // Body
     canvas.drawOval(
-        Rect.fromCenter(center: Offset(x, y + 9), width: 24, height: 18), bp);
+      Rect.fromCenter(center: Offset(x, y + 9), width: 24, height: 18),
+      bp,
+    );
 
     // Head
     canvas.drawCircle(Offset(x + 7, y - 4), 12, bp);
@@ -1060,19 +1236,21 @@ class _RescueScenePainter extends CustomPainter {
     // Pointed ears (larger than cat)
     void ear(double ex, double ey) {
       canvas.drawPath(
-          Path()
-            ..moveTo(ex - 5, ey)
-            ..lineTo(ex, ey - 13)
-            ..lineTo(ex + 5, ey)
-            ..close(),
-          bp);
+        Path()
+          ..moveTo(ex - 5, ey)
+          ..lineTo(ex, ey - 13)
+          ..lineTo(ex + 5, ey)
+          ..close(),
+        bp,
+      );
       canvas.drawPath(
-          Path()
-            ..moveTo(ex - 3, ey - 1)
-            ..lineTo(ex, ey - 9)
-            ..lineTo(ex + 3, ey - 1)
-            ..close(),
-          Paint()..color = Colors.pink.shade100);
+        Path()
+          ..moveTo(ex - 3, ey - 1)
+          ..lineTo(ex, ey - 9)
+          ..lineTo(ex + 3, ey - 1)
+          ..close(),
+        Paint()..color = Colors.pink.shade100,
+      );
     }
 
     ear(x + 2, y - 14);
@@ -1100,14 +1278,15 @@ class _RescueScenePainter extends CustomPainter {
         : Color.lerp(const Color(0xFFFFAB40), Colors.redAccent, catClimb)!;
     canvas.drawCircle(Offset(x + 4, y - 5), 2.5, Paint()..color = eyeColor);
     canvas.drawCircle(Offset(x + 10, y - 5), 2.5, Paint()..color = eyeColor);
+    canvas.drawCircle(Offset(x + 4, y - 5), 1.2, Paint()..color = Colors.black);
     canvas.drawCircle(
-        Offset(x + 4, y - 5), 1.2, Paint()..color = Colors.black);
-    canvas.drawCircle(
-        Offset(x + 10, y - 5), 1.2, Paint()..color = Colors.black);
+      Offset(x + 10, y - 5),
+      1.2,
+      Paint()..color = Colors.black,
+    );
 
     // Black nose at snout tip
-    canvas.drawCircle(
-        Offset(x + 21, y + 1), 2, Paint()..color = Colors.black);
+    canvas.drawCircle(Offset(x + 21, y + 1), 2, Paint()..color = Colors.black);
 
     // Bushy tail
     canvas.drawPath(
@@ -1121,8 +1300,7 @@ class _RescueScenePainter extends CustomPainter {
         ..strokeCap = StrokeCap.round,
     );
     // White tail tip
-    canvas.drawCircle(
-        Offset(x - 28, y - 12), 6, Paint()..color = Colors.white);
+    canvas.drawCircle(Offset(x - 28, y - 12), 6, Paint()..color = Colors.white);
   }
 
   // ── Raccoon ────────────────────────────────────────────────────────────────
@@ -1134,7 +1312,9 @@ class _RescueScenePainter extends CustomPainter {
 
     // Body
     canvas.drawOval(
-        Rect.fromCenter(center: Offset(x, y + 9), width: 26, height: 20), gp);
+      Rect.fromCenter(center: Offset(x, y + 9), width: 26, height: 20),
+      gp,
+    );
 
     // Head
     canvas.drawCircle(Offset(x + 7, y - 5), 13, gp);
@@ -1147,29 +1327,34 @@ class _RescueScenePainter extends CustomPainter {
 
     // Black eye mask
     canvas.drawOval(
-        Rect.fromCenter(center: Offset(x + 3, y - 6), width: 10, height: 7),
-        Paint()..color = dark);
+      Rect.fromCenter(center: Offset(x + 3, y - 6), width: 10, height: 7),
+      Paint()..color = dark,
+    );
     canvas.drawOval(
-        Rect.fromCenter(center: Offset(x + 11, y - 6), width: 10, height: 7),
-        Paint()..color = dark);
+      Rect.fromCenter(center: Offset(x + 11, y - 6), width: 10, height: 7),
+      Paint()..color = dark,
+    );
 
     // Eyes
+    canvas.drawCircle(Offset(x + 3, y - 6), 2.5, Paint()..color = Colors.white);
     canvas.drawCircle(
-        Offset(x + 3, y - 6), 2.5, Paint()..color = Colors.white);
+      Offset(x + 11, y - 6),
+      2.5,
+      Paint()..color = Colors.white,
+    );
+    canvas.drawCircle(Offset(x + 3, y - 6), 1.5, Paint()..color = Colors.black);
     canvas.drawCircle(
-        Offset(x + 11, y - 6), 2.5, Paint()..color = Colors.white);
-    canvas.drawCircle(
-        Offset(x + 3, y - 6), 1.5, Paint()..color = Colors.black);
-    canvas.drawCircle(
-        Offset(x + 11, y - 6), 1.5, Paint()..color = Colors.black);
+      Offset(x + 11, y - 6),
+      1.5,
+      Paint()..color = Colors.black,
+    );
 
     // White muzzle
     canvas.drawOval(
       Rect.fromCenter(center: Offset(x + 7, y - 1), width: 10, height: 7),
       Paint()..color = Colors.white70,
     );
-    canvas.drawCircle(
-        Offset(x + 7, y - 2), 1.5, Paint()..color = dark);
+    canvas.drawCircle(Offset(x + 7, y - 2), 1.5, Paint()..color = dark);
 
     // Ringed tail — alternating circles along a bezier
     final tailPoints = _bezierPoints(
@@ -1180,7 +1365,10 @@ class _RescueScenePainter extends CustomPainter {
     );
     for (int i = 0; i < tailPoints.length; i++) {
       canvas.drawCircle(
-          tailPoints[i], 4.5, Paint()..color = i % 2 == 0 ? grey : dark);
+        tailPoints[i],
+        4.5,
+        Paint()..color = i % 2 == 0 ? grey : dark,
+      );
     }
   }
 
@@ -1215,22 +1403,36 @@ class _RescueScenePainter extends CustomPainter {
       final legBaseY = y - 2 + i * 3.5;
       // Left
       canvas.drawLine(
-          Offset(x - 5, legBaseY), Offset(x - 16, legBaseY - 6), lp);
+        Offset(x - 5, legBaseY),
+        Offset(x - 16, legBaseY - 6),
+        lp,
+      );
       canvas.drawLine(
-          Offset(x - 16, legBaseY - 6), Offset(x - 20, legBaseY + 3), lp);
+        Offset(x - 16, legBaseY - 6),
+        Offset(x - 20, legBaseY + 3),
+        lp,
+      );
       // Right
       canvas.drawLine(
-          Offset(x + 5, legBaseY), Offset(x + 16, legBaseY - 6), lp);
+        Offset(x + 5, legBaseY),
+        Offset(x + 16, legBaseY - 6),
+        lp,
+      );
       canvas.drawLine(
-          Offset(x + 16, legBaseY - 6), Offset(x + 20, legBaseY + 3), lp);
+        Offset(x + 16, legBaseY - 6),
+        Offset(x + 20, legBaseY + 3),
+        lp,
+      );
     }
 
     // Red eyes (multiple, spider style)
-    final eyeColor =
-        isFailed ? Colors.red.shade900 : Colors.redAccent;
+    final eyeColor = isFailed ? Colors.red.shade900 : Colors.redAccent;
     for (int i = -1; i <= 1; i++) {
       canvas.drawCircle(
-          Offset(x + i * 3.0, y - 6), 1.5, Paint()..color = eyeColor);
+        Offset(x + i * 3.0, y - 6),
+        1.5,
+        Paint()..color = eyeColor,
+      );
     }
 
     // Hourglass marking on abdomen
@@ -1274,24 +1476,27 @@ class _RescueScenePainter extends CustomPainter {
 
     // Body
     canvas.drawOval(
-        Rect.fromCenter(center: Offset(x, y), width: 26, height: 13),
-        Paint()..color = brown);
+      Rect.fromCenter(center: Offset(x, y), width: 26, height: 13),
+      Paint()..color = brown,
+    );
 
     // Tan chest
     canvas.drawOval(
-        Rect.fromCenter(center: Offset(x - 3, y + 1), width: 12, height: 8),
-        Paint()..color = tan);
+      Rect.fromCenter(center: Offset(x - 3, y + 1), width: 12, height: 8),
+      Paint()..color = tan,
+    );
 
     // Head
     canvas.drawCircle(Offset(x - 10, y - 2), 8, Paint()..color = brown);
 
     // Fierce eye
-    final eyeColor =
-        isFailed ? Colors.redAccent : Colors.yellowAccent;
+    final eyeColor = isFailed ? Colors.redAccent : Colors.yellowAccent;
+    canvas.drawCircle(Offset(x - 13, y - 4), 2.5, Paint()..color = eyeColor);
     canvas.drawCircle(
-        Offset(x - 13, y - 4), 2.5, Paint()..color = eyeColor);
-    canvas.drawCircle(
-        Offset(x - 13, y - 4), 1.5, Paint()..color = Colors.black);
+      Offset(x - 13, y - 4),
+      1.5,
+      Paint()..color = Colors.black,
+    );
     // Brow ridge (predator look)
     canvas.drawLine(
       Offset(x - 16, y - 7),
@@ -1326,8 +1531,7 @@ class _RescueScenePainter extends CustomPainter {
 
   // ── Helpers ────────────────────────────────────────────────────────────────
 
-  List<Offset> _bezierPoints(
-      Offset p0, Offset p1, Offset p2, int count) {
+  List<Offset> _bezierPoints(Offset p0, Offset p1, Offset p2, int count) {
     return List.generate(count, (i) {
       final t = i / (count - 1);
       final mt = 1 - t;

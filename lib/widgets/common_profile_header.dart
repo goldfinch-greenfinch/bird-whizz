@@ -5,18 +5,14 @@ import '../models/bird.dart';
 import '../widgets/navigation_utils.dart';
 import '../widgets/user_level_badge.dart';
 import '../screens/stats_screen.dart';
-import '../screens/achievements_book_screen.dart';
 
 class CommonProfileHeader extends StatelessWidget {
   final VoidCallback? onBackButtonPressed;
   final bool isStatsScreen;
-  final String? sectionTitle;
-
   const CommonProfileHeader({
     super.key,
     this.onBackButtonPressed,
     this.isStatsScreen = false,
-    this.sectionTitle,
   });
 
   @override
@@ -34,225 +30,234 @@ class CommonProfileHeader extends StatelessWidget {
           }
         }
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              children: [
-            NavigationUtils.buildBackButton(
-              context,
-              color: Colors.white,
-              onPressed: onBackButtonPressed,
-            ),
-            if (selectedBird != null) ...[
-              const SizedBox(width: 4),
-              GestureDetector(
-                onTap: () {
-                  if (!isStatsScreen) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const StatsScreen()),
-                    );
-                  }
-                },
-                child: Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: provider.isMaxCompletion
-                              ? Colors.amber
-                              : selectedBird.color,
-                          width: provider.isMaxCompletion ? 3.5 : 3,
-                        ),
-                      ),
-                      child: ClipOval(
-                        child: Image.asset(
-                          selectedBird.getEvolvedImagePath(
-                            provider.userEvolutionStage,
-                          ),
-                          width: (MediaQuery.of(context).size.width * 0.16)
-                              .clamp(60.0, 96.0),
-                          height: (MediaQuery.of(context).size.width * 0.16)
-                              .clamp(60.0, 96.0),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    if (provider.isMaxCompletion)
-                      Positioned(
-                        top: -10,
-                        left: 0,
-                        right: 0,
-                        child: Center(
-                          child: Icon(
-                            Icons.workspace_premium_rounded,
-                            color: Colors.amber,
-                            size: 22,
-                            shadows: const [
-                              Shadow(
-                                color: Colors.black54,
-                                blurRadius: 4,
-                                offset: Offset(0, 1),
+        final isExpanded = provider.isBannerExpanded;
+
+        return GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            provider.toggleBannerExpanded();
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  NavigationUtils.buildBackButton(
+                    context,
+                    color: Colors.white,
+                    onPressed: onBackButtonPressed,
+                  ),
+                  if (selectedBird != null) ...[
+                    const SizedBox(width: 4),
+                    GestureDetector(
+                      onTap: () {
+                        if (!isStatsScreen) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const StatsScreen(),
+                            ),
+                          );
+                        }
+                      },
+                      child: Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.2),
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: provider.isMaxCompletion
+                                    ? Colors.amber
+                                    : selectedBird.color,
+                                width: provider.isMaxCompletion ? 3.5 : 3,
                               ),
-                            ],
+                            ),
+                            child: ClipOval(
+                              child: Image.asset(
+                                selectedBird.getEvolvedImagePath(
+                                  provider.userEvolutionStage,
+                                ),
+                                width:
+                                    (MediaQuery.of(context).size.width * 0.16)
+                                        .clamp(60.0, 96.0),
+                                height:
+                                    (MediaQuery.of(context).size.width * 0.16)
+                                        .clamp(60.0, 96.0),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 12),
-            ] else
-              const SizedBox(width: 8),
-            Expanded(
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () {
-                  if (!isStatsScreen) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const StatsScreen()),
-                    );
-                  }
-                },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      provider.currentProfile?.name ?? 'Adventurer',
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
+                          if (provider.isMaxCompletion)
+                            Positioned(
+                              top: -10,
+                              left: 0,
+                              right: 0,
+                              child: Center(
+                                child: Icon(
+                                  Icons.workspace_premium_rounded,
+                                  color: Colors.amber,
+                                  size: 22,
+                                  shadows: const [
+                                    Shadow(
+                                      color: Colors.black54,
+                                      blurRadius: 4,
+                                      offset: Offset(0, 1),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 6),
-                    Row(
+                    const SizedBox(width: 12),
+                  ] else
+                    const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Expanded(child: UserLevelBadge()),
-                        const SizedBox(width: 6),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 2),
-                          child: IconButton(
-                            padding: EdgeInsets.zero,
-                            constraints: const BoxConstraints(),
-                            icon: const Icon(
-                              Icons.menu_book,
-                              color: Colors.amber,
-                              size: 24,
-                            ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const AchievementsBookScreen(),
-                                ),
-                              );
-                            },
-                          ),
+                        AnimatedSize(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          child: isExpanded
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      provider.currentProfile?.name ??
+                                          'Adventurer',
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                  ],
+                                )
+                              : const SizedBox.shrink(),
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [const Expanded(child: UserLevelBadge())],
+                        ),
+                        AnimatedSize(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          child: isExpanded
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 8),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          'level ${provider.isMaxCompletion ? '100' : (provider.nextLevelProgress * 100).toStringAsFixed(0)}% complete',
+                                          style: TextStyle(
+                                            color: Colors.white.withValues(
+                                              alpha: 0.8,
+                                            ),
+                                            fontSize: 11,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        if (!provider.isMaxCompletion)
+                                          Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(
+                                                '${provider.currentStarsInLevel}/${provider.neededStarsForNextLevel}',
+                                                style: TextStyle(
+                                                  color: Colors.white
+                                                      .withValues(alpha: 0.8),
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 2),
+                                              Icon(
+                                                Icons.star_rounded,
+                                                color: Colors.white.withValues(
+                                                  alpha: 0.8,
+                                                ),
+                                                size: 12,
+                                              ),
+                                            ],
+                                          ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 3),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(4),
+                                      child: LinearProgressIndicator(
+                                        value: provider.isMaxCompletion
+                                            ? 1.0
+                                            : provider.nextLevelProgress.clamp(
+                                                0.0,
+                                                1.0,
+                                              ),
+                                        backgroundColor: Colors.white
+                                            .withValues(alpha: 0.2),
+                                        color: Colors.yellowAccent,
+                                        minHeight: 6,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      'game ${provider.maxStars > 0 ? (provider.progressStars / provider.maxStars * 100).toStringAsFixed(0) : 0}% complete',
+                                      style: TextStyle(
+                                        color: Colors.white.withValues(
+                                          alpha: 0.8,
+                                        ),
+                                        fontSize: 11,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 3),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(4),
+                                      child: LinearProgressIndicator(
+                                        value: provider.maxStars > 0
+                                            ? (provider.progressStars /
+                                                      provider.maxStars)
+                                                  .clamp(0.0, 1.0)
+                                            : 0.0,
+                                        backgroundColor: Colors.white
+                                            .withValues(alpha: 0.2),
+                                        color: Colors.greenAccent,
+                                        minHeight: 6,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : const SizedBox.shrink(),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'level ${provider.isMaxCompletion ? '100' : (provider.nextLevelProgress * 100).toStringAsFixed(0)}% complete',
-                          style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.8),
-                            fontSize: 11,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        if (!provider.isMaxCompletion)
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                '${provider.currentStarsInLevel}/${provider.neededStarsForNextLevel}',
-                                style: TextStyle(
-                                  color: Colors.white.withValues(alpha: 0.8),
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const SizedBox(width: 2),
-                              Icon(Icons.star_rounded, color: Colors.white.withValues(alpha: 0.8), size: 12),
-                            ],
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 3),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: LinearProgressIndicator(
-                        value: provider.isMaxCompletion ? 1.0 : provider.nextLevelProgress.clamp(0.0, 1.0),
-                        backgroundColor: Colors.white.withValues(alpha: 0.2),
-                        color: Colors.yellowAccent,
-                        minHeight: 6,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      'game ${provider.maxStars > 0 ? (provider.progressStars / provider.maxStars * 100).toStringAsFixed(0) : 0}% complete',
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.8),
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    const SizedBox(height: 3),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: LinearProgressIndicator(
-                        value: provider.maxStars > 0
-                            ? (provider.progressStars / provider.maxStars).clamp(0.0, 1.0)
-                            : 0.0,
-                        backgroundColor: Colors.white.withValues(alpha: 0.2),
-                        color: Colors.greenAccent,
-                        minHeight: 6,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Container(
-              height: (MediaQuery.of(context).size.width * 0.16)
-                  .clamp(60.0, 96.0),
-              alignment: Alignment.topRight,
-              child: NavigationUtils.buildProfileMenu(
-                context,
-                color: Colors.white,
-              ),
-            ),
-              ],
-            ),
-            if (sectionTitle != null) ...[
-              const SizedBox(height: 10),
-              Padding(
-                padding: const EdgeInsets.only(left: 4),
-                child: Text(
-                  sectionTitle!,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 0.2,
                   ),
-                ),
+                  const SizedBox(width: 8),
+                  Container(
+                    height: (MediaQuery.of(context).size.width * 0.16).clamp(
+                      60.0,
+                      96.0,
+                    ),
+                    alignment: Alignment.topRight,
+                    child: NavigationUtils.buildProfileMenu(
+                      context,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
               ),
             ],
-          ],
+          ),
         );
       },
     );

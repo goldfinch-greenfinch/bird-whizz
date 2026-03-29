@@ -38,192 +38,200 @@ class StatsScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       children: [
-                      _StatSection(
-                        title: 'Total Journey',
-                        icon: Icons.explore_rounded,
-                        color: Colors.teal,
-                        children: [
-                          _StatRow(
-                            'Adventurer',
-                            provider.currentProfile?.name ?? 'Unknown',
-                          ),
-                          _StatRow('Rank', provider.userStatusTitle),
-                          _StatRow('Started On', firstPlay),
-                          _StatRow('Time Played', timePlayed),
-                          _StatRow(
-                            'Total Stars',
-                            '${provider.progressStars} / ${provider.maxStars}',
-                          ),
-                          const SizedBox(height: 8),
-                          if (provider.isMaxCompletion)
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 10,
-                                horizontal: 16,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.amber.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                  color: Colors.amber,
-                                  width: 2,
+                        _StatSection(
+                          title: 'Total Journey',
+                          icon: Icons.explore_rounded,
+                          color: Colors.teal,
+                          children: [
+                            _StatRow(
+                              'Adventurer',
+                              provider.currentProfile?.name ?? 'Unknown',
+                            ),
+                            _StatRow('Rank', provider.userStatusTitle),
+                            _StatRow('Started On', firstPlay),
+                            _StatRow('Time Played', timePlayed),
+                            _StatRow(
+                              'Total Stars',
+                              '${provider.progressStars} / ${provider.maxStars}',
+                            ),
+                            const SizedBox(height: 8),
+                            if (provider.isMaxCompletion)
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10,
+                                  horizontal: 16,
                                 ),
-                              ),
-                              child: const Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.workspace_premium_rounded,
+                                decoration: BoxDecoration(
+                                  color: Colors.amber.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
                                     color: Colors.amber,
-                                    size: 22,
+                                    width: 2,
                                   ),
-                                  SizedBox(width: 8),
-                                  Text(
-                                    '100% Complete!',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.amber,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          else
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                ),
+                                child: const Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      'To Next Rank',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey[600],
-                                      ),
+                                    Icon(
+                                      Icons.workspace_premium_rounded,
+                                      color: Colors.amber,
+                                      size: 22,
                                     ),
+                                    SizedBox(width: 8),
                                     Text(
-                                      '${(provider.nextLevelProgress * 100).toInt()}%',
+                                      '100% Complete!',
                                       style: TextStyle(
-                                        fontSize: 14,
+                                        fontSize: 16,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.teal[700],
+                                        color: Colors.amber,
                                       ),
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 8),
-                                LinearProgressIndicator(
-                                  value: provider.nextLevelProgress,
-                                  backgroundColor: Colors.teal.withValues(
-                                    alpha: 0.2,
+                              )
+                            else
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'To Next Rank',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                      Text(
+                                        '${(provider.nextLevelProgress * 100).toInt()}%',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.teal[700],
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  color: Colors.teal,
-                                  minHeight: 8,
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                              ],
+                                  const SizedBox(height: 8),
+                                  LinearProgressIndicator(
+                                    value: provider.nextLevelProgress,
+                                    backgroundColor: Colors.teal.withValues(
+                                      alpha: 0.2,
+                                    ),
+                                    color: Colors.teal,
+                                    minHeight: 8,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                ],
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        _StatSection(
+                          title: 'Text Quiz',
+                          icon: Icons.quiz_rounded,
+                          color: Colors.blueAccent,
+                          children: [
+                            _StatRow(
+                              'Stars',
+                              '${provider.textQuizTotalStars} / ${provider.textQuizMaxStars}',
                             ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      _StatSection(
-                        title: 'Text Quiz',
-                        icon: Icons.quiz_rounded,
-                        color: Colors.blueAccent,
-                        children: [
-                          _StatRow(
-                            'Stars',
-                            '${provider.textQuizTotalStars} / ${provider.textQuizMaxStars}',
-                          ),
-                          _StatRow(
-                            'Sections Mastered',
-                            '${provider.completedCategoriesCount} / 8',
-                          ),
-                          _StatRow(
-                            'Total Correct',
-                            '${provider.totalCorrectAnswers}',
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      _StatSection(
-                        title: 'Bird Identification',
-                        icon: Icons.visibility_rounded,
-                        color: Colors.orangeAccent.shade700,
-                        children: [
-                          _StatRow(
-                            'Stars',
-                            '${provider.birdIdTotalStars} / ${provider.birdIdMaxStars}',
-                          ),
-                          _StatRow(
-                            'Best Session Score',
-                            '${provider.birdIdHighScore} / 10',
-                          ),
-                          _StatRow(
-                            'Total Identified',
-                            '${provider.currentProfile?.categoryCorrectAnswers['bird_id'] ?? 0}',
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      _StatSection(
-                        title: 'Word Games',
-                        icon: Icons.spellcheck_rounded,
-                        color: Colors.deepPurpleAccent,
-                        children: [
-                          _StatRow(
-                            'Unscramble Stars',
-                            '${provider.unscrambleTotalStars} / ${provider.unscrambleMaxStars}',
-                          ),
-                          _StatRow(
-                            'Best Unscramble Score',
-                            '${provider.unscrambleHighScore} / 10',
-                          ),
-                          _StatRow(
-                            'Words Unscrambled',
-                            '${provider.totalUnscrambledWords}',
-                          ),
-                          _StatRow(
-                            'Crossbird Stars',
-                            '${provider.crossbirdTotalStars} / ${provider.crossbirdMaxStars}',
-                          ),
-                          _StatRow(
-                            'Crosswords Solved',
-                            '${provider.totalCrosswordsSolved}',
-                          ),
-                          _StatRow(
-                            'Rescue Stars',
-                            '${provider.rescueTotalStars} / ${provider.rescueMaxStars}',
-                          ),
-                          _StatRow(
-                            'Birds Rescued',
-                            '${provider.totalRescuedBirds}',
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      _StatSection(
-                        title: 'Special Modes',
-                        icon: Icons.auto_awesome_rounded,
-                        color: Colors.indigo,
-                        children: [
-                          _StatRow(
-                            'Guess the Bird Stars',
-                            '${provider.guessBirdTotalStars} / ${provider.guessBirdMaxStars}',
-                          ),
-                          _StatRow(
-                            'Speed Challenge Stars',
-                            '${provider.speedChallengeTotalStars} / ${provider.speedChallengeMaxStars}',
-                          ),
-                          _StatRow(
-                            'Endless Best Streak',
-                            '${provider.endlessHighScore}',
-                          ),
-                        ],
-                      ),
+                            _StatRow(
+                              'Sections Mastered',
+                              '${provider.completedCategoriesCount} / 8',
+                            ),
+                            _StatRow(
+                              'Total Correct',
+                              '${provider.textQuizTotalCorrect}',
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        _StatSection(
+                          title: 'Bird Identification',
+                          icon: Icons.visibility_rounded,
+                          color: Colors.orangeAccent.shade700,
+                          children: [
+                            _StatRow(
+                              'Stars',
+                              '${provider.birdIdTotalStars} / ${provider.birdIdMaxStars}',
+                            ),
+                            _StatRow(
+                              'Best Session Score',
+                              '${provider.birdIdHighScore} / 10',
+                            ),
+                            _StatRow(
+                              'Total Identified',
+                              '${provider.currentProfile?.categoryCorrectAnswers['bird_id'] ?? 0}',
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        _StatSection(
+                          title: 'Word Games',
+                          icon: Icons.spellcheck_rounded,
+                          color: Colors.deepPurpleAccent,
+                          children: [
+                            _StatRow(
+                              'Unscramble Stars',
+                              '${provider.unscrambleTotalStars} / ${provider.unscrambleMaxStars}',
+                            ),
+                            _StatRow(
+                              'Best Unscramble Score',
+                              '${provider.unscrambleHighScore} / 10',
+                            ),
+                            _StatRow(
+                              'Words Unscrambled',
+                              '${provider.totalUnscrambledWords}',
+                            ),
+                            _StatRow(
+                              'Crossbird Stars',
+                              '${provider.crossbirdTotalStars} / ${provider.crossbirdMaxStars}',
+                            ),
+                            _StatRow(
+                              'Crosswords Solved',
+                              '${provider.totalCrosswordsSolved}',
+                            ),
+                            _StatRow(
+                              'Rescue Stars',
+                              '${provider.rescueTotalStars} / ${provider.rescueMaxStars}',
+                            ),
+                            _StatRow(
+                              'Birds Rescued',
+                              '${provider.totalRescuedBirds}',
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        _StatSection(
+                          title: 'Special Modes',
+                          icon: Icons.auto_awesome_rounded,
+                          color: Colors.indigo,
+                          children: [
+                            _StatRow(
+                              'Guess the Bird Stars',
+                              '${provider.guessBirdTotalStars} / ${provider.guessBirdMaxStars}',
+                            ),
+                            _StatRow(
+                              'Birds Guessed',
+                              '${provider.currentProfile?.totalGuessBirdBirdsGuessed ?? 0}',
+                            ),
+                            _StatRow(
+                              'Speed Challenge Stars',
+                              '${provider.speedChallengeTotalStars} / ${provider.speedChallengeMaxStars}',
+                            ),
+                            _StatRow(
+                              'Speed Correct',
+                              '${provider.currentProfile?.totalSpeedChallengeCorrect ?? 0}',
+                            ),
+                            _StatRow(
+                              'Endless Best Streak',
+                              '${provider.endlessHighScore}',
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -366,7 +374,7 @@ class _Header extends StatelessWidget {
             ],
           ),
           child: Column(
-            children: [const CommonProfileHeader(isStatsScreen: true, sectionTitle: 'My Stats')],
+            children: [const CommonProfileHeader(isStatsScreen: true)],
           ),
         );
       },

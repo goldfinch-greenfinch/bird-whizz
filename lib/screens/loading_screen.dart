@@ -152,7 +152,9 @@ class _LoadingScreenState extends State<LoadingScreen>
           Container(
             color: Colors.white.withValues(alpha: 0.1),
             child: GestureDetector(
-              onTap: context.watch<QuizProvider>().isInitialized ? _handleStart : null,
+              onTap: context.watch<QuizProvider>().isInitialized
+                  ? _handleStart
+                  : null,
               behavior: HitTestBehavior.opaque,
               child: Center(
                 child: Column(

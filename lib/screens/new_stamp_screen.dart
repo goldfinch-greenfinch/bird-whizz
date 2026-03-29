@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../models/stamp.dart';
+import '../router/app_router.dart';
 import '../services/audio_service.dart';
 import 'achievements_book_screen.dart';
 
@@ -87,7 +88,9 @@ class _NewStampScreenState extends State<NewStampScreen>
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (!_stampsInitialized) {
-      _stamps = List.from(Provider.of<QuizProvider>(context, listen: false).newlyUnlockedStamps);
+      _stamps = List.from(
+        Provider.of<QuizProvider>(context, listen: false).newlyUnlockedStamps,
+      );
       _stampsInitialized = true;
     }
   }
@@ -132,7 +135,7 @@ class _NewStampScreenState extends State<NewStampScreen>
     final provider = Provider.of<QuizProvider>(context, listen: false);
     provider.consumeNewlyUnlockedStamps();
     provider.resetQuiz();
-    context.pop();
+    context.go(AppRoutes.main);
   }
 
   int _getSpreadIndexForStamp(String stampId) {

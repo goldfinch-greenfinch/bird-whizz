@@ -1,9 +1,12 @@
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_soloud/flutter_soloud.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'logging_service.dart';
 
 class AudioService extends ChangeNotifier {
+  static const String _muteKey = 'audio_is_muted';
+
   final Random _random = Random();
   bool _isMuted = false;
   bool get isMuted => _isMuted;
@@ -24,10 +27,12 @@ class AudioService extends ChangeNotifier {
   int _sequenceId = 0;
 
   AudioService() {
-    _initFuture = _initSoLoud();
+    _initFuture = _init();
   }
 
-  Future<void> _initSoLoud() async {
+  Future<void> _init() async {
+    final prefs = await SharedPreferences.getInstance();
+    _isMuted = prefs.getBool(_muteKey) ?? false;
     try {
       await SoLoud.instance.init();
     } catch (e) {
@@ -43,6 +48,7 @@ class AudioService extends ChangeNotifier {
 
   void toggleMute() {
     _isMuted = !_isMuted;
+    SharedPreferences.getInstance().then((prefs) => prefs.setBool(_muteKey, _isMuted));
     final soloud = SoLoud.instance;
 
     if (_isMuted) {
@@ -149,8 +155,8 @@ class AudioService extends ChangeNotifier {
   }
 
   Future<void> _playMusic(String path, {double volume = 0.3}) async {
-    if (_isMuted) return;
     await _ensureInitialized();
+    if (_isMuted) return;
 
     if (_currentMusicPath == path &&
         _musicHandle != null &&
@@ -176,8 +182,8 @@ class AudioService extends ChangeNotifier {
   // --- Voice Over Methods ---
 
   Future<void> playVoiceOver(String path) async {
-    if (_isMuted) return;
     await _ensureInitialized();
+    if (_isMuted) return;
     _sequenceId++; // Cancel any playing sequence
     try {
       if (_voiceHandle != null &&
@@ -239,8 +245,8 @@ class AudioService extends ChangeNotifier {
   }
 
   Future<void> _playSfx(String path) async {
-    if (_isMuted) return;
     await _ensureInitialized();
+    if (_isMuted) return;
     try {
       if (_voiceHandle != null &&
           SoLoud.instance.getIsValidVoiceHandle(_voiceHandle!)) {
@@ -263,8 +269,8 @@ class AudioService extends ChangeNotifier {
   }
 
   Future<void> playSequence(List<String> paths) async {
-    if (_isMuted) return;
     await _ensureInitialized();
+    if (_isMuted) return;
 
     final currentSequenceId = ++_sequenceId;
 

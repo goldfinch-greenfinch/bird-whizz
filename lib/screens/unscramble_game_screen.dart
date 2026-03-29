@@ -294,9 +294,14 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
                             runSpacing: 12,
                             children: _scrambledLetters.map((letter) {
                               if (letter == null) {
-                              final tileSize = (MediaQuery.of(context).size.width * 0.13).clamp(44.0, 70.0);
-                              return SizedBox(width: tileSize, height: tileSize * 1.2);
-                            }
+                                final tileSize =
+                                    (MediaQuery.of(context).size.width * 0.13)
+                                        .clamp(44.0, 70.0);
+                                return SizedBox(
+                                  width: tileSize,
+                                  height: tileSize * 1.2,
+                                );
+                              }
                               return GestureDetector(
                                 onTap: () => _onLetterTapped(letter),
                                 child: _buildLetterTile(letter),
@@ -370,7 +375,10 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
     bool isFeedback = false,
     bool isGhost = false,
   }) {
-    final tileSize = (MediaQuery.of(context).size.width * 0.13).clamp(44.0, 70.0);
+    final tileSize = (MediaQuery.of(context).size.width * 0.13).clamp(
+      44.0,
+      70.0,
+    );
     return Material(
       color: Colors.transparent,
       child: Container(

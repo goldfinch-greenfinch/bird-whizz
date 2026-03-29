@@ -7,6 +7,9 @@ import '../services/audio_service.dart';
 import '../router/app_router.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common_profile_header.dart';
+import '../widgets/stat_item_widget.dart';
+import '../models/stamp.dart';
+import '../screens/achievements_book_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,6 +32,17 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             const _HomeHeader(),
+            const Padding(
+              padding: EdgeInsets.only(top: 24, bottom: 8),
+              child: Text(
+                'Quiz Levels',
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
             Expanded(
               child: Consumer<QuizProvider>(
                 builder: (context, provider, child) {
@@ -40,20 +54,19 @@ class _HomeScreenState extends State<HomeScreen> {
                         constraints: const BoxConstraints(maxWidth: 720),
                         child: ListView.separated(
                           itemCount: provider.allLevels.length,
-                          separatorBuilder: (_, __) =>
+                          separatorBuilder: (_, _) =>
                               const SizedBox(height: 12),
                           itemBuilder: (context, index) {
                             final level = provider.allLevels[index];
-                            final isUnlocked =
-                                provider.isLevelUnlocked(level.id);
-                            final stars =
-                                provider.getStarsForLevel(level.id);
+                            final isUnlocked = provider.isLevelUnlocked(
+                              level.id,
+                            );
+                            final stars = provider.getStarsForLevel(level.id);
                             final color =
                                 Color.lerp(
                                   Colors.teal.shade300,
                                   Colors.deepPurple.shade900,
-                                  index /
-                                      (provider.allLevels.length - 1),
+                                  index / (provider.allLevels.length - 1),
                                 ) ??
                                 Colors.teal;
 
@@ -101,85 +114,90 @@ class _HomeHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<QuizProvider>(
       builder: (context, provider, child) {
-        return Container(
-          padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
-          decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(30),
-              bottomRight: Radius.circular(30),
+        final isExpanded = provider.isBannerExpanded;
+        return GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            provider.toggleBannerExpanded();
+          },
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
+            decoration: BoxDecoration(
+              color: AppColors.primary,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.primary.withValues(alpha: 0.3),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
             ),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.primary.withValues(alpha: 0.3),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              const CommonProfileHeader(),
-              const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildStatItem(
-                    Icons.star_rounded,
-                    '${provider.categoryStars}/${provider.categoryMaxStars}',
-                    'Stars',
-                    Colors.amber,
-                  ),
-                  _buildContainerLine(),
-                  _buildStatItem(
-                    Icons.emoji_events_rounded,
-                    '${provider.categoryCompletedLevels}/${provider.allLevels.length}',
-                    'Levels',
-                    Colors.orangeAccent,
-                  ),
-                  _buildContainerLine(),
-                  _buildStatItem(
-                    Icons.check_circle_rounded,
-                    '${provider.categoryTotalCorrectAnswers}',
-                    'Total Correct',
-                    Colors.greenAccent,
-                  ),
-                ],
-              ),
-            ],
+            child: Column(
+              children: [
+                const CommonProfileHeader(),
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  child: isExpanded
+                      ? Column(
+                          children: [
+                            const SizedBox(height: 24),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                StatItemWidget(
+                                  icon: Icons.star_rounded,
+                                  value:
+                                      '${provider.categoryStars}/${provider.categoryMaxStars}',
+                                  label: 'Stars',
+                                  color: Colors.amber,
+                                ),
+                                buildStatDivider(),
+                                StatItemWidget(
+                                  icon: Icons.emoji_events_rounded,
+                                  value:
+                                      '${provider.categoryCompletedLevels}/${provider.allLevels.length}',
+                                  label: 'Levels',
+                                  color: Colors.orangeAccent,
+                                ),
+                                buildStatDivider(),
+                                StatItemWidget(
+                                  icon: Icons.check_circle_rounded,
+                                  value:
+                                      '${provider.categoryTotalCorrectAnswers}',
+                                  label: 'Total Correct',
+                                  color: Colors.greenAccent,
+                                ),
+                                buildStatDivider(),
+                                StatItemWidget(
+                                  icon: Icons.menu_book,
+                                  value:
+                                      '${provider.unlockedStamps.length}/${gameStamps.length}',
+                                  label: 'Badges',
+                                  color: Colors.pinkAccent,
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          const AchievementsBookScreen(),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      : const SizedBox.shrink(),
+                ),
+              ],
+            ),
           ),
         );
       },
-    );
-  }
-
-  Widget _buildStatItem(
-    IconData icon,
-    String value,
-    String label,
-    Color color,
-  ) {
-    return Column(
-      children: [
-        Icon(icon, color: color, size: 28),
-        const SizedBox(height: 6),
-        Text(
-          value,
-          style: AppTextStyles.statValue,
-        ),
-        Text(
-          label,
-          style: AppTextStyles.statLabel,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildContainerLine() {
-    return Container(
-      height: 30,
-      width: 1,
-      color: Colors.white.withValues(alpha: 0.2),
     );
   }
 }
@@ -217,10 +235,7 @@ class _LevelCard extends StatelessWidget {
               offset: const Offset(0, 4),
             ),
           ],
-          border: Border.all(
-            color: cardColor.withValues(alpha: 0.4),
-            width: 1,
-          ),
+          border: Border.all(color: cardColor.withValues(alpha: 0.4), width: 1),
         ),
         child: Row(
           children: [
@@ -247,9 +262,7 @@ class _LevelCard extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: isUnlocked
-                          ? Colors.black87
-                          : Colors.grey.shade500,
+                      color: isUnlocked ? Colors.black87 : Colors.grey.shade500,
                     ),
                   ),
                   if (isUnlocked && stars > 0) ...[
@@ -280,9 +293,7 @@ class _LevelCard extends StatelessWidget {
               ),
             ),
             Icon(
-              isUnlocked
-                  ? Icons.arrow_forward_ios_rounded
-                  : Icons.lock_rounded,
+              isUnlocked ? Icons.arrow_forward_ios_rounded : Icons.lock_rounded,
               color: isUnlocked ? Colors.grey[300] : Colors.grey.shade400,
               size: 16,
             ),

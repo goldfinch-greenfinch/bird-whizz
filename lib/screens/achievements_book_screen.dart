@@ -73,8 +73,10 @@ class AchievementsBookScreen extends StatefulWidget {
     Stamp stamp,
     bool isUnlocked,
   ) {
-    final companionBirdId =
-        Provider.of<QuizProvider>(context, listen: false).selectedBirdId;
+    final companionBirdId = Provider.of<QuizProvider>(
+      context,
+      listen: false,
+    ).selectedBirdId;
     showDialog(
       context: context,
       builder: (context) {
@@ -264,9 +266,12 @@ class AchievementsBookScreen extends StatefulWidget {
 
     // 5. Bird ID
     addSection('Eagle Eye Challenges', [
-      'id_easy_complete',
-      'id_medium_complete',
-      'id_hard_complete',
+      'id_level_1_complete',
+      'id_level_2_complete',
+      'id_level_3_complete',
+      'id_theme_forest_complete',
+      'id_theme_exotic_complete',
+      'id_theme_songbirds_complete',
       'identification_expert',
       'id_master',
       'sharp_shooter',
@@ -698,7 +703,11 @@ class AchievementsBookScreen extends StatefulWidget {
                   color: isUnlocked ? Colors.white : Colors.transparent,
                 ),
                 child: ClipOval(
-                  child: buildStampIconChild(stamp, isUnlocked, companionBirdId),
+                  child: buildStampIconChild(
+                    stamp,
+                    isUnlocked,
+                    companionBirdId,
+                  ),
                 ),
               ),
             ),

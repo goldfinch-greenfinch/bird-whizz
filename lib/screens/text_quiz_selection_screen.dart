@@ -5,6 +5,9 @@ import '../providers/quiz_provider.dart';
 import '../services/audio_service.dart';
 import '../router/app_router.dart';
 import '../widgets/common_profile_header.dart';
+import '../widgets/stat_item_widget.dart';
+import '../models/stamp.dart';
+import '../screens/achievements_book_screen.dart';
 
 class TextQuizSelectionScreen extends StatelessWidget {
   const TextQuizSelectionScreen({super.key});
@@ -17,6 +20,26 @@ class TextQuizSelectionScreen extends StatelessWidget {
         child: Column(
           children: [
             const _CategoryHeader(),
+            const Padding(
+              padding: EdgeInsets.only(top: 24, bottom: 8),
+              child: Column(
+                children: [
+                  Text(
+                    'Bird Whizz',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.teal,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Test your bird knowledge!',
+                    style: TextStyle(fontSize: 16, color: Colors.black54),
+                  ),
+                ],
+              ),
+            ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -75,8 +98,7 @@ class TextQuizSelectionScreen extends StatelessWidget {
 
                     return ListView.separated(
                       itemCount: categories.length,
-                      separatorBuilder: (_, __) =>
-                          const SizedBox(height: 14),
+                      separatorBuilder: (_, _) => const SizedBox(height: 14),
                       itemBuilder: (context, index) {
                         final cat = categories[index];
                         final color =
@@ -198,93 +220,89 @@ class _CategoryHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<QuizProvider>(
       builder: (context, provider, child) {
-        return Container(
-          padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
-          decoration: BoxDecoration(
-            color: Colors.teal,
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(30),
-              bottomRight: Radius.circular(30),
+        final isExpanded = provider.isBannerExpanded;
+        return GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            provider.toggleBannerExpanded();
+          },
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
+            decoration: BoxDecoration(
+              color: Colors.teal,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.teal.withValues(alpha: 0.3),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.teal.withValues(alpha: 0.3),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              const CommonProfileHeader(sectionTitle: 'Bird Whizz'),
-              const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildStatItem(
-                    Icons.star_rounded,
-                    '${provider.totalStars}/${provider.maxStars}',
-                    'App Stats',
-                    Colors.amber,
-                  ),
-                  _buildContainerLine(),
-                  _buildStatItem(
-                    Icons.emoji_events_rounded,
-                    '${provider.completedCategoriesCount}/${provider.allLevels.isNotEmpty ? 8 : 0}', // Hardcoded 8 sections for now + bonus maybe? Let's use 8 from _categoryOrder
-                    'Sections Done',
-                    Colors.orangeAccent,
-                  ),
-                  _buildContainerLine(),
-                  _buildStatItem(
-                    Icons.check_circle_rounded,
-                    '${provider.totalCorrectAnswers}',
-                    'Total Correct',
-                    Colors.greenAccent,
-                  ),
-                ],
-              ),
-            ],
+            child: Column(
+              children: [
+                const CommonProfileHeader(),
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  child: isExpanded
+                      ? Column(
+                          children: [
+                            const SizedBox(height: 24),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                StatItemWidget(
+                                  icon: Icons.star_rounded,
+                                  value:
+                                      '${provider.totalStars}/${provider.maxStars}',
+                                  label: 'App Stats',
+                                  color: Colors.amber,
+                                ),
+                                buildStatDivider(),
+                                StatItemWidget(
+                                  icon: Icons.emoji_events_rounded,
+                                  value:
+                                      '${provider.completedCategoriesCount}/${provider.allLevels.isNotEmpty ? 8 : 0}',
+                                  label: 'Sections Done',
+                                  color: Colors.orangeAccent,
+                                ),
+                                buildStatDivider(),
+                                StatItemWidget(
+                                  icon: Icons.check_circle_rounded,
+                                  value: '${provider.totalCorrectAnswers}',
+                                  label: 'Total Correct',
+                                  color: Colors.greenAccent,
+                                ),
+                                buildStatDivider(),
+                                StatItemWidget(
+                                  icon: Icons.menu_book,
+                                  value:
+                                      '${provider.unlockedStamps.length}/${gameStamps.length}',
+                                  label: 'Badges',
+                                  color: Colors.pinkAccent,
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          const AchievementsBookScreen(),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      : const SizedBox.shrink(),
+                ),
+              ],
+            ),
           ),
         );
       },
     );
   }
-
-  Widget _buildStatItem(
-    IconData icon,
-    String value,
-    String label,
-    Color color,
-  ) {
-    return Column(
-      children: [
-        Icon(icon, color: color, size: 28),
-        const SizedBox(height: 6),
-        Text(
-          value,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.8),
-            fontSize: 11,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildContainerLine() {
-    return Container(
-      height: 30,
-      width: 1,
-      color: Colors.white.withValues(alpha: 0.2),
-    );
-  }
 }
-

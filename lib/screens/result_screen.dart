@@ -223,16 +223,13 @@ class _ResultScreenState extends State<ResultScreen> {
           const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              3,
-              (index) {
-                return Icon(
-                  index < _stars ? Icons.star : Icons.star_border,
-                  color: AppColors.star,
-                  size: 48,
-                );
-              },
-            ),
+            children: List.generate(3, (index) {
+              return Icon(
+                index < _stars ? Icons.star : Icons.star_border,
+                color: AppColors.star,
+                size: 48,
+              );
+            }),
           ),
         ],
       ),
@@ -286,7 +283,7 @@ class _ResultScreenState extends State<ResultScreen> {
             context.pushReplacement(AppRoutes.stamp);
           } else {
             provider.resetQuiz();
-            context.pop();
+            context.go(AppRoutes.main);
           }
         },
         child: Text(

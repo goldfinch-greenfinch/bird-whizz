@@ -216,24 +216,18 @@ class _EndlessResultScreenState extends State<EndlessResultScreen> {
           const SizedBox(height: 16),
           Text(
             'Best Streak: $best',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[700],
-            ),
+            style: TextStyle(fontSize: 16, color: Colors.grey[700]),
           ),
           const SizedBox(height: 15),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              3,
-              (index) {
-                return Icon(
-                  index < _stars ? Icons.star : Icons.star_border,
-                  color: Colors.amber,
-                  size: 32,
-                );
-              },
-            ),
+            children: List.generate(3, (index) {
+              return Icon(
+                index < _stars ? Icons.star : Icons.star_border,
+                color: Colors.amber,
+                size: 32,
+              );
+            }),
           ),
         ],
       ),
@@ -287,7 +281,7 @@ class _EndlessResultScreenState extends State<EndlessResultScreen> {
             context.pushReplacement(AppRoutes.stamp);
           } else {
             provider.resetQuiz();
-            context.pop();
+            context.go(AppRoutes.main);
           }
         },
         child: Text(
@@ -298,4 +292,3 @@ class _EndlessResultScreenState extends State<EndlessResultScreen> {
     );
   }
 }
-

@@ -169,9 +169,10 @@ class _CrossbirdScreenState extends State<CrossbirdScreen>
   void _submitAnswer([String? override]) {
     if (_selectedWordIndex == null) return;
     final word = _puzzle.words[_selectedWordIndex!];
-    final typed = (override ?? _textController.text)
-        .toUpperCase()
-        .replaceAll(' ', '');
+    final typed = (override ?? _textController.text).toUpperCase().replaceAll(
+      ' ',
+      '',
+    );
 
     if (typed == word.answer) {
       _onCorrect(_selectedWordIndex!);
@@ -206,7 +207,10 @@ class _CrossbirdScreenState extends State<CrossbirdScreen>
       // Auto-advance to next unsolved word
       int nextIdx = -1;
       for (int i = 0; i < _puzzle.words.length; i++) {
-        if (!_solved[i]) { nextIdx = i; break; }
+        if (!_solved[i]) {
+          nextIdx = i;
+          break;
+        }
       }
       if (nextIdx != -1) {
         Future.delayed(const Duration(milliseconds: 200), () {
@@ -262,8 +266,7 @@ class _CrossbirdScreenState extends State<CrossbirdScreen>
     return _puzzle.words[_selectedWordIndex!].cells.contains((row, col));
   }
 
-  bool _cellSolved(int row, int col) =>
-      _lockedLetters.containsKey((row, col));
+  bool _cellSolved(int row, int col) => _lockedLetters.containsKey((row, col));
 
   int? _cellNumber(int row, int col) {
     for (final w in _puzzle.words) {
@@ -393,8 +396,10 @@ class _CrossbirdScreenState extends State<CrossbirdScreen>
     return LayoutBuilder(
       builder: (context, constraints) {
         final maxWidth = constraints.maxWidth - 8; // subtract outer padding
-        final cellSize = ((maxWidth - gap * _puzzle.cols) / _puzzle.cols)
-            .clamp(24.0, 42.0);
+        final cellSize = ((maxWidth - gap * _puzzle.cols) / _puzzle.cols).clamp(
+          24.0,
+          42.0,
+        );
         return _buildGridWithCellSize(cellSize, gap);
       },
     );
@@ -436,11 +441,7 @@ class _CrossbirdScreenState extends State<CrossbirdScreen>
   Widget _buildCell(int row, int col, double size) {
     final active = _cellActive(row, col);
     if (!active) {
-      return Container(
-        width: size,
-        height: size,
-        color: Colors.grey[800],
-      );
+      return Container(width: size, height: size, color: Colors.grey[800]);
     }
 
     final selected = _cellSelected(row, col);
@@ -471,7 +472,8 @@ class _CrossbirdScreenState extends State<CrossbirdScreen>
         builder: (context, child) {
           double dx = 0;
           if (_isWrong && selected) {
-            dx = 6 *
+            dx =
+                6 *
                 (0.5 - (_shakeAnimation.value * 4 % 1).abs()).sign *
                 _shakeAnimation.value;
           }
@@ -507,9 +509,7 @@ class _CrossbirdScreenState extends State<CrossbirdScreen>
                     fontWeight: FontWeight.bold,
                     color: solved
                         ? Colors.green[900]
-                        : (_isWrong && selected
-                            ? Colors.red
-                            : Colors.black87),
+                        : (_isWrong && selected ? Colors.red : Colors.black87),
                   ),
                 ),
               ),
@@ -521,8 +521,9 @@ class _CrossbirdScreenState extends State<CrossbirdScreen>
   }
 
   Widget _buildInputPanel() {
-    final word =
-        _selectedWordIndex != null ? _puzzle.words[_selectedWordIndex!] : null;
+    final word = _selectedWordIndex != null
+        ? _puzzle.words[_selectedWordIndex!]
+        : null;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
@@ -550,8 +551,7 @@ class _CrossbirdScreenState extends State<CrossbirdScreen>
                 style: TextStyle(
                   color: _allDone ? Colors.green : Colors.grey[500],
                   fontSize: 15,
-                  fontWeight:
-                      _allDone ? FontWeight.bold : FontWeight.normal,
+                  fontWeight: _allDone ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
             )
@@ -562,7 +562,9 @@ class _CrossbirdScreenState extends State<CrossbirdScreen>
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 3),
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.teal,
                         borderRadius: BorderRadius.circular(8),
@@ -599,8 +601,7 @@ class _CrossbirdScreenState extends State<CrossbirdScreen>
                         textCapitalization: TextCapitalization.characters,
                         maxLength: word.answer.length,
                         decoration: InputDecoration(
-                          hintText:
-                              '${word.answer.length} letters...',
+                          hintText: '${word.answer.length} letters...',
                           filled: true,
                           fillColor: _isWrong
                               ? Colors.red[50]
@@ -614,9 +615,7 @@ class _CrossbirdScreenState extends State<CrossbirdScreen>
                           enabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                             borderSide: BorderSide(
-                              color: _isWrong
-                                  ? Colors.red
-                                  : Colors.grey[300]!,
+                              color: _isWrong ? Colors.red : Colors.grey[300]!,
                             ),
                           ),
                           focusedBorder: OutlineInputBorder(
@@ -648,7 +647,9 @@ class _CrossbirdScreenState extends State<CrossbirdScreen>
                         backgroundColor: Colors.teal,
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 18, vertical: 14),
+                          horizontal: 18,
+                          vertical: 14,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
@@ -667,18 +668,20 @@ class _CrossbirdScreenState extends State<CrossbirdScreen>
 
   Widget _buildClueList() {
     // Group and sort clues: across first, then down, by clueNumber
-    final acrossWords = _puzzle.words
-        .asMap()
-        .entries
-        .where((e) => e.value.direction == 'across')
-        .toList()
-      ..sort((a, b) => a.value.clueNumber.compareTo(b.value.clueNumber));
-    final downWords = _puzzle.words
-        .asMap()
-        .entries
-        .where((e) => e.value.direction == 'down')
-        .toList()
-      ..sort((a, b) => a.value.clueNumber.compareTo(b.value.clueNumber));
+    final acrossWords =
+        _puzzle.words
+            .asMap()
+            .entries
+            .where((e) => e.value.direction == 'across')
+            .toList()
+          ..sort((a, b) => a.value.clueNumber.compareTo(b.value.clueNumber));
+    final downWords =
+        _puzzle.words
+            .asMap()
+            .entries
+            .where((e) => e.value.direction == 'down')
+            .toList()
+          ..sort((a, b) => a.value.clueNumber.compareTo(b.value.clueNumber));
 
     return Container(
       decoration: BoxDecoration(
@@ -753,14 +756,16 @@ class _CrossbirdScreenState extends State<CrossbirdScreen>
                   color: isSolved
                       ? Colors.green[700]
                       : (isSelected ? Colors.teal[900] : Colors.grey[800]),
-                  decoration:
-                      isSolved ? TextDecoration.lineThrough : null,
+                  decoration: isSolved ? TextDecoration.lineThrough : null,
                 ),
               ),
             ),
             if (isSolved)
-              Icon(Icons.check_circle_rounded,
-                  color: Colors.green[400], size: 18),
+              Icon(
+                Icons.check_circle_rounded,
+                color: Colors.green[400],
+                size: 18,
+              ),
           ],
         ),
       ),

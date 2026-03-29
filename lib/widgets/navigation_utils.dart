@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import '../data/about/app_text.dart';
+import '../data/about/feedback_text.dart';
+import '../data/about/mission_text.dart';
+import '../data/about/team_text.dart';
 import '../services/audio_service.dart';
 import '../router/app_router.dart';
 import '../theme/app_theme.dart';
@@ -26,6 +30,8 @@ class NavigationUtils {
           _showAcknowledgementsDialog(context);
         } else if (value == 'about') {
           _showAboutDialog(context);
+        } else if (value == 'feedback') {
+          _showFeedbackDialog(context);
         }
       },
       itemBuilder: (BuildContext context) {
@@ -42,7 +48,7 @@ class NavigationUtils {
                   color: AppColors.primary,
                 ),
                 const SizedBox(width: 12),
-                Text(isMuted ? 'Sound Off' : 'Sound On'),
+                Text(isMuted ? 'Turn Sound On' : 'Turn Sound Off'),
               ],
             ),
           ),
@@ -63,6 +69,16 @@ class NavigationUtils {
                 Icon(Icons.info_outline_rounded, color: AppColors.primary),
                 SizedBox(width: 12),
                 Text('About'),
+              ],
+            ),
+          ),
+          const PopupMenuItem<String>(
+            value: 'feedback',
+            child: Row(
+              children: [
+                Icon(Icons.feedback_outlined, color: AppColors.primary),
+                SizedBox(width: 12),
+                Text('Feedback & Support'),
               ],
             ),
           ),
@@ -137,21 +153,81 @@ class NavigationUtils {
                         icon: Icons.flutter_dash,
                         title: 'The App',
                         children: const [
-                          _AboutParagraph('Placeholder text about the app.'),
+                          _AboutParagraph(aboutAppText),
                         ],
                       ),
                       _ackSection(
                         icon: Icons.people_outline,
                         title: 'The Team',
                         children: const [
-                          _AboutParagraph('Placeholder text about the team.'),
+                          _AboutParagraph(aboutTeamText),
                         ],
                       ),
                       _ackSection(
                         icon: Icons.lightbulb_outline_rounded,
                         title: 'Our Mission',
                         children: const [
-                          _AboutParagraph('Placeholder text about the mission.'),
+                          _AboutParagraph(aboutMissionText),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  static void _showFeedbackDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.85,
+            maxWidth: 520,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.fromLTRB(20, 20, 8, 16),
+                decoration: const BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.feedback_outlined, color: Colors.white),
+                    const SizedBox(width: 10),
+                    const Expanded(
+                      child: Text(
+                        'Feedback & Support',
+                        style: AppTextStyles.dialogTitle,
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close, color: Colors.white),
+                      onPressed: () => context.pop(),
+                    ),
+                  ],
+                ),
+              ),
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _ackSection(
+                        icon: Icons.email_outlined,
+                        title: 'Get In Touch',
+                        children: const [
+                          _AboutParagraph(feedbackText),
                         ],
                       ),
                     ],

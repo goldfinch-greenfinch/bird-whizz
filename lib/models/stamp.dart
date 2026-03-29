@@ -359,24 +359,42 @@ final List<Stamp> gameStamps = [
     description: 'Earn a star in every Colours level.',
     iconPath: 'assets/bird_icons/bullfinch.webp',
   ),
-  // -- Bird Identification Stamps --
+  // -- Bird Identification Theme Completion Stamps --
   const Stamp(
-    id: 'id_easy_complete',
-    title: 'Eagle Eye: Easy',
-    description: 'Complete the Easy Bird Identification challenge.',
+    id: 'id_level_1_complete',
+    title: 'Waterfowl Watcher',
+    description: 'Complete all Waterfowl Bird ID levels.',
+    iconPath: 'assets/bird_icons/mallard.webp',
+  ),
+  const Stamp(
+    id: 'id_level_2_complete',
+    title: 'Coastal Expert',
+    description: 'Complete all Coastal & Wading Bird ID levels.',
+    iconPath: 'assets/bird_icons/oystercatcher.webp',
+  ),
+  const Stamp(
+    id: 'id_level_3_complete',
+    title: 'Raptor Scout',
+    description: 'Complete all Birds of Prey ID levels.',
     iconPath: 'assets/bird_icons/kestrel.webp',
   ),
   const Stamp(
-    id: 'id_medium_complete',
-    title: 'Eagle Eye: Medium',
-    description: 'Complete the Medium Bird Identification challenge.',
-    iconPath: 'assets/bird_icons/goshawk.webp',
+    id: 'id_theme_forest_complete',
+    title: 'Forest Finder',
+    description: 'Complete all Forest & Woodland Bird ID levels.',
+    iconPath: 'assets/bird_icons/woodpecker.webp',
   ),
   const Stamp(
-    id: 'id_hard_complete',
-    title: 'Eagle Eye: Hard',
-    description: 'Complete the Hard Bird Identification challenge.',
-    iconPath: 'assets/bird_icons/blackbird.webp',
+    id: 'id_theme_exotic_complete',
+    title: 'Exotic Explorer',
+    description: 'Complete all Exotic & Colorful Bird ID levels.',
+    iconPath: 'assets/bird_icons/kingfisher.webp',
+  ),
+  const Stamp(
+    id: 'id_theme_songbirds_complete',
+    title: 'Song Master',
+    description: 'Complete all Songbird ID levels.',
+    iconPath: 'assets/bird_icons/goldfinch.webp',
   ),
   // -- Daily Challenge Stamps --
   const Stamp(
@@ -476,7 +494,7 @@ final List<Stamp> gameStamps = [
   const Stamp(
     id: 'crossbird_master',
     title: 'Crossbird Master',
-    description: 'Complete all 3 Crossbird puzzles.',
+    description: 'Complete all 4 Crossbird puzzles.',
     iconData: Icons.grid_on_rounded,
   ),
   const Stamp(

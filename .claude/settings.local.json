@@ -6,7 +6,8 @@
       "Bash(taskkill:*)",
       "Bash(cmd.exe:*)",
       "Bash(grep:*)",
-      "Bash(flutter pub:*)"
+      "Bash(flutter pub:*)",
+      "Bash(flutter:*)"
     ]
   }
 }

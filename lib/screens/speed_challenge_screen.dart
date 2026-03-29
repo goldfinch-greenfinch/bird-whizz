@@ -79,8 +79,9 @@ class _SpeedChallengeScreenState extends State<SpeedChallengeScreen>
 
   void _startQuestion() {
     _timeLeft = _level.secondsPerQuestion.toDouble();
-    _timerRingController.duration =
-        Duration(seconds: _level.secondsPerQuestion);
+    _timerRingController.duration = Duration(
+      seconds: _level.secondsPerQuestion,
+    );
     _timerRingController.forward(from: 0);
 
     _countdownTimer = Timer.periodic(const Duration(milliseconds: 100), (t) {
@@ -185,6 +186,18 @@ class _SpeedChallengeScreenState extends State<SpeedChallengeScreen>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 16),
+                        child: Text(
+                          'Speed Challenge',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: _accent,
+                          ),
+                        ),
+                      ),
                       _buildProgressRow(),
                       const SizedBox(height: 16),
                       _buildTimerAndQuestion(),
@@ -248,7 +261,11 @@ class _SpeedChallengeScreenState extends State<SpeedChallengeScreen>
             ),
             Row(
               children: [
-                Icon(Icons.check_circle_rounded, color: Colors.green[600], size: 18),
+                Icon(
+                  Icons.check_circle_rounded,
+                  color: Colors.green[600],
+                  size: 18,
+                ),
                 const SizedBox(width: 4),
                 Text(
                   '$_score correct',
@@ -290,8 +307,10 @@ class _SpeedChallengeScreenState extends State<SpeedChallengeScreen>
         // Timer ring — scales with screen width
         LayoutBuilder(
           builder: (context, constraints) {
-            final ringSize = (MediaQuery.of(context).size.width * 0.22)
-                .clamp(72.0, 120.0);
+            final ringSize = (MediaQuery.of(context).size.width * 0.22).clamp(
+              72.0,
+              120.0,
+            );
             final fontSize = ringSize * 0.34;
             return SizedBox(
               width: ringSize,
@@ -371,8 +390,10 @@ class _SpeedChallengeScreenState extends State<SpeedChallengeScreen>
                 ),
                 const Spacer(),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 3,
+                  ),
                   decoration: BoxDecoration(
                     color: _accent.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(20),
@@ -463,7 +484,10 @@ class _SpeedChallengeScreenState extends State<SpeedChallengeScreen>
         bg = Colors.green[50]!;
         border = Colors.green;
         text = Colors.green[800]!;
-        trailingIcon = const Icon(Icons.check_circle_rounded, color: Colors.green);
+        trailingIcon = const Icon(
+          Icons.check_circle_rounded,
+          color: Colors.green,
+        );
       } else if (index == _selectedIndex && _selectedIndex != correct) {
         bg = Colors.red[50]!;
         border = Colors.red[400]!;
@@ -550,7 +574,8 @@ class _SpeedChallengeScreenState extends State<SpeedChallengeScreen>
 
     if (isTimeout) {
       color = Colors.orange[700]!;
-      message = 'Time\'s up! The answer was: ${_currentQuestion.options[_currentQuestion.correctIndex]}';
+      message =
+          'Time\'s up! The answer was: ${_currentQuestion.options[_currentQuestion.correctIndex]}';
       icon = Icons.timer_off_rounded;
     } else if (correct) {
       color = Colors.green[700]!;
@@ -558,7 +583,8 @@ class _SpeedChallengeScreenState extends State<SpeedChallengeScreen>
       icon = Icons.check_circle_rounded;
     } else {
       color = Colors.red[700]!;
-      message = 'Wrong! The answer was: ${_currentQuestion.options[_currentQuestion.correctIndex]}';
+      message =
+          'Wrong! The answer was: ${_currentQuestion.options[_currentQuestion.correctIndex]}';
       icon = Icons.cancel_rounded;
     }
 

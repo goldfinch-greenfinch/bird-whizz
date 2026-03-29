@@ -36,6 +36,15 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
   bool _isInitialized = false;
   bool get isInitialized => _isInitialized;
 
+  // Global UI State
+  bool _isBannerExpanded = false;
+  bool get isBannerExpanded => _isBannerExpanded;
+
+  void toggleBannerExpanded() {
+    _isBannerExpanded = !_isBannerExpanded;
+    notifyListeners();
+  }
+
   // Stamps
   final List<Stamp> _newlyUnlockedStamps = [];
 
@@ -470,7 +479,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
 
     // Identification Expert
     if (!currentStamps.contains('identification_expert') &&
-        birdIdHighScore >= 50) {
+        (_currentProfile?.categoryCorrectAnswers['bird_id'] ?? 0) >= 50) {
       _unlockStamp('identification_expert', currentStamps);
       newlyUnlocked = true;
     }
@@ -493,7 +502,8 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
       _unlockStamp('avian_apprentice', currentStamps);
       newlyUnlocked = true;
     }
-    if (!currentStamps.contains('master_ornithologist') && progressStars >= 250) {
+    if (!currentStamps.contains('master_ornithologist') &&
+        progressStars >= 250) {
       _unlockStamp('master_ornithologist', currentStamps);
       newlyUnlocked = true;
     }
@@ -547,7 +557,8 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     }
 
     // ID Master
-    if (!currentStamps.contains('id_master') && birdIdHighScore >= 100) {
+    if (!currentStamps.contains('id_master') &&
+        (_currentProfile?.categoryCorrectAnswers['bird_id'] ?? 0) >= 100) {
       _unlockStamp('id_master', currentStamps);
       newlyUnlocked = true;
     }
@@ -621,7 +632,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
         .where((e) => e.key.startsWith('crossbird_puzzle_') && e.value > 0)
         .length;
     if (!currentStamps.contains('crossbird_master') &&
-        crossbirdPuzzlesCompleted >= 3) {
+        crossbirdPuzzlesCompleted >= 4) {
       _unlockStamp('crossbird_master', currentStamps);
       newlyUnlocked = true;
     }
@@ -629,7 +640,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
         .where((e) => e.key.startsWith('crossbird_puzzle_') && e.value >= 3)
         .length;
     if (!currentStamps.contains('crossbird_perfectionist') &&
-        crossbirdPerfectPuzzles >= 3) {
+        crossbirdPerfectPuzzles >= 4) {
       _unlockStamp('crossbird_perfectionist', currentStamps);
       newlyUnlocked = true;
     }
@@ -648,16 +659,19 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
       newlyUnlocked = true;
     }
 
-    // Bird ID High Scores
-    if (!currentStamps.contains('sharp_shooter') && birdIdHighScore >= 250) {
+    // Bird ID cumulative correct totals
+    if (!currentStamps.contains('sharp_shooter') &&
+        (_currentProfile?.categoryCorrectAnswers['bird_id'] ?? 0) >= 250) {
       _unlockStamp('sharp_shooter', currentStamps);
       newlyUnlocked = true;
     }
-    if (!currentStamps.contains('hawk_eyed') && birdIdHighScore >= 500) {
+    if (!currentStamps.contains('hawk_eyed') &&
+        (_currentProfile?.categoryCorrectAnswers['bird_id'] ?? 0) >= 500) {
       _unlockStamp('hawk_eyed', currentStamps);
       newlyUnlocked = true;
     }
-    if (!currentStamps.contains('bird_paparazzi') && birdIdHighScore >= 1000) {
+    if (!currentStamps.contains('bird_paparazzi') &&
+        (_currentProfile?.categoryCorrectAnswers['bird_id'] ?? 0) >= 1000) {
       _unlockStamp('bird_paparazzi', currentStamps);
       newlyUnlocked = true;
     }
@@ -726,7 +740,8 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
       _unlockStamp('quiz_guru', currentStamps);
       newlyUnlocked = true;
     }
-    if (!currentStamps.contains('id_legend') && birdIdHighScore >= 2000) {
+    if (!currentStamps.contains('id_legend') &&
+        (_currentProfile?.categoryCorrectAnswers['bird_id'] ?? 0) >= 2000) {
       _unlockStamp('id_legend', currentStamps);
       newlyUnlocked = true;
     }
@@ -776,37 +791,41 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
       }
     });
 
-    // --- Bird ID Complete (at least 1 star across the themes of a given difficulty) ---
-    // The easiest way to check is to count completed levels that end with the difficulty
-    // There are 10 themes per difficulty. So 10 levels ending in _easy means easy complete.
-    int idEasyCount = 0;
-    int idMedCount = 0;
-    int idHardCount = 0;
+    // --- Bird ID Theme Completion Stamps ---
+    // Each theme has levels numbered sequentially: level_1, level_2, ... level_N.
+    // A theme is "complete" when ALL of its levels have at least 1 star.
+    const themeData = {
+      'Waterfowl': 5,
+      'Coastal & Wading Birds': 10,
+      'Birds of Prey': 5,
+      'Forest & Woodland Birds': 5,
+      'Exotic & Colorful': 2,
+      'Songbirds': 15,
+    };
 
-    _levelStars.forEach((key, stars) {
-      if (key.startsWith('bird_id_session_') && stars > 0) {
-        if (key.endsWith('_easy')) {
-          idEasyCount++;
-        } else if (key.endsWith('_medium')) {
-          idMedCount++;
-        } else if (key.endsWith('_hard')) {
-          idHardCount++;
+    final themeStampMap = {
+      'Waterfowl': 'id_level_1_complete',
+      'Coastal & Wading Birds': 'id_level_2_complete',
+      'Birds of Prey': 'id_level_3_complete',
+      'Forest & Woodland Birds': 'id_theme_forest_complete',
+      'Exotic & Colorful': 'id_theme_exotic_complete',
+      'Songbirds': 'id_theme_songbirds_complete',
+    };
+
+    themeData.forEach((theme, levelCount) {
+      final stampId = themeStampMap[theme]!;
+      if (!currentStamps.contains(stampId)) {
+        int completedInTheme = 0;
+        for (int i = 1; i <= levelCount; i++) {
+          final key = 'bird_id_session_${theme}_level_$i';
+          if ((_levelStars[key] ?? 0) > 0) completedInTheme++;
+        }
+        if (completedInTheme >= levelCount) {
+          _unlockStamp(stampId, currentStamps);
+          newlyUnlocked = true;
         }
       }
     });
-
-    if (!currentStamps.contains('id_easy_complete') && idEasyCount >= 10) {
-      _unlockStamp('id_easy_complete', currentStamps);
-      newlyUnlocked = true;
-    }
-    if (!currentStamps.contains('id_medium_complete') && idMedCount >= 10) {
-      _unlockStamp('id_medium_complete', currentStamps);
-      newlyUnlocked = true;
-    }
-    if (!currentStamps.contains('id_hard_complete') && idHardCount >= 10) {
-      _unlockStamp('id_hard_complete', currentStamps);
-      newlyUnlocked = true;
-    }
 
     // --- Daily Challenge Stamps ---
     int dailyCompleted = _currentProfile?.totalDailyChallengesCompleted ?? 0;
@@ -887,8 +906,9 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
       newlyUnlocked = true;
     }
     if (!currentStamps.contains('speed_perfect')) {
-      final hasSpeedPerfect = _levelStars.entries
-          .any((e) => e.key.startsWith('speed_challenge_level_') && e.value >= 3);
+      final hasSpeedPerfect = _levelStars.entries.any(
+        (e) => e.key.startsWith('speed_challenge_level_') && e.value >= 3,
+      );
       if (hasSpeedPerfect) {
         _unlockStamp('speed_perfect', currentStamps);
         newlyUnlocked = true;
@@ -914,8 +934,9 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
       newlyUnlocked = true;
     }
     if (!currentStamps.contains('guess_bird_perfect')) {
-      final hasGuessBirdPerfect = _levelStars.entries
-          .any((e) => e.key.startsWith('guess_bird_level_') && e.value >= 3);
+      final hasGuessBirdPerfect = _levelStars.entries.any(
+        (e) => e.key.startsWith('guess_bird_level_') && e.value >= 3,
+      );
       if (hasGuessBirdPerfect) {
         _unlockStamp('guess_bird_perfect', currentStamps);
         newlyUnlocked = true;
@@ -1033,14 +1054,9 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     );
   }
 
-  int get totalCrosswordsSolved =>
-      _currentProfile?.totalCrosswordsSolved ?? 0;
+  int get totalCrosswordsSolved => _currentProfile?.totalCrosswordsSolved ?? 0;
 
-  void saveCrossbirdsStars(
-    int puzzleIndex,
-    int solvedWords,
-    int totalWords,
-  ) {
+  void saveCrossbirdsStars(int puzzleIndex, int solvedWords, int totalWords) {
     if (_currentProfile == null) return;
 
     _score = solvedWords;
@@ -1365,10 +1381,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     }
   }
 
-  void saveRescueBirdStars(
-    int rescuedCount, {
-    int totalPuzzles = 3,
-  }) {
+  void saveRescueBirdStars(int rescuedCount, {int totalPuzzles = 3}) {
     if (_currentProfile == null) return;
 
     _score = rescuedCount;
@@ -1419,7 +1432,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
   }
 
   int get birdIdMaxStars =>
-      10 * 3 * 3; // 10 themes * 3 difficulties * 3 stars = 90
+      42 * 3; // 6 themes × varying levels (5+10+5+5+2+15=42) × 3 stars = 126
 
   int get birdIdCompletedLevels {
     int count = 0;
@@ -1433,6 +1446,17 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
 
   // Stats
   int get totalCorrectAnswers => _currentProfile?.totalCorrectAnswers ?? 0;
+
+  // Correct answers from text quiz categories only (excludes bird_id).
+  int get textQuizTotalCorrect {
+    const textCategories = [
+      'trivia', 'biology', 'habitat', 'conservation',
+      'behaviour', 'families', 'migration', 'colours',
+    ];
+    final map = _currentProfile?.categoryCorrectAnswers ?? {};
+    return textCategories.fold(0, (sum, cat) => sum + (map[cat] ?? 0));
+  }
+
   int get birdIdHighScore => _currentProfile?.birdIdHighScore ?? 0;
   int get totalTimePlayingSeconds =>
       _currentProfile?.totalTimePlayingSeconds ?? 0;
@@ -1484,15 +1508,15 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
   int get textQuizMaxStars => _allLevelsGlobally.length * 3; // 80 * 3 = 240
 
   // Total possible stars across all game modes (excluding daily challenge):
-  // Text Quiz 240 + Unscramble 15 + Rescue 3 + Bird ID 90 + Crossbird 12 + Guess the Bird 15 + Speed Challenge 15 = 390
+  // Text Quiz 240 + Unscramble 15 + Rescue 3 + Bird ID 126 + Crossbird 12 + Guess the Bird 15 + Speed Challenge 15 = 426
   int get maxStars =>
-      textQuizMaxStars +        // 240
-      unscrambleMaxStars +      // 15
-      rescueMaxStars +          // 3
-      birdIdMaxStars +          // 90
-      crossbirdMaxStars +       // 12
-      guessBirdMaxStars +       // 15
-      speedChallengeMaxStars;   // 15 → total 390
+      textQuizMaxStars + // 240
+      unscrambleMaxStars + // 15
+      rescueMaxStars + // 3
+      birdIdMaxStars + // 126
+      crossbirdMaxStars + // 12
+      guessBirdMaxStars + // 15
+      speedChallengeMaxStars; // 15 → total 426
 
   bool get isMaxCompletion => progressStars >= maxStars;
 
@@ -1506,34 +1530,38 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
 
   String get userStatusTitle => _getStatusTitleForStars(progressStars);
 
-  // 9 levels (0–8). Level 8 "Bird Wizard" reached at 370 stars ≈ 95% of 390.
-  // At 100% (390 stars) the title stays "Bird Wizard" but a crown is shown.
+  // 10 levels (0–9). Exponential bands (~1.5× each), summing to 351 (90% of 390).
+  // Thresholds: 0, 5, 12, 22, 38, 61, 97, 150, 230, 351.
+  // Level 10 "Feathered Legend" reached at 351 stars (90% of max).
+  // At 100% (390 stars) the title stays "Feathered Legend" but a crown is shown.
   String _getStatusTitleForStars(int starCount) {
     if (starCount < 5) return 'Just Hatched';
-    if (starCount < 15) return 'Bird Newbie';
-    if (starCount < 35) return 'Feather Weight';
-    if (starCount < 65) return 'Learning to Fly';
-    if (starCount < 110) return 'Nest Builder';
-    if (starCount < 170) return 'Winging It';
-    if (starCount < 250) return 'High Flyer';
-    if (starCount < 370) return 'Eagle Eye';
-    return 'Bird Wizard'; // 370+ stars (≥95%), level 8
+    if (starCount < 12) return 'Bird Newbie';
+    if (starCount < 22) return 'Feather Weight';
+    if (starCount < 38) return 'Learning to Fly';
+    if (starCount < 61) return 'Nest Builder';
+    if (starCount < 97) return 'Winging It';
+    if (starCount < 150) return 'High Flyer';
+    if (starCount < 230) return 'Eagle Eye';
+    if (starCount < 351) return 'Bird Wizard';
+    return 'Feathered Legend'; // 351+ stars (≥90%), level 10
   }
 
   int get userLevelIndex => getLevelIndexForStars(progressStars);
 
-  // Level index 8 = max rank. Evolution formula (levelIndex ~/ 2) + 1 gives:
-  // levels 0-1→stage1, 2-3→stage2, 4-5→stage3, 6-7→stage4, 8→stage5
+  // Level index 9 = max rank. Evolution formula (levelIndex ~/ 2) + 1 gives:
+  // levels 0-1→stage1, 2-3→stage2, 4-5→stage3, 6-7→stage4, 8-9→stage5
   int getLevelIndexForStars(int starCount) {
     if (starCount < 5) return 0;
-    if (starCount < 15) return 1;
-    if (starCount < 35) return 2;
-    if (starCount < 65) return 3;
-    if (starCount < 110) return 4;
-    if (starCount < 170) return 5;
-    if (starCount < 250) return 6;
-    if (starCount < 370) return 7;
-    return 8; // Bird Wizard
+    if (starCount < 12) return 1;
+    if (starCount < 22) return 2;
+    if (starCount < 38) return 3;
+    if (starCount < 61) return 4;
+    if (starCount < 97) return 5;
+    if (starCount < 150) return 6;
+    if (starCount < 230) return 7;
+    if (starCount < 351) return 8;
+    return 9; // Feathered Legend
   }
 
   int get userEvolutionStage => getEvolutionStageForStars(progressStars);
@@ -1569,26 +1597,28 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
 
   int _getNextLevelThreshold(int starCount) {
     if (starCount < 5) return 5;
-    if (starCount < 15) return 15;
-    if (starCount < 35) return 35;
-    if (starCount < 65) return 65;
-    if (starCount < 110) return 110;
-    if (starCount < 170) return 170;
-    if (starCount < 250) return 250;
-    if (starCount < 370) return 370;
-    return maxStars; // 390 — king state
+    if (starCount < 12) return 12;
+    if (starCount < 22) return 22;
+    if (starCount < 38) return 38;
+    if (starCount < 61) return 61;
+    if (starCount < 97) return 97;
+    if (starCount < 150) return 150;
+    if (starCount < 230) return 230;
+    if (starCount < 351) return 351;
+    return maxStars; // 390 — Feathered Legend crown state
   }
 
   int _getPreviousLevelThreshold(int starCount) {
     if (starCount < 5) return 0;
-    if (starCount < 15) return 5;
-    if (starCount < 35) return 15;
-    if (starCount < 65) return 35;
-    if (starCount < 110) return 65;
-    if (starCount < 170) return 110;
-    if (starCount < 250) return 170;
-    if (starCount < 370) return 250;
-    return 370; // Max rank entry point
+    if (starCount < 12) return 5;
+    if (starCount < 22) return 12;
+    if (starCount < 38) return 22;
+    if (starCount < 61) return 38;
+    if (starCount < 97) return 61;
+    if (starCount < 150) return 97;
+    if (starCount < 230) return 150;
+    if (starCount < 351) return 230;
+    return 351; // Feathered Legend entry point
   }
 
   // Level Up Getters and Actions
@@ -1640,11 +1670,8 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
   }
 
   bool isLevelUnlocked(String levelId) {
-    // Determine which list this level belongs to for logic
-    // But actually, we only render 'allLevels' (current category), so we just check that list.
     List<Level> currentCatLevels = allLevels;
 
-    // If it's the first level of the CURRENT category, it's unlocked.
     if (currentCatLevels.isNotEmpty && currentCatLevels.first.id == levelId) {
       return true;
     }
@@ -1652,10 +1679,12 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     int index = currentCatLevels.indexWhere((l) => l.id == levelId);
     if (index > 0) {
       String prevLevelId = currentCatLevels[index - 1].id;
-      return getStarsForLevel(prevLevelId) >= 2;
+      // Unlock requirement increases with depth:
+      // levels 2–3 (index 1–2): 1 star, levels 4–6 (index 3–5): 2 stars, level 7+ (index 6+): 3 stars
+      final int required = index <= 2 ? 1 : index <= 5 ? 2 : 3;
+      return getStarsForLevel(prevLevelId) >= required;
     }
 
-    // If not found in current category (shouldn't happen in UI), lock it
     return false;
   }
 
@@ -1683,7 +1712,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
   // Actions
   Future<void> startBirdIdQuiz([
     String? theme,
-    String difficulty = 'medium',
+    String difficulty = 'level_2',
   ]) async {
     // Initialize service if not already
     await BirdImageService().initialize();
@@ -1740,17 +1769,19 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     }
 
     final int totalLevels = allLevels.length;
-    final double progress =
-        (_endlessQuestionCount / 50).clamp(0.0, 1.0); // 0..1 over 50 Qs
+    final double progress = (_endlessQuestionCount / 50).clamp(
+      0.0,
+      1.0,
+    ); // 0..1 over 50 Qs
 
     final int minIndex = (progress * totalLevels * 0.4).toInt().clamp(
-          0,
-          totalLevels - 1,
-        );
+      0,
+      totalLevels - 1,
+    );
     final int maxIndex = (progress * totalLevels).toInt().clamp(
-          minIndex,
-          totalLevels - 1,
-        );
+      minIndex,
+      totalLevels - 1,
+    );
 
     final int levelIndex =
         minIndex + _random.nextInt((maxIndex - minIndex) + 1);
@@ -1763,8 +1794,8 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     final Question baseQuestion =
         level.questions[_random.nextInt(level.questions.length)];
 
-    final originalCorrectOption = baseQuestion.options[baseQuestion
-        .correctOptionIndex];
+    final originalCorrectOption =
+        baseQuestion.options[baseQuestion.correctOptionIndex];
     final scrambledOptions = List<String>.from(baseQuestion.options)..shuffle();
     final newCorrectIndex = scrambledOptions.indexOf(originalCorrectOption);
 

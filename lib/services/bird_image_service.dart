@@ -75,96 +75,18 @@ class BirdImageService {
   }
 
   static const Map<String, List<String>> birdThemes = {
-    'Waterfowl': [
-      'Duck',
-      'Goose',
-      'Swan',
-      'Teal',
-      'Wigeon',
-      'Pintail',
-      'Mallard',
-      'Eider',
-      'Scoter',
-      'Merganser',
-      'Shoveler',
-      'Garganey',
-    ],
-    'Birds of Prey': [
-      'Eagle',
-      'Hawk',
-      'Falcon',
-      'Kite',
-      'Osprey',
-      'Harrier',
-      'Buzzard',
-      'Kestrel',
-      'Caracara',
-    ],
-    'Owls': ['Owl'],
-    'Waders & Shorebirds': [
-      'Heron',
-      'Egret',
-      'Sandpiper',
-      'Plover',
-      'Redshank',
-      'Godwit',
-      'Curlew',
-      'Avocet',
-      'Oystercatcher',
-      'Stilt',
-      'Snipe',
-      'Phalarope',
-    ],
-    'Woodpeckers & Kingfishers': [
-      'Woodpecker',
-      'Kingfisher',
-      'Sapsucker',
-      'Flicker',
-    ],
-    'Corvids': ['Crow', 'Raven', 'Jay', 'Magpie', 'Rook', 'Nutcracker'],
-    'Songbirds': [
-      'Warbler',
-      'Thrush',
-      'Robin',
-      'Tit',
-      'Chickadee',
-      'Wren',
-      'Bunting',
-      'Sparrow',
-      'Finch',
-      'Grosbeak',
-      'Towhee',
-      'Nuthatch',
-    ],
-    'Seabirds': [
-      'Gull',
-      'Tern',
-      'Pelican',
-      'Puffin',
-      'Cormorant',
-      'Booby',
-      'Frigatebird',
-      'Albatross',
-      'Gannet',
-    ],
-    'Pigeons & Doves': ['Pigeon', 'Dove'],
-    'Exotic & Colorful': [
-      'Hummingbird',
-      'Macaw',
-      'Toucan',
-      'Roller',
-      'Bee Eater',
-      'Flamingo',
-      'Parakeet',
-      'Peacock',
-      'Peafowl',
-    ],
+    'Waterfowl': ['Duck', 'Goose', 'Geese', 'Swan', 'Teal', 'Wigeon', 'Pintail', 'Mallard', 'Eider', 'Scoter', 'Merganser', 'Shoveler', 'Garganey', 'Pochard', 'Shelduck', 'Smew', 'Goldeneye', 'Brant', 'Bufflehead', 'Canvasback', 'Scaup', 'Gadwall'],
+    'Coastal & Wading Birds': ['Heron', 'Egret', 'Sandpiper', 'Plover', 'Redshank', 'Godwit', 'Curlew', 'Avocet', 'Oystercatcher', 'Stilt', 'Snipe', 'Phalarope', 'Gull', 'Tern', 'Pelican', 'Puffin', 'Cormorant', 'Booby', 'Frigatebird', 'Albatross', 'Gannet', 'Shag', 'Turnstone', 'Loon', 'Coot', 'Gallinule', 'Flamingo', 'Anhinga', 'Guillemot', 'Skimmer', 'Ibis', 'Spoonbill', 'Grebe', 'Tattler', 'Sanderling', 'Dunlin', 'Limpkin', 'Willet', 'Razorbill', 'Fulmar', 'Moorhen', 'Stork', 'Crane', 'Whimbrel', 'Killdeer'],
+    'Birds of Prey': ['Eagle', 'Hawk', 'Falcon', 'Kite', 'Osprey', 'Harrier', 'Buzzard', 'Kestrel', 'Caracara', 'Owl', 'Vulture', 'Merlin', 'Condor', 'Roadrunner'],
+    'Forest & Woodland Birds': ['Woodpecker', 'Kingfisher', 'Sapsucker', 'Flicker', 'Crow', 'Raven', 'Jay', 'Magpie', 'Rook', 'Nutcracker', 'Pigeon', 'Dove', 'Grouse', 'Quail', 'Pheasant', 'Partridge', 'Ptarmigan', 'Turkey', 'Drongo', 'Chukar', 'Jackdaw', 'Cuckoo'],
+    'Exotic & Colorful': ['Hummingbird', 'Macaw', 'Toucan', 'Roller', 'Bee Eater', 'Parakeet', 'Peacock', 'Peafowl', 'Trogon', 'Motmot', 'Jacamar', 'Puffbird', 'Barbet', 'Honeyguide', 'Aracari', 'Woodcreeper', 'Manakin', 'Cotinga', 'Tityra', 'Becard', 'Antbird', 'Antthrush', 'Antpitta', 'Gnateater', 'Tapaculo', 'Rosy Finch'],
+    'Songbirds': ['Warbler', 'Thrush', 'Robin', 'Tit', 'Chickadee', 'Wren', 'Bunting', 'Sparrow', 'Finch', 'Grosbeak', 'Towhee', 'Nuthatch', 'Blackbird', 'Oriole', 'Swallow', 'Meadowlark', 'Starling', 'Vireo', 'Waxwing', 'Bluebird', 'Dickcissel', 'Grackle', 'Lark', 'Catbird', 'Mockingbird', 'Thrasher', 'Goldfinch', 'Siskin', 'Redpoll', 'Crossbill', 'Pipit', 'Tanager', 'Bobolink', 'Flycatcher', 'Phoebe', 'Kingbird', 'Pewee', 'Shrike', 'Creeper', 'Gnatcatcher', 'Kinglet', 'Martin', 'Ovenbird', 'Parula', 'Redstart', 'Yellowthroat', 'Chat', 'Waterthrush', 'Accentor', 'Dipper', 'Cardinal', 'Bluethroat', 'Chiffchaff', 'Stonechat', 'Blackcap', 'Brambling', 'Bullfinch', 'Linnet', 'Yellowhammer', 'Skylark', 'Dunnock', 'Goldcrest', 'Firecrest', 'Pyrrhuloxia', 'Junco', 'Whitethroat', 'Redwing', 'White Eye', 'Swift', 'Bushtit'],
   };
 
   List<Question> generateQuestions({
     int count = 10,
     String? theme,
-    String difficulty = 'medium',
+    String difficulty = 'level_2',
   }) {
     if (_birdImagePaths.isEmpty) {
       return [];
@@ -192,7 +114,7 @@ class BirdImageService {
     // Filter by difficulty based on bird rareness
     List<String> idealDifficultyPaths = themeImagePaths.where((path) {
       final name = _getBirdNameFromPath(path);
-      final birdDiff = birdDifficulty[name] ?? 'medium';
+      final birdDiff = birdDifficulty[name] ?? 'level_2';
       return birdDiff == difficulty;
     }).toList();
 
@@ -284,7 +206,7 @@ class BirdImageService {
   ) {
     final random = Random();
 
-    if (difficulty == 'hard') {
+    if (difficulty == 'level_3') {
       if (identificationData.containsKey(correctName)) {
         final List<String> similar = List.from(
           identificationData[correctName]!,
@@ -298,12 +220,12 @@ class BirdImageService {
       return _generateDistractors(
         correctName,
         count,
-        'medium',
+        'level_2',
         themeImagePaths,
       );
     }
 
-    if (difficulty == 'medium') {
+    if (difficulty == 'level_2') {
       // Pick random from the SAME theme
       final List<String> themeBirdNames = themeImagePaths
           .map((path) => _getBirdNameFromPath(path))
@@ -318,18 +240,39 @@ class BirdImageService {
         return randomDistractors.take(count).toList();
       }
       // If not enough theme distractors, fallback to easy
-      return _generateDistractors(correctName, count, 'easy', themeImagePaths);
+      return _generateDistractors(correctName, count, 'level_1', themeImagePaths);
     }
 
-    // Easy (or fallback)
+    // Level 1 (or fallback): prefer same-theme birds; only supplement with
+    // off-theme birds when the theme pool is too small to fill all slots.
+    final List<String> themeBirdNames = themeImagePaths
+        .map((path) => _getBirdNameFromPath(path))
+        .toSet()
+        .toList();
+    final List<String> themeDistractors = themeBirdNames
+        .where((name) => name != correctName)
+        .toList()
+      ..shuffle(random);
+
+    if (themeDistractors.length >= count) {
+      return themeDistractors.take(count).toList();
+    }
+
+    // Not enough theme birds: supplement with non-theme birds
     final List<String> allBirdNames = _birdImagePaths
         .map((path) => _getBirdNameFromPath(path))
         .toSet()
         .toList();
-    final List<String> randomDistractors = allBirdNames
-        .where((name) => name != correctName)
-        .toList();
-    randomDistractors.shuffle(random);
-    return randomDistractors.take(count).toList();
+    final List<String> offThemeDistractors = allBirdNames
+        .where((name) => name != correctName && !themeBirdNames.contains(name))
+        .toList()
+      ..shuffle(random);
+
+    final List<String> combined = List.from(themeDistractors);
+    combined.addAll(
+      offThemeDistractors.take(count - themeDistractors.length),
+    );
+    combined.shuffle(random);
+    return combined.take(count).toList();
   }
 }

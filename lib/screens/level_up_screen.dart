@@ -219,7 +219,7 @@ class _LevelUpScreenState extends State<LevelUpScreen> {
                         context.pushReplacement(AppRoutes.stamp);
                       } else {
                         provider.resetQuiz();
-                        context.pop();
+                        context.go(AppRoutes.main);
                       }
                     },
                     style: ElevatedButton.styleFrom(

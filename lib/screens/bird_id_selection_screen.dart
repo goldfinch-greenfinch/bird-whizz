@@ -5,6 +5,9 @@ import '../providers/quiz_provider.dart';
 import '../services/audio_service.dart';
 import '../router/app_router.dart';
 import '../widgets/common_profile_header.dart';
+import '../widgets/stat_item_widget.dart';
+import '../models/stamp.dart';
+import '../screens/achievements_book_screen.dart';
 
 class BirdIdSelectionScreen extends StatelessWidget {
   const BirdIdSelectionScreen({super.key});
@@ -23,81 +26,70 @@ class BirdIdSelectionScreen extends StatelessWidget {
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 720),
                   child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  children: [
-                    const Text(
-                      'Bird Identification',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.teal,
-                      ),
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      children: [
+                        const Text(
+                          'Bird Identification',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.teal,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Can you identify the bird from the photo?',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                        const SizedBox(height: 32),
+                        // Theme Levels
+                        Column(
+                          children: const [
+                            _ThemeCard(
+                              title: 'Waterfowl',
+                              icon: Icons.water_drop_rounded,
+                              color: Colors.blue,
+                              levelCount: 5,
+                            ),
+                            _ThemeCard(
+                              title: 'Coastal & Wading Birds',
+                              icon: Icons.waves_rounded,
+                              color: Colors.cyan,
+                              levelCount: 10,
+                            ),
+                            _ThemeCard(
+                              title: 'Birds of Prey',
+                              icon: Icons.bolt_rounded,
+                              color: Colors.redAccent,
+                              levelCount: 5,
+                            ),
+                            _ThemeCard(
+                              title: 'Forest & Woodland Birds',
+                              icon: Icons.forest_rounded,
+                              color: Colors.brown,
+                              levelCount: 5,
+                            ),
+                            _ThemeCard(
+                              title: 'Exotic & Colorful',
+                              icon: Icons.palette_rounded,
+                              color: Colors.orange,
+                              levelCount: 2,
+                            ),
+                            _ThemeCard(
+                              title: 'Songbirds',
+                              icon: Icons.music_note_rounded,
+                              color: Colors.pinkAccent,
+                              levelCount: 15,
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Can you identify the bird from the photo?',
-                      style: TextStyle(fontSize: 16, color: Colors.grey[700]),
-                    ),
-                    const SizedBox(height: 32),
-                    // Theme Levels
-                    Column(
-                      children: const [
-                          _ThemeCard(
-                            title: 'Waterfowl',
-                            icon: Icons.water_drop_rounded,
-                            color: Colors.blue,
-                          ),
-                          _ThemeCard(
-                            title: 'Birds of Prey',
-                            icon: Icons.bolt_rounded,
-                            color: Colors.redAccent,
-                          ),
-                          _ThemeCard(
-                            title: 'Owls',
-                            icon: Icons.nightlight_round,
-                            color: Colors.deepPurple,
-                          ),
-                          _ThemeCard(
-                            title: 'Waders & Shorebirds',
-                            icon: Icons.waves_rounded,
-                            color: Colors.cyan,
-                          ),
-                          _ThemeCard(
-                            title: 'Woodpeckers & Kingfishers',
-                            icon: Icons.forest_rounded,
-                            color: Colors.brown,
-                          ),
-                          _ThemeCard(
-                            title: 'Corvids',
-                            icon: Icons.dark_mode_rounded,
-                            color: Colors.blueGrey,
-                          ),
-                          _ThemeCard(
-                            title: 'Songbirds',
-                            icon: Icons.music_note_rounded,
-                            color: Colors.pinkAccent,
-                          ),
-                          _ThemeCard(
-                            title: 'Seabirds',
-                            icon: Icons.sailing_rounded,
-                            color: Colors.lightBlue,
-                          ),
-                          _ThemeCard(
-                            title: 'Pigeons & Doves',
-                            icon: Icons.favorite_rounded,
-                            color: Colors.grey,
-                          ),
-                          _ThemeCard(
-                            title: 'Exotic & Colorful',
-                            icon: Icons.palette_rounded,
-                            color: Colors.orange,
-                          ),
-                        ],
-                      ),
-                  ],
-                ),
-              ),
+                  ),
                 ),
               ),
             ],
@@ -112,11 +104,13 @@ class _ThemeCard extends StatelessWidget {
   final String title;
   final IconData icon;
   final Color color;
+  final int levelCount;
 
   const _ThemeCard({
     required this.title,
     required this.icon,
     required this.color,
+    required this.levelCount,
   });
 
   @override
@@ -159,28 +153,18 @@ class _ThemeCard extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _DifficultyButton(
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                alignment: WrapAlignment.center,
+                children: List.generate(levelCount, (index) {
+                  return _DifficultyButton(
                     title: title,
-                    difficulty: 'easy',
-                    label: 'Easy',
-                    color: Colors.green,
-                  ),
-                  _DifficultyButton(
-                    title: title,
-                    difficulty: 'medium',
-                    label: 'Medium',
-                    color: Colors.orange,
-                  ),
-                  _DifficultyButton(
-                    title: title,
-                    difficulty: 'hard',
-                    label: 'Hard',
-                    color: Colors.red,
-                  ),
-                ],
+                    difficulty: 'level_${index + 1}',
+                    label: 'Level ${index + 1}',
+                    color: color,
+                  );
+                }),
               ),
             ),
           ],
@@ -236,92 +220,89 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<QuizProvider>(
       builder: (context, provider, child) {
-        return Container(
-          padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
-          decoration: BoxDecoration(
-            color: Colors.teal,
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(30),
-              bottomRight: Radius.circular(30),
+        final isExpanded = provider.isBannerExpanded;
+        return GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            provider.toggleBannerExpanded();
+          },
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
+            decoration: BoxDecoration(
+              color: Colors.teal,
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.teal.withValues(alpha: 0.3),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.teal.withValues(alpha: 0.3),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              const CommonProfileHeader(sectionTitle: 'Bird Identification'),
-              const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildStatItem(
-                    Icons.star_rounded,
-                    '${provider.birdIdTotalStars}/${provider.birdIdMaxStars}',
-                    'App Stats',
-                    Colors.amber,
-                  ),
-                  _buildContainerLine(),
-                  _buildStatItem(
-                    Icons.emoji_events_rounded,
-                    '${provider.birdIdCompletedLevels}/30', // 10 themes x 3 difficulties
-                    'Levels Done',
-                    Colors.orangeAccent,
-                  ),
-                  _buildContainerLine(),
-                  _buildStatItem(
-                    Icons.check_circle_rounded,
-                    '${provider.currentProfile?.categoryCorrectAnswers['bird_id'] ?? 0}',
-                    'Total Correct',
-                    Colors.greenAccent,
-                  ),
-                ],
-              ),
-            ],
+            child: Column(
+              children: [
+                const CommonProfileHeader(),
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  child: isExpanded
+                      ? Column(
+                          children: [
+                            const SizedBox(height: 24),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                StatItemWidget(
+                                  icon: Icons.star_rounded,
+                                  value:
+                                      '${provider.birdIdTotalStars}/${provider.birdIdMaxStars}',
+                                  label: 'App Stats',
+                                  color: Colors.amber,
+                                ),
+                                buildStatDivider(),
+                                StatItemWidget(
+                                  icon: Icons.emoji_events_rounded,
+                                  value: '${provider.birdIdCompletedLevels}/42',
+                                  label: 'Levels Done',
+                                  color: Colors.orangeAccent,
+                                ),
+                                buildStatDivider(),
+                                StatItemWidget(
+                                  icon: Icons.check_circle_rounded,
+                                  value:
+                                      '${provider.currentProfile?.categoryCorrectAnswers['bird_id'] ?? 0}',
+                                  label: 'Total Correct',
+                                  color: Colors.greenAccent,
+                                ),
+                                buildStatDivider(),
+                                StatItemWidget(
+                                  icon: Icons.menu_book,
+                                  value:
+                                      '${provider.unlockedStamps.length}/${gameStamps.length}',
+                                  label: 'Badges',
+                                  color: Colors.pinkAccent,
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) =>
+                                          const AchievementsBookScreen(),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                      : const SizedBox.shrink(),
+                ),
+              ],
+            ),
           ),
         );
       },
-    );
-  }
-
-  Widget _buildStatItem(
-    IconData icon,
-    String value,
-    String label,
-    Color color,
-  ) {
-    return Column(
-      children: [
-        Icon(icon, color: color, size: 28),
-        const SizedBox(height: 6),
-        Text(
-          value,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.8),
-            fontSize: 11,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildContainerLine() {
-    return Container(
-      height: 30,
-      width: 1,
-      color: Colors.white.withValues(alpha: 0.2),
     );
   }
 }

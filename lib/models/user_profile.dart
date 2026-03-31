@@ -30,6 +30,10 @@ class UserProfile {
   final DateTime? lastLoginDate;
   final int currentLoginStreak;
 
+  // Milestone celebration flags (shown once per profile)
+  final bool hasSeenAllStarsCelebration;
+  final bool hasSeenAllBadgesCelebration;
+
   UserProfile({
     required this.id,
     required this.name,
@@ -52,6 +56,8 @@ class UserProfile {
     this.totalCrosswordsSolved = 0,
     this.totalGuessBirdBirdsGuessed = 0,
     this.totalSpeedChallengeCorrect = 0,
+    this.hasSeenAllStarsCelebration = false,
+    this.hasSeenAllBadgesCelebration = false,
   });
 
   Map<String, dynamic> toJson() {
@@ -77,6 +83,8 @@ class UserProfile {
       'totalCrosswordsSolved': totalCrosswordsSolved,
       'totalGuessBirdBirdsGuessed': totalGuessBirdBirdsGuessed,
       'totalSpeedChallengeCorrect': totalSpeedChallengeCorrect,
+      'hasSeenAllStarsCelebration': hasSeenAllStarsCelebration,
+      'hasSeenAllBadgesCelebration': hasSeenAllBadgesCelebration,
     };
   }
 
@@ -126,6 +134,8 @@ class UserProfile {
       totalCrosswordsSolved: json['totalCrosswordsSolved'] as int? ?? 0,
       totalGuessBirdBirdsGuessed: json['totalGuessBirdBirdsGuessed'] as int? ?? 0,
       totalSpeedChallengeCorrect: json['totalSpeedChallengeCorrect'] as int? ?? 0,
+      hasSeenAllStarsCelebration: json['hasSeenAllStarsCelebration'] as bool? ?? false,
+      hasSeenAllBadgesCelebration: json['hasSeenAllBadgesCelebration'] as bool? ?? false,
     );
   }
 
@@ -151,6 +161,8 @@ class UserProfile {
     int? totalCrosswordsSolved,
     int? totalGuessBirdBirdsGuessed,
     int? totalSpeedChallengeCorrect,
+    bool? hasSeenAllStarsCelebration,
+    bool? hasSeenAllBadgesCelebration,
   }) {
     return UserProfile(
       id: id ?? this.id,
@@ -182,6 +194,10 @@ class UserProfile {
           totalGuessBirdBirdsGuessed ?? this.totalGuessBirdBirdsGuessed,
       totalSpeedChallengeCorrect:
           totalSpeedChallengeCorrect ?? this.totalSpeedChallengeCorrect,
+      hasSeenAllStarsCelebration:
+          hasSeenAllStarsCelebration ?? this.hasSeenAllStarsCelebration,
+      hasSeenAllBadgesCelebration:
+          hasSeenAllBadgesCelebration ?? this.hasSeenAllBadgesCelebration,
     );
   }
 }

@@ -261,7 +261,9 @@ class _ResultScreenState extends State<ResultScreen> {
     final bool hasNextScreen =
         provider.hasLeveledUp ||
         provider.hasEvolved ||
-        provider.newlyUnlockedStamps.isNotEmpty;
+        provider.newlyUnlockedStamps.isNotEmpty ||
+        provider.hasPendingAllStarsCelebration ||
+        provider.hasPendingAllBadgesCelebration;
 
     return SizedBox(
       width: double.infinity,
@@ -281,6 +283,12 @@ class _ResultScreenState extends State<ResultScreen> {
             context.pushReplacement(AppRoutes.evolve);
           } else if (provider.newlyUnlockedStamps.isNotEmpty) {
             context.pushReplacement(AppRoutes.stamp);
+          } else if (provider.hasPendingAllStarsCelebration) {
+            provider.consumeAllStarsCelebration();
+            context.pushReplacement(AppRoutes.allStars);
+          } else if (provider.hasPendingAllBadgesCelebration) {
+            provider.consumeAllBadgesCelebration();
+            context.pushReplacement(AppRoutes.allBadges);
           } else {
             provider.resetQuiz();
             context.go(AppRoutes.main);

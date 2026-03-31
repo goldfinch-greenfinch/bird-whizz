@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 // import 'package:uuid/uuid.dart'; // Removed
 import '../models/question.dart';
@@ -47,6 +48,23 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
 
   // Stamps
   final List<Stamp> _newlyUnlockedStamps = [];
+
+  // Milestone celebration flags
+  bool _pendingAllStarsCelebration = false;
+  bool _pendingAllBadgesCelebration = false;
+
+  bool get hasPendingAllStarsCelebration => _pendingAllStarsCelebration;
+  bool get hasPendingAllBadgesCelebration => _pendingAllBadgesCelebration;
+
+  void consumeAllStarsCelebration() {
+    _pendingAllStarsCelebration = false;
+    notifyListeners();
+  }
+
+  void consumeAllBadgesCelebration() {
+    _pendingAllBadgesCelebration = false;
+    notifyListeners();
+  }
 
   // Game Session State
   String _currentCategory = 'trivia'; // Default category
@@ -320,6 +338,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
       text: dailyQ.text,
       options: dailyQ.options,
       correctOptionIndex: dailyQ.correctOptionIndex,
+      hasAudio: false,
     );
 
     final dailyLevel = Level(
@@ -421,6 +440,17 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
       _saveProfiles(); // Save on every update
 
       _checkStamps(); // Check for unlocked stamps when profile updates
+
+      // Check all-stars milestone (once per profile)
+      if (isMaxCompletion && !(_currentProfile?.hasSeenAllStarsCelebration ?? true)) {
+        _pendingAllStarsCelebration = true;
+        int idx = _profiles.indexWhere((p) => p.id == _currentProfile!.id);
+        if (idx != -1) {
+          _profiles[idx] = _currentProfile!.copyWith(hasSeenAllStarsCelebration: true);
+          _currentProfile = _profiles[idx];
+          _saveProfiles();
+        }
+      }
 
       notifyListeners();
     }
@@ -991,6 +1021,18 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
         _currentProfile = _profiles[index];
         _saveProfiles();
         notifyListeners();
+      }
+    }
+
+    // Check all-badges milestone (once per profile)
+    if (!(_currentProfile?.hasSeenAllBadgesCelebration ?? true) &&
+        (_currentProfile?.unlockedStamps.length ?? 0) >= gameStamps.length) {
+      _pendingAllBadgesCelebration = true;
+      int idx = _profiles.indexWhere((p) => p.id == _currentProfile!.id);
+      if (idx != -1) {
+        _profiles[idx] = _currentProfile!.copyWith(hasSeenAllBadgesCelebration: true);
+        _currentProfile = _profiles[idx];
+        _saveProfiles();
       }
     }
   }
@@ -1636,9 +1678,78 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
   void consumeLevelUp() {
     _oldLevelTitle = null;
     _newLevelTitle = null;
-    _oldEvolutionStage = null;
-    _newEvolutionStage = null;
     notifyListeners();
+  }
+
+  // ── Debug helpers (debug builds only) ────────────────────────────────────
+
+  // Queue of oldStage values for the "loop all evolutions" debug feature.
+  // Each entry means: animate oldStage → oldStage+1.
+  final List<int> _debugEvolveQueue = [];
+  bool get hasDebugEvolveQueued => _debugEvolveQueue.isNotEmpty;
+
+  void debugForceLevelUp({bool includeEvolve = false}) {
+    assert(kDebugMode, 'debugForceLevelUp must only be called in debug mode');
+    final currentTitle = _getStatusTitleForStars(progressStars);
+    // Pick a plausible "next" title by faking +6 stars
+    final nextTitle = _getStatusTitleForStars(progressStars + 6);
+    _oldLevelTitle = currentTitle;
+    _newLevelTitle = nextTitle != currentTitle ? nextTitle : 'Bird Newbie';
+    if (includeEvolve) {
+      final currentEvo = userEvolutionStage;
+      _oldEvolutionStage = currentEvo;
+      _newEvolutionStage = (currentEvo < 5) ? currentEvo + 1 : currentEvo;
+    }
+    // Set a dummy score so ResultScreen renders cleanly
+    _score = 10;
+    _wordGameTotalQuestions = 10;
+    _currentCategory = 'trivia';
+    notifyListeners();
+  }
+
+  /// Queues all 4 evolution transitions (1→2, 2→3, 3→4, 4→5) and sets the
+  /// first one ready. The evolve screen will advance through the queue on each
+  /// Continue press.
+  void debugQueueAllEvolutions() {
+    assert(kDebugMode, 'debugQueueAllEvolutions must only be called in debug mode');
+    _debugEvolveQueue
+      ..clear()
+      ..addAll([2, 3, 4]); // stages 2→3, 3→4, 4→5 (first is 1→2, set below)
+    _oldEvolutionStage = 1;
+    _newEvolutionStage = 2;
+    _score = 10;
+    _wordGameTotalQuestions = 10;
+    _currentCategory = 'trivia';
+    notifyListeners();
+  }
+
+  void debugTriggerAllStarsCelebration() {
+    assert(kDebugMode, 'debug only');
+    _pendingAllStarsCelebration = true;
+    notifyListeners();
+  }
+
+  void debugTriggerAllBadgesCelebration() {
+    assert(kDebugMode, 'debug only');
+    _pendingAllBadgesCelebration = true;
+    notifyListeners();
+  }
+
+  /// Pops the next evolution from the queue and sets it as the current
+  /// evolution. Returns true if another evolution was loaded, false if done.
+  bool debugAdvanceEvolveQueue() {
+    assert(kDebugMode, 'debugAdvanceEvolveQueue must only be called in debug mode');
+    if (_debugEvolveQueue.isEmpty) {
+      _oldEvolutionStage = null;
+      _newEvolutionStage = null;
+      notifyListeners();
+      return false;
+    }
+    final oldStage = _debugEvolveQueue.removeAt(0);
+    _oldEvolutionStage = oldStage;
+    _newEvolutionStage = oldStage + 1;
+    notifyListeners();
+    return true;
   }
 
   // --- Quiz Logic ---
@@ -1805,6 +1916,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
       imagePath: baseQuestion.imagePath,
       options: scrambledOptions,
       correctOptionIndex: newCorrectIndex,
+      hasAudio: baseQuestion.hasAudio,
     );
   }
 
@@ -1842,6 +1954,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
         imagePath: q.imagePath,
         options: scrambledOptions,
         correctOptionIndex: newCorrectIndex,
+        hasAudio: q.hasAudio,
       );
     }).toList();
 

@@ -166,6 +166,7 @@ class BirdImageService {
           imagePath: imagePath,
           options: options,
           correctOptionIndex: correctIndex,
+          hasAudio: false,
         ),
       );
     }

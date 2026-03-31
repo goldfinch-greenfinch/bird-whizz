@@ -22,8 +22,16 @@ class _BirdSelectionScreenState extends State<BirdSelectionScreen> {
     });
   }
 
+  String _toTitleCase(String s) => s
+      .split(' ')
+      .map(
+        (word) =>
+            word.isEmpty ? '' : word[0].toUpperCase() + word.substring(1).toLowerCase(),
+      )
+      .join(' ');
+
   void _onConfirm() async {
-    final name = _nameController.text.trim();
+    final name = _toTitleCase(_nameController.text.trim());
     if (name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter your name adventurer!')),

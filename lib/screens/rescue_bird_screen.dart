@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -78,6 +79,8 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
       duration: const Duration(milliseconds: 1600),
     )..repeat(reverse: true);
 
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<AudioService>().playQuizMusic();
       _startNewPuzzle();
@@ -86,6 +89,12 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
 
   @override
   void dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
     _confettiController.dispose();
     _catController.dispose();
     _birdEventController.dispose();
@@ -226,7 +235,7 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
                   _buildOutcome()
                 else
                   _buildKeyboard(),
-                const SizedBox(height: 12),
+                const SizedBox(height: 6),
               ],
             ),
           ),
@@ -465,69 +474,80 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
   }
 
   Widget _buildKeyboard() {
-    const rows = ['ABCDEFGHIJKLM', 'NOPQRSTUVWXYZ'];
+    const rows = ['ABCDEFG', 'HIJKLMN', 'OPQRSTU', 'VWXYZ'];
+    const maxKeysPerRow = 7;
+    const keyGap = 6.0; // 3px each side
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: rows.map((row) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 5),
-            child: Row(
-              children: row.split('').map((letter) {
-                final guessed = _guessedLetters.contains(letter);
-                final correct = guessed && _lettersInWord.contains(letter);
-                final wrong = guessed && !correct;
-                return Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2.5),
-                    child: AspectRatio(
-                      aspectRatio: 0.9,
-                      child: GestureDetector(
-                        onTap: guessed ? null : () => _onLetterTapped(letter),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 180),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: correct
-                                ? Colors.greenAccent.withValues(alpha: 0.25)
-                                : wrong
-                                ? Colors.redAccent.withValues(alpha: 0.12)
-                                : Colors.white.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(7),
-                            border: Border.all(
-                              color: correct
-                                  ? Colors.greenAccent
-                                  : wrong
-                                  ? Colors.redAccent.withValues(alpha: 0.3)
-                                  : Colors.white38,
-                              width: 1.5,
-                            ),
-                          ),
-                          child: FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              letter,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final keyWidth =
+              (constraints.maxWidth - maxKeysPerRow * keyGap) / maxKeysPerRow;
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: rows.map((row) {
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 5),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: row.split('').map((letter) {
+                    final guessed = _guessedLetters.contains(letter);
+                    final correct = guessed && _lettersInWord.contains(letter);
+                    final wrong = guessed && !correct;
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 3),
+                      child: SizedBox(
+                        width: keyWidth,
+                        child: AspectRatio(
+                          aspectRatio: 1.1,
+                          child: GestureDetector(
+                            onTap:
+                                guessed ? null : () => _onLetterTapped(letter),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 180),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
                                 color: correct
-                                    ? Colors.greenAccent
+                                    ? Colors.greenAccent.withValues(alpha: 0.25)
                                     : wrong
-                                    ? Colors.white24
-                                    : Colors.white,
+                                    ? Colors.redAccent.withValues(alpha: 0.12)
+                                    : Colors.white.withValues(alpha: 0.15),
+                                borderRadius: BorderRadius.circular(9),
+                                border: Border.all(
+                                  color: correct
+                                      ? Colors.greenAccent
+                                      : wrong
+                                      ? Colors.redAccent.withValues(alpha: 0.3)
+                                      : Colors.white38,
+                                  width: 1.5,
+                                ),
+                              ),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  letter,
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                    color: correct
+                                        ? Colors.greenAccent
+                                        : wrong
+                                        ? Colors.white24
+                                        : Colors.white,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                );
-              }).toList(),
-            ),
+                    );
+                  }).toList(),
+                ),
+              );
+            }).toList(),
           );
-        }).toList(),
+        },
       ),
     );
   }

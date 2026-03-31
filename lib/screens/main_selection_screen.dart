@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -39,14 +40,14 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
     });
   }
 
-  void _launchDailyChallenge(BuildContext context, QuizProvider provider) {
+  void _launchDailyChallenge(BuildContext screenContext, QuizProvider provider) {
     showGeneralDialog(
-      context: context,
+      context: screenContext,
       barrierDismissible: true,
       barrierLabel: '',
       barrierColor: Colors.black54,
       transitionDuration: const Duration(milliseconds: 300),
-      pageBuilder: (context, anim1, anim2) {
+      pageBuilder: (dialogContext, anim1, anim2) {
         return ScaleTransition(
           scale: Tween<double>(
             begin: 0.5,
@@ -86,10 +87,12 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
                   ),
                 ),
                 onPressed: () {
-                  context.pop(); // close dialog
+                  // Use the screen context (not the dialog's context) so navigation
+                  // happens from a live route after the dialog dismisses.
+                  dialogContext.pop();
                   provider.startDailyChallenge();
-                  context.read<AudioService>().playTransition();
-                  context.push(AppRoutes.quiz);
+                  screenContext.read<AudioService>().playTransition();
+                  screenContext.push(AppRoutes.quiz);
                 },
                 child: const Text(
                   'Play Now',
@@ -103,10 +106,111 @@ class _MainSelectionScreenState extends State<MainSelectionScreen> {
     );
   }
 
+  void _showDebugMenu(BuildContext context) {
+    final provider = context.read<QuizProvider>();
+    showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Debug: Test Level-Up Flow'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'Current stars: ${provider.progressStars}  '
+              'Level: ${provider.userLevelIndex}  '
+              'Evo: ${provider.userEvolutionStage}',
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                provider.debugForceLevelUp();
+                ctx.pop();
+                context.pushReplacement(AppRoutes.result);
+              },
+              child: const Text('Result → Level Up'),
+            ),
+            const SizedBox(height: 8),
+            ElevatedButton(
+              onPressed: () {
+                provider.debugForceLevelUp(includeEvolve: true);
+                ctx.pop();
+                context.pushReplacement(AppRoutes.result);
+              },
+              child: const Text('Result → Level Up → Evolve'),
+            ),
+            const SizedBox(height: 8),
+            ElevatedButton(
+              onPressed: () {
+                provider.debugForceLevelUp(includeEvolve: true);
+                provider.consumeLevelUp();
+                ctx.pop();
+                context.pushReplacement(AppRoutes.evolve);
+              },
+              child: const Text('Evolve screen only'),
+            ),
+            const SizedBox(height: 8),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
+              onPressed: () {
+                provider.debugQueueAllEvolutions();
+                ctx.pop();
+                context.pushReplacement(AppRoutes.evolve);
+              },
+              child: const Text(
+                'Loop all evolutions (1→2→3→4→5)',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            const SizedBox(height: 8),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.amber[800]),
+              onPressed: () {
+                ctx.pop();
+                context.push(AppRoutes.allStars);
+              },
+              child: const Text(
+                'All Stars celebration screen',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            const SizedBox(height: 8),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.brown[700]),
+              onPressed: () {
+                ctx.pop();
+                context.push(AppRoutes.allBadges);
+              },
+              child: const Text(
+                'All Badges celebration screen',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => ctx.pop(),
+            child: const Text('Cancel'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primaryLight,
+      floatingActionButton: kDebugMode
+          ? FloatingActionButton.small(
+              onPressed: () => _showDebugMenu(context),
+              backgroundColor: Colors.red[700],
+              tooltip: 'Debug: test level-up',
+              child: const Icon(Icons.bug_report, color: Colors.white),
+            )
+          : null,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(

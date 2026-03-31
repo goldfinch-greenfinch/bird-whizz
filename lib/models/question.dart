@@ -4,6 +4,7 @@ class Question {
   final String? imagePath;
   final List<String> options;
   final int correctOptionIndex;
+  final bool hasAudio;
 
   Question({
     required this.id,
@@ -11,6 +12,7 @@ class Question {
     this.imagePath,
     required this.options,
     required this.correctOptionIndex,
+    this.hasAudio = true,
   });
 
   String get questionAudioPath {

@@ -21,6 +21,8 @@ import '../screens/character_evolve_screen.dart';
 import '../screens/new_stamp_screen.dart';
 import '../screens/achievements_book_screen.dart';
 import '../screens/stats_screen.dart';
+import '../screens/all_stars_screen.dart';
+import '../screens/all_badges_screen.dart';
 
 class AppRouter {
   final QuizProvider quizProvider;
@@ -130,6 +132,14 @@ class AppRouter {
         path: AppRoutes.stats,
         builder: (context, state) => const StatsScreen(),
       ),
+      GoRoute(
+        path: AppRoutes.allStars,
+        builder: (context, state) => const AllStarsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.allBadges,
+        builder: (context, state) => const AllBadgesScreen(),
+      ),
     ],
   );
 }
@@ -153,4 +163,6 @@ abstract final class AppRoutes {
   static const stamp        = '/stamp';
   static const achievements = '/achievements';
   static const stats        = '/stats';
+  static const allStars     = '/all-stars';
+  static const allBadges    = '/all-badges';
 }

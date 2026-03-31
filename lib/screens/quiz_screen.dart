@@ -22,6 +22,10 @@ class _QuizScreenState extends State<QuizScreen> {
   // Track previous state to trigger animations only once per question/answer
   int? _lastSelectedQuestionIndex;
 
+  // Guard against duplicate pushReplacement calls when notifyListeners fires
+  // multiple times during quiz completion (e.g. _updateCurrentProfile + nextQuestion)
+  bool _navigatingToResult = false;
+
   @override
   void initState() {
     super.initState();
@@ -36,9 +40,12 @@ class _QuizScreenState extends State<QuizScreen> {
       builder: (context, provider, child) {
         // Handle Quiz Completion
         if (provider.isQuizFinished) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            context.pushReplacement(AppRoutes.result);
-          });
+          if (!_navigatingToResult) {
+            _navigatingToResult = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) context.pushReplacement(AppRoutes.result);
+            });
+          }
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
@@ -208,69 +215,82 @@ class _QuizScreenState extends State<QuizScreen> {
                                       ),
                                       const SizedBox(height: 20),
                                     ],
-                                    Consumer<AudioService>(
-                                      builder: (context, audioService, _) {
-                                        return Stack(
-                                          alignment: Alignment.center,
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    horizontal: 40.0,
-                                                  ),
-                                              child: Text(
-                                                question.text,
-                                                textAlign: TextAlign.center,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headlineSmall
-                                                    ?.copyWith(
-                                                      color: const Color(
-                                                        0xFF2C3E50,
-                                                      ),
-                                                      fontWeight:
-                                                          FontWeight.w600,
+                                    if (question.hasAudio)
+                                      Consumer<AudioService>(
+                                        builder: (context, audioService, _) {
+                                          return Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 40.0,
                                                     ),
-                                              ),
-                                            ),
-                                            Positioned(
-                                              right: 0,
-                                              bottom: 0,
-                                              top: 0,
-                                              child: Center(
-                                                child: IconButton(
-                                                  icon: const Icon(
-                                                    Icons.volume_up_rounded,
-                                                    color: Colors.teal,
-                                                  ),
-                                                  onPressed: () {
-                                                    final sequence = [
-                                                      question
-                                                          .questionAudioPath,
-                                                      for (
-                                                        int i = 0;
-                                                        i <
-                                                            question
-                                                                .options
-                                                                .length;
-                                                        i++
-                                                      )
-                                                        question
-                                                            .getAnswerAudioPath(
-                                                              i,
-                                                            ),
-                                                    ];
-                                                    audioService.playSequence(
-                                                      sequence,
-                                                    );
-                                                  },
+                                                child: Text(
+                                                  question.text,
+                                                  textAlign: TextAlign.center,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headlineSmall
+                                                      ?.copyWith(
+                                                        color: const Color(
+                                                          0xFF2C3E50,
+                                                        ),
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
                                                 ),
                                               ),
+                                              Positioned(
+                                                right: 0,
+                                                bottom: 0,
+                                                top: 0,
+                                                child: Center(
+                                                  child: IconButton(
+                                                    icon: const Icon(
+                                                      Icons.volume_up_rounded,
+                                                      color: Colors.teal,
+                                                    ),
+                                                    onPressed: () {
+                                                      final sequence = [
+                                                        question
+                                                            .questionAudioPath,
+                                                        for (
+                                                          int i = 0;
+                                                          i <
+                                                              question
+                                                                  .options
+                                                                  .length;
+                                                          i++
+                                                        )
+                                                          question
+                                                              .getAnswerAudioPath(
+                                                                i,
+                                                              ),
+                                                      ];
+                                                      audioService.playSequence(
+                                                        sequence,
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      )
+                                    else
+                                      Text(
+                                        question.text,
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headlineSmall
+                                            ?.copyWith(
+                                              color: const Color(0xFF2C3E50),
+                                              fontWeight: FontWeight.w600,
                                             ),
-                                          ],
-                                        );
-                                      },
-                                    ),
+                                      ),
                                   ],
                                 ),
                               ),
@@ -384,25 +404,26 @@ class _QuizScreenState extends State<QuizScreen> {
                 textAlign: TextAlign.center,
               ),
             ),
-            Positioned(
-              right: -8,
-              child: Consumer<AudioService>(
-                builder: (context, audioService, _) {
-                  return IconButton(
-                    icon: Icon(
-                      Icons.volume_up_rounded,
-                      color: textColor.withValues(alpha: 0.6),
-                      size: 20,
-                    ),
-                    onPressed: () {
-                      audioService.playVoiceOver(
-                        question.getAnswerAudioPath(index),
-                      );
-                    },
-                  );
-                },
+            if (question.hasAudio)
+              Positioned(
+                right: -8,
+                child: Consumer<AudioService>(
+                  builder: (context, audioService, _) {
+                    return IconButton(
+                      icon: Icon(
+                        Icons.volume_up_rounded,
+                        color: textColor.withValues(alpha: 0.6),
+                        size: 20,
+                      ),
+                      onPressed: () {
+                        audioService.playVoiceOver(
+                          question.getAnswerAudioPath(index),
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
-            ),
           ],
         ),
       ),

@@ -134,8 +134,16 @@ class _NewStampScreenState extends State<NewStampScreen>
   void _finish() {
     final provider = Provider.of<QuizProvider>(context, listen: false);
     provider.consumeNewlyUnlockedStamps();
-    provider.resetQuiz();
-    context.go(AppRoutes.main);
+    if (provider.hasPendingAllStarsCelebration) {
+      provider.consumeAllStarsCelebration();
+      context.go(AppRoutes.allStars);
+    } else if (provider.hasPendingAllBadgesCelebration) {
+      provider.consumeAllBadgesCelebration();
+      context.go(AppRoutes.allBadges);
+    } else {
+      provider.resetQuiz();
+      context.go(AppRoutes.main);
+    }
   }
 
   int _getSpreadIndexForStamp(String stampId) {

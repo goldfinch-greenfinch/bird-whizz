@@ -510,7 +510,7 @@ class _Header extends StatelessWidget {
                                   icon: Icons.quiz_rounded,
                                   value:
                                       '${provider.textQuizTotalStars}/${provider.textQuizMaxStars}',
-                                  label: 'Quiz',
+                                  label: 'Stars',
                                   color: Colors.amber,
                                 ),
                                 buildStatDivider(),

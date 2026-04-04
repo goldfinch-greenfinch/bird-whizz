@@ -255,8 +255,8 @@ class _CategoryHeader extends StatelessWidget {
                                 StatItemWidget(
                                   icon: Icons.star_rounded,
                                   value:
-                                      '${provider.totalStars}/${provider.maxStars}',
-                                  label: 'App Stats',
+                                      '${provider.textQuizTotalStars}/${provider.textQuizMaxStars}',
+                                  label: 'Stars',
                                   color: Colors.amber,
                                 ),
                                 buildStatDivider(),

@@ -1,11 +1,11 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../models/stamp.dart';
 import '../services/audio_service.dart';
 import '../widgets/particle_overlay.dart';
+import '../widgets/navigation_utils.dart';
 
 class AllBadgesScreen extends StatefulWidget {
   const AllBadgesScreen({super.key});
@@ -51,7 +51,7 @@ class _AllBadgesScreenState extends State<AllBadgesScreen>
   void _continue() {
     final provider = Provider.of<QuizProvider>(context, listen: false);
     provider.resetQuiz();
-    context.pop();
+    NavigationUtils.leaveStandardQuizRoute(context, provider);
   }
 
   @override

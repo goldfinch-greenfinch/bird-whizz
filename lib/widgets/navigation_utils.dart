@@ -8,8 +8,23 @@ import '../data/about/team_text.dart';
 import '../services/audio_service.dart';
 import '../router/app_router.dart';
 import '../theme/app_theme.dart';
+import '../providers/quiz_provider.dart';
 
 class NavigationUtils {
+  /// Call after [QuizProvider.resetQuiz] (or before deferred reset) when leaving
+  /// the standard quiz [ResultScreen] stack. Daily challenge is opened from
+  /// [AppRoutes.main]; a bare [pop] can leave an invalid stack or return to
+  /// [AppRoutes.quiz] still marked finished, which immediately opens result again.
+  static void leaveStandardQuizRoute(BuildContext context, QuizProvider provider) {
+    if (provider.currentCategory == 'daily_challenge') {
+      context.go(AppRoutes.main);
+    } else if (context.canPop()) {
+      context.pop();
+    } else {
+      context.go(AppRoutes.main);
+    }
+  }
+
   static Widget buildProfileMenu(
     BuildContext context, {
     Color color = Colors.white,

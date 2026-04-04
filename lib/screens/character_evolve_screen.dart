@@ -524,7 +524,7 @@ class _CharacterEvolveScreenState extends State<CharacterEvolveScreen>
                           context.pushReplacement(AppRoutes.allBadges);
                         } else {
                           qp.resetQuiz();
-                          context.pop();
+                          NavigationUtils.leaveStandardQuizRoute(context, qp);
                         }
                       }
                     : null,

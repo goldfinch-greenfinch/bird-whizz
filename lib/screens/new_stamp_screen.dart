@@ -6,6 +6,7 @@ import '../providers/quiz_provider.dart';
 import '../models/stamp.dart';
 import '../router/app_router.dart';
 import '../services/audio_service.dart';
+import '../widgets/navigation_utils.dart';
 import 'achievements_book_screen.dart';
 
 class NewStampScreen extends StatefulWidget {
@@ -149,7 +150,7 @@ class _NewStampScreenState extends State<NewStampScreen>
         provider.consumeNewlyUnlockedStamps();
       });
     } else {
-      context.pop();
+      NavigationUtils.leaveStandardQuizRoute(context, provider);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         provider.consumeNewlyUnlockedStamps();
         provider.resetQuiz();

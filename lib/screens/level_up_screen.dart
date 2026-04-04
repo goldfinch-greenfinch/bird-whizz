@@ -20,6 +20,19 @@ class LevelUpScreen extends StatefulWidget {
 class _LevelUpScreenState extends State<LevelUpScreen> {
   late ConfettiController _confettiController;
 
+  /// Frozen on first build so [QuizProvider.consumeLevelUp] cannot blank the UI
+  /// (it clears titles and notifies listeners before we navigate away).
+  String? _frozenOldTitle;
+  String? _frozenNewTitle;
+  /// Companion look before the evolution reveal (see [QuizProvider.oldEvolutionStage]).
+  late int _frozenPortraitEvolutionStage;
+  bool _snapshotted = false;
+
+  static String _evolutionStageName(int stage) {
+    const names = ['Egg', 'Hatchling', 'Fledgling', 'Adult', 'Magnificent'];
+    return names[stage.clamp(1, 5) - 1];
+  }
+
   @override
   void initState() {
     super.initState();
@@ -41,6 +54,50 @@ class _LevelUpScreenState extends State<LevelUpScreen> {
     super.dispose();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_snapshotted) {
+      final p = Provider.of<QuizProvider>(context, listen: false);
+      _frozenOldTitle = p.oldLevelTitle;
+      _frozenNewTitle = p.newLevelTitle;
+      _frozenPortraitEvolutionStage =
+          p.oldEvolutionStage ?? p.userEvolutionStage;
+      _snapshotted = true;
+    }
+  }
+
+  void _continuePressed(BuildContext context) {
+    final p = Provider.of<QuizProvider>(context, listen: false);
+    void afterNavCleanup() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        p.consumeLevelUp();
+      });
+    }
+
+    if (p.hasEvolved) {
+      context.pushReplacement(AppRoutes.evolve);
+      afterNavCleanup();
+    } else if (p.newlyUnlockedStamps.isNotEmpty) {
+      context.pushReplacement(AppRoutes.stamp);
+      afterNavCleanup();
+    } else if (p.hasPendingAllStarsCelebration) {
+      p.consumeAllStarsCelebration();
+      context.pushReplacement(AppRoutes.allStars);
+      afterNavCleanup();
+    } else if (p.hasPendingAllBadgesCelebration) {
+      p.consumeAllBadgesCelebration();
+      context.pushReplacement(AppRoutes.allBadges);
+      afterNavCleanup();
+    } else {
+      NavigationUtils.leaveStandardQuizRoute(context, p);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        p.consumeLevelUp();
+        p.resetQuiz();
+      });
+    }
+  }
+
   Path _drawFeather(Size size) {
     final path = Path();
     path.moveTo(size.width / 2, 0);
@@ -57,7 +114,7 @@ class _LevelUpScreenState extends State<LevelUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<QuizProvider>();
+    final provider = Provider.of<QuizProvider>(context, listen: false);
     Bird? selectedBird;
     if (provider.selectedBirdId != null) {
       try {
@@ -119,7 +176,7 @@ class _LevelUpScreenState extends State<LevelUpScreen> {
                       child: ClipOval(
                         child: Image.asset(
                           selectedBird.getEvolvedImagePath(
-                            provider.userEvolutionStage,
+                            _frozenPortraitEvolutionStage,
                           ),
                           width: 120,
                           height: 120,
@@ -133,6 +190,19 @@ class _LevelUpScreenState extends State<LevelUpScreen> {
                       size: 100,
                       color: Colors.amber,
                     ),
+                  if (selectedBird != null) ...[
+                    const SizedBox(height: 12),
+                    Text(
+                      _evolutionStageName(_frozenPortraitEvolutionStage),
+                      style: TextStyle(
+                        color: Colors.teal[800],
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.5,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                   const SizedBox(height: 30),
                   Text(
                     'CONGRATULATIONS!',
@@ -159,7 +229,9 @@ class _LevelUpScreenState extends State<LevelUpScreen> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      provider.oldLevelTitle ?? 'Unknown',
+                      _frozenOldTitle ??
+                          provider.oldLevelTitle ??
+                          'Just Hatched',
                       style: TextStyle(
                         color: Colors.teal[800],
                         fontSize: 24,
@@ -189,7 +261,9 @@ class _LevelUpScreenState extends State<LevelUpScreen> {
                       ),
                     ),
                     child: Text(
-                      provider.newLevelTitle ?? 'Bird Wizard',
+                      _frozenNewTitle ??
+                          provider.newLevelTitle ??
+                          'Bird Wizard',
                       style: TextStyle(
                         color: Colors.amber[700],
                         fontSize: 36,
@@ -207,27 +281,7 @@ class _LevelUpScreenState extends State<LevelUpScreen> {
                   ),
                   const SizedBox(height: 60),
                   ElevatedButton(
-                    onPressed: () {
-                      final provider = Provider.of<QuizProvider>(
-                        context,
-                        listen: false,
-                      );
-                      provider.consumeLevelUp();
-                      if (provider.hasEvolved) {
-                        context.pushReplacement(AppRoutes.evolve);
-                      } else if (provider.newlyUnlockedStamps.isNotEmpty) {
-                        context.pushReplacement(AppRoutes.stamp);
-                      } else if (provider.hasPendingAllStarsCelebration) {
-                        provider.consumeAllStarsCelebration();
-                        context.pushReplacement(AppRoutes.allStars);
-                      } else if (provider.hasPendingAllBadgesCelebration) {
-                        provider.consumeAllBadgesCelebration();
-                        context.pushReplacement(AppRoutes.allBadges);
-                      } else {
-                        provider.resetQuiz();
-                        context.pop();
-                      }
-                    },
+                    onPressed: () => _continuePressed(context),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.teal,
                       foregroundColor: Colors.white,

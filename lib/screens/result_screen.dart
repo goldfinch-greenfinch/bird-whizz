@@ -20,6 +20,10 @@ class ResultScreen extends StatefulWidget {
 class _ResultScreenState extends State<ResultScreen> {
   String _message = "";
   int _stars = 0;
+  /// Frozen at first layout — do not read live [QuizProvider.score] in build after
+  /// Return may call [QuizProvider.resetQuiz], which zeros score and rebuilds this screen.
+  int _displayScore = 0;
+  int _displayTotal = 0;
   bool _initialized = false;
 
   @override
@@ -43,6 +47,8 @@ class _ResultScreenState extends State<ResultScreen> {
   void _calculateResult(QuizProvider provider) {
     int total = provider.totalQuestions;
     int score = provider.score;
+    _displayScore = score;
+    _displayTotal = total;
 
     if (score == total && total > 0) {
       _stars = 3;
@@ -131,7 +137,7 @@ class _ResultScreenState extends State<ResultScreen> {
                             ),
                           ),
                           const SizedBox(height: 30),
-                          _buildScoreCard(provider),
+                          _buildScoreCard(),
                           const SizedBox(height: 30),
                           _buildMessageCard(),
                           const SizedBox(height: 40),
@@ -187,7 +193,7 @@ class _ResultScreenState extends State<ResultScreen> {
     );
   }
 
-  Widget _buildScoreCard(QuizProvider provider) {
+  Widget _buildScoreCard() {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -213,7 +219,7 @@ class _ResultScreenState extends State<ResultScreen> {
           ),
           const SizedBox(height: 10),
           Text(
-            '${provider.score} / ${provider.totalQuestions}',
+            '$_displayScore / $_displayTotal',
             style: const TextStyle(
               fontSize: 48,
               fontWeight: FontWeight.bold,
@@ -290,8 +296,12 @@ class _ResultScreenState extends State<ResultScreen> {
             provider.consumeAllBadgesCelebration();
             context.pushReplacement(AppRoutes.allBadges);
           } else {
-            provider.resetQuiz();
-            context.pop();
+            // Navigate first; resetQuiz zeros score and notifies listeners, which
+            // would rebuild this screen and flash 0/N if reset ran before leaving.
+            NavigationUtils.leaveStandardQuizRoute(context, provider);
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              provider.resetQuiz();
+            });
           }
         },
         child: Text(

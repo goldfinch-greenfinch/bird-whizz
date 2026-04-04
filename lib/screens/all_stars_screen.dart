@@ -6,6 +6,7 @@ import '../providers/quiz_provider.dart';
 import '../router/app_router.dart';
 import '../services/audio_service.dart';
 import '../widgets/particle_overlay.dart';
+import '../widgets/navigation_utils.dart';
 
 class AllStarsScreen extends StatefulWidget {
   const AllStarsScreen({super.key});
@@ -55,7 +56,7 @@ class _AllStarsScreenState extends State<AllStarsScreen>
       context.pushReplacement(AppRoutes.allBadges);
     } else {
       provider.resetQuiz();
-      context.pop();
+      NavigationUtils.leaveStandardQuizRoute(context, provider);
     }
   }
 

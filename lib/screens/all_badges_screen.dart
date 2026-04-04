@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../providers/quiz_provider.dart';
 import '../models/stamp.dart';
-import '../router/app_router.dart';
 import '../services/audio_service.dart';
 import '../widgets/particle_overlay.dart';
 
@@ -52,7 +51,7 @@ class _AllBadgesScreenState extends State<AllBadgesScreen>
   void _continue() {
     final provider = Provider.of<QuizProvider>(context, listen: false);
     provider.resetQuiz();
-    context.go(AppRoutes.main);
+    context.pop();
   }
 
   @override

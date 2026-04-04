@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -170,12 +171,30 @@ class _SpeedChallengeScreenState extends State<SpeedChallengeScreen>
     context.pushReplacement(AppRoutes.result);
   }
 
+  void _debugAutoComplete() {
+    _countdownTimer?.cancel();
+    final total = _level.questions.length;
+    context.read<QuizProvider>().finishSpeedChallengeLevel(widget.levelIndex, total, total);
+    context.read<AudioService>().playMenuMusic();
+    context.pushReplacement(AppRoutes.result);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ConfettiOverlay(
       key: _confettiKey,
       child: Scaffold(
         backgroundColor: _bg,
+        floatingActionButton: kDebugMode
+            ? FloatingActionButton.small(
+                heroTag: 'debug_speed',
+                backgroundColor: Colors.orange,
+                onPressed: _debugAutoComplete,
+                tooltip: 'Debug: Auto-complete 3★',
+                child: const Icon(Icons.bolt_rounded, color: Colors.white),
+              )
+            : null,
+        floatingActionButtonLocation: FloatingActionButtonLocation.miniStartFloat,
         body: SafeArea(
           child: Column(
             children: [

@@ -291,11 +291,11 @@ class _ResultScreenState extends State<ResultScreen> {
             context.pushReplacement(AppRoutes.allBadges);
           } else {
             provider.resetQuiz();
-            context.go(AppRoutes.main);
+            context.pop();
           }
         },
         child: Text(
-          hasNextScreen ? 'Next…' : 'Return to Home',
+          hasNextScreen ? 'Next…' : 'Return',
           style: const TextStyle(fontSize: 18, color: Colors.white),
         ),
       ),

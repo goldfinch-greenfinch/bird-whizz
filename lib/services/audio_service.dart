@@ -49,14 +49,27 @@ class AudioService extends ChangeNotifier {
   void toggleMute() {
     _isMuted = !_isMuted;
     SharedPreferences.getInstance().then((prefs) => prefs.setBool(_muteKey, _isMuted));
-    final soloud = SoLoud.instance;
-
-    if (_isMuted) {
-      if (_musicHandle != null) soloud.setPause(_musicHandle!, true);
-      if (_voiceHandle != null) soloud.stop(_voiceHandle!);
-      if (_sfxHandle != null) soloud.stop(_sfxHandle!);
-    } else {
-      if (_musicHandle != null) soloud.setPause(_musicHandle!, false);
+    try {
+      final soloud = SoLoud.instance;
+      if (_isMuted) {
+        if (_musicHandle != null && soloud.getIsValidVoiceHandle(_musicHandle!)) {
+          soloud.setPause(_musicHandle!, true);
+        }
+        if (_voiceHandle != null && soloud.getIsValidVoiceHandle(_voiceHandle!)) {
+          soloud.stop(_voiceHandle!);
+          _voiceHandle = null;
+        }
+        if (_sfxHandle != null && soloud.getIsValidVoiceHandle(_sfxHandle!)) {
+          soloud.stop(_sfxHandle!);
+          _sfxHandle = null;
+        }
+      } else {
+        if (_musicHandle != null && soloud.getIsValidVoiceHandle(_musicHandle!)) {
+          soloud.setPause(_musicHandle!, false);
+        }
+      }
+    } catch (e) {
+      LoggingService.error('Error toggling mute', e);
     }
     notifyListeners();
   }
@@ -247,6 +260,7 @@ class AudioService extends ChangeNotifier {
   Future<void> _playSfx(String path) async {
     await _ensureInitialized();
     if (_isMuted) return;
+    _sequenceId++; // Cancel any running sequence
     try {
       if (_voiceHandle != null &&
           SoLoud.instance.getIsValidVoiceHandle(_voiceHandle!)) {

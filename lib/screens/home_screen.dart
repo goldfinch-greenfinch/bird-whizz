@@ -265,8 +265,8 @@ class _LevelCard extends StatelessWidget {
                       color: isUnlocked ? Colors.black87 : Colors.grey.shade500,
                     ),
                   ),
-                  if (isUnlocked && stars > 0) ...[
-                    const SizedBox(height: 6),
+                  const SizedBox(height: 6),
+                  if (isUnlocked)
                     Row(
                       children: List.generate(
                         3,
@@ -278,9 +278,8 @@ class _LevelCard extends StatelessWidget {
                           size: 18,
                         ),
                       ),
-                    ),
-                  ] else if (!isUnlocked) ...[
-                    const SizedBox(height: 4),
+                    )
+                  else
                     Text(
                       'Complete previous level to unlock',
                       style: TextStyle(
@@ -288,7 +287,6 @@ class _LevelCard extends StatelessWidget {
                         color: Colors.grey.shade500,
                       ),
                     ),
-                  ],
                 ],
               ),
             ),

@@ -429,88 +429,99 @@ class _GuessBirdLevelsScreen extends StatelessWidget {
         final levelId = 'guess_bird_level_$index';
         final stars = provider.levelStars(levelId);
         final level = guessBirdLevels[index];
+        final isUnlocked = provider.isGuessBirdLevelUnlocked(index);
 
         return InkWell(
           onTap: () {
+            if (!isUnlocked) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Complete the previous level to unlock!'),
+                  duration: Duration(milliseconds: 1500),
+                ),
+              );
+              return;
+            }
             context.read<AudioService>().playTransition();
             context.push('${AppRoutes.special}/guess-bird/$index');
           },
           borderRadius: BorderRadius.circular(20),
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.indigo.withValues(alpha: 0.15),
-                  blurRadius: 10,
-                  offset: const Offset(0, 5),
+          child: Opacity(
+            opacity: isUnlocked ? 1.0 : 0.5,
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.indigo.withValues(alpha: 0.15),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+                border: Border.all(
+                  color: Colors.indigo.withValues(alpha: 0.3),
+                  width: 1,
                 ),
-              ],
-              border: Border.all(
-                color: Colors.indigo.withValues(alpha: 0.3),
-                width: 1,
               ),
-            ),
-            child: Row(
-              children: [
-                // Level emoji
-                Container(
-                  width: 54,
-                  height: 54,
-                  decoration: BoxDecoration(
-                    color: Colors.indigo.withValues(alpha: 0.08),
-                    shape: BoxShape.circle,
+              child: Row(
+                children: [
+                  Container(
+                    width: 54,
+                    height: 54,
+                    decoration: BoxDecoration(
+                      color: Colors.indigo.withValues(alpha: 0.08),
+                      shape: BoxShape.circle,
+                    ),
+                    alignment: Alignment.center,
+                    child: isUnlocked
+                        ? Text(level.emoji, style: const TextStyle(fontSize: 26))
+                        : const Icon(Icons.lock_rounded, color: Colors.indigo, size: 26),
                   ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    level.emoji,
-                    style: const TextStyle(fontSize: 26),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Level ${index + 1}: ${level.title}',
-                        style: const TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        level.subtitle,
-                        style: TextStyle(fontSize: 13, color: Colors.grey[600]),
-                      ),
-                      if (stars > 0) ...[
-                        const SizedBox(height: 8),
-                        Row(
-                          children: List.generate(
-                            3,
-                            (i) => Icon(
-                              i < stars
-                                  ? Icons.star_rounded
-                                  : Icons.star_outline_rounded,
-                              color: Colors.amber,
-                              size: 20,
-                            ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Level ${index + 1}: ${level.title}',
+                          style: const TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
                           ),
                         ),
+                        const SizedBox(height: 4),
+                        Text(
+                          isUnlocked ? level.subtitle : 'Complete Level $index to unlock',
+                          style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                        ),
+                        if (stars > 0) ...[
+                          const SizedBox(height: 8),
+                          Row(
+                            children: List.generate(
+                              3,
+                              (i) => Icon(
+                                i < stars
+                                    ? Icons.star_rounded
+                                    : Icons.star_outline_rounded,
+                                color: Colors.amber,
+                                size: 20,
+                              ),
+                            ),
+                          ),
+                        ],
                       ],
-                    ],
+                    ),
                   ),
-                ),
-                Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  color: Colors.grey[300],
-                  size: 16,
-                ),
-              ],
+                  Icon(
+                    isUnlocked ? Icons.arrow_forward_ios_rounded : Icons.lock_rounded,
+                    color: isUnlocked ? Colors.grey[300] : Colors.grey[400],
+                    size: isUnlocked ? 16 : 20,
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -670,122 +681,131 @@ class _SpeedChallengeLevelsScreen extends StatelessWidget {
         final levelId = 'speed_challenge_level_$index';
         final stars = provider.levelStars(levelId);
         final level = speedChallengeLevels[index];
+        final isUnlocked = provider.isSpeedChallengeLevelUnlocked(index);
 
         return InkWell(
           onTap: () {
+            if (!isUnlocked) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Complete the previous level to unlock!'),
+                  duration: Duration(milliseconds: 1500),
+                ),
+              );
+              return;
+            }
             context.read<AudioService>().playTransition();
             context.push('${AppRoutes.special}/speed-challenge/$index');
           },
           borderRadius: BorderRadius.circular(20),
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              boxShadow: [
-                BoxShadow(
-                  color: _accent.withValues(alpha: 0.15),
-                  blurRadius: 10,
-                  offset: const Offset(0, 5),
+          child: Opacity(
+            opacity: isUnlocked ? 1.0 : 0.5,
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: _accent.withValues(alpha: 0.15),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
+                border: Border.all(
+                  color: _accent.withValues(alpha: 0.25),
+                  width: 1,
                 ),
-              ],
-              border: Border.all(
-                color: _accent.withValues(alpha: 0.25),
-                width: 1,
               ),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 54,
-                  height: 54,
-                  decoration: BoxDecoration(
-                    color: _accent.withValues(alpha: 0.08),
-                    shape: BoxShape.circle,
+              child: Row(
+                children: [
+                  Container(
+                    width: 54,
+                    height: 54,
+                    decoration: BoxDecoration(
+                      color: _accent.withValues(alpha: 0.08),
+                      shape: BoxShape.circle,
+                    ),
+                    alignment: Alignment.center,
+                    child: isUnlocked
+                        ? Text(level.emoji, style: const TextStyle(fontSize: 26))
+                        : const Icon(Icons.lock_rounded, color: _accent, size: 26),
                   ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    level.emoji,
-                    style: const TextStyle(fontSize: 26),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              'Level ${index + 1}: ${level.title}',
-                              style: const TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Level ${index + 1}: ${level.title}',
+                                style: const TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ),
+                            if (isUnlocked)
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 3,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: _accent.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(Icons.timer_rounded, size: 13, color: _accent),
+                                    const SizedBox(width: 3),
+                                    Text(
+                                      '${level.secondsPerQuestion}s',
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: _accent,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          isUnlocked ? level.subtitle : 'Complete Level $index to unlock',
+                          style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                        ),
+                        if (stars > 0) ...[
+                          const SizedBox(height: 8),
+                          Row(
+                            children: List.generate(
+                              3,
+                              (i) => Icon(
+                                i < stars
+                                    ? Icons.star_rounded
+                                    : Icons.star_outline_rounded,
+                                color: Colors.amber,
+                                size: 20,
                               ),
                             ),
                           ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 3,
-                            ),
-                            decoration: BoxDecoration(
-                              color: _accent.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.timer_rounded,
-                                  size: 13,
-                                  color: _accent,
-                                ),
-                                const SizedBox(width: 3),
-                                Text(
-                                  '${level.secondsPerQuestion}s',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: _accent,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
                         ],
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        level.subtitle,
-                        style: TextStyle(fontSize: 13, color: Colors.grey[600]),
-                      ),
-                      if (stars > 0) ...[
-                        const SizedBox(height: 8),
-                        Row(
-                          children: List.generate(
-                            3,
-                            (i) => Icon(
-                              i < stars
-                                  ? Icons.star_rounded
-                                  : Icons.star_outline_rounded,
-                              color: Colors.amber,
-                              size: 20,
-                            ),
-                          ),
-                        ),
                       ],
-                    ],
+                    ),
                   ),
-                ),
-                Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  color: Colors.grey[300],
-                  size: 16,
-                ),
-              ],
+                  Icon(
+                    isUnlocked ? Icons.arrow_forward_ios_rounded : Icons.lock_rounded,
+                    color: isUnlocked ? Colors.grey[300] : Colors.grey[400],
+                    size: isUnlocked ? 16 : 20,
+                  ),
+                ],
+              ),
             ),
           ),
         );

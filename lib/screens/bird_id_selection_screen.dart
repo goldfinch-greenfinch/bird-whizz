@@ -115,61 +115,92 @@ class _ThemeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: color.withValues(alpha: 0.2),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-        border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
-      ),
-      child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-        child: ExpansionTile(
-          iconColor: color,
-          collapsedIconColor: color,
-          leading: Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: color, size: 28),
-          ),
-          title: Text(
-            title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-          ),
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-              child: Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                alignment: WrapAlignment.center,
-                children: List.generate(levelCount, (index) {
-                  return _DifficultyButton(
-                    title: title,
-                    difficulty: 'level_${index + 1}',
-                    label: 'Level ${index + 1}',
-                    color: color,
-                  );
-                }),
+    return Consumer<QuizProvider>(
+      builder: (context, provider, _) {
+        final completedCount = List.generate(levelCount, (i) {
+          return provider.birdIdLevelStars(title, 'level_${i + 1}') > 0 ? 1 : 0;
+        }).fold<int>(0, (a, b) => a + b);
+
+        return Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: color.withValues(alpha: 0.2),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
               ),
+            ],
+            border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
+          ),
+          child: Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              iconColor: color,
+              collapsedIconColor: color,
+              leading: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, color: color, size: 28),
+              ),
+              title: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                  if (completedCount > 0) ...[
+                    const SizedBox(width: 8),
+                    Text(
+                      '$completedCount/$levelCount',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: completedCount == levelCount ? Colors.green[700] : Colors.grey[600],
+                      ),
+                    ),
+                    const SizedBox(width: 2),
+                    Icon(
+                      Icons.star_rounded,
+                      size: 14,
+                      color: completedCount == levelCount ? Colors.green[700] : Colors.amber,
+                    ),
+                  ],
+                ],
+              ),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                  child: Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    alignment: WrapAlignment.center,
+                    children: List.generate(levelCount, (index) {
+                      return _DifficultyButton(
+                        title: title,
+                        difficulty: 'level_${index + 1}',
+                        label: 'Level ${index + 1}',
+                        color: color,
+                      );
+                    }),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
@@ -189,26 +220,78 @@ class _DifficultyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: color.withValues(alpha: 0.1),
-        foregroundColor: color,
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: color.withValues(alpha: 0.5)),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      ),
-      onPressed: () async {
-        final provider = context.read<QuizProvider>();
-        await provider.startBirdIdQuiz(title, difficulty);
-        if (context.mounted) {
-          context.read<AudioService>().playTransition();
-          context.push(AppRoutes.quiz);
+    return Consumer<QuizProvider>(
+      builder: (context, provider, _) {
+        final isUnlocked = provider.isBirdIdLevelUnlocked(title, difficulty);
+        final stars = provider.birdIdLevelStars(title, difficulty);
+
+        Widget child;
+        if (!isUnlocked) {
+          child = Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.lock_rounded, size: 14, color: Colors.grey[400]),
+              const SizedBox(width: 4),
+              Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+            ],
+          );
+        } else if (stars > 0) {
+          child = Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ...List.generate(
+                3,
+                (i) => Icon(
+                  i < stars ? Icons.star_rounded : Icons.star_outline_rounded,
+                  size: 12,
+                  color: Colors.amber,
+                ),
+              ),
+              const SizedBox(width: 4),
+              Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+            ],
+          );
+        } else {
+          child = Text(label, style: const TextStyle(fontWeight: FontWeight.bold));
         }
+
+        return ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: isUnlocked
+                ? color.withValues(alpha: 0.1)
+                : Colors.grey.withValues(alpha: 0.08),
+            foregroundColor: isUnlocked ? color : Colors.grey[400],
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+              side: BorderSide(
+                color: isUnlocked
+                    ? color.withValues(alpha: 0.5)
+                    : Colors.grey.withValues(alpha: 0.3),
+              ),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          ),
+          onPressed: isUnlocked
+              ? () async {
+                  final provider = context.read<QuizProvider>();
+                  await provider.startBirdIdQuiz(title, difficulty);
+                  if (context.mounted) {
+                    context.read<AudioService>().playTransition();
+                    context.push(AppRoutes.quiz);
+                  }
+                }
+              : () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Complete the previous level to unlock!'),
+                      duration: Duration(milliseconds: 1500),
+                    ),
+                  );
+                },
+          child: child,
+        );
       },
-      child: Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
     );
   }
 }

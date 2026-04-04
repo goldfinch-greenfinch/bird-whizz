@@ -52,10 +52,10 @@ class _AllStarsScreenState extends State<AllStarsScreen>
     final provider = Provider.of<QuizProvider>(context, listen: false);
     if (provider.hasPendingAllBadgesCelebration) {
       provider.consumeAllBadgesCelebration();
-      context.go(AppRoutes.allBadges);
+      context.pushReplacement(AppRoutes.allBadges);
     } else {
       provider.resetQuiz();
-      context.go(AppRoutes.main);
+      context.pop();
     }
   }
 

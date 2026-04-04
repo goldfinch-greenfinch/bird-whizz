@@ -923,7 +923,7 @@ final Map<String, List<String>> identificationData = {
     "Prairie Warbler",
     "Yellow Rumped Warbler",
   ],
-  "Mallard": ["Black Vulture", "Female Reed Bunting", "Mallard Duck"],
+  "Mallard": ["Black Vulture", "Female Reed Bunting", "Teal"],
   "Marbled Godwit": ["Cackling Goose", "Hudsonian Godwit", "Canada Warbler"],
   "Marsh Sandpiper": [
     "Purple Sandpiper",

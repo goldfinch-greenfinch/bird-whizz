@@ -133,16 +133,27 @@ class _NewStampScreenState extends State<NewStampScreen>
 
   void _finish() {
     final provider = Provider.of<QuizProvider>(context, listen: false);
-    provider.consumeNewlyUnlockedStamps();
+    // Leave this route before clearing stamps: GoRouter listens to QuizProvider
+    // and rebuilding /stamp while stamps are already cleared recreates this
+    // screen with an empty list → endless progress indicator.
     if (provider.hasPendingAllStarsCelebration) {
       provider.consumeAllStarsCelebration();
-      context.go(AppRoutes.allStars);
+      context.pushReplacement(AppRoutes.allStars);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        provider.consumeNewlyUnlockedStamps();
+      });
     } else if (provider.hasPendingAllBadgesCelebration) {
       provider.consumeAllBadgesCelebration();
-      context.go(AppRoutes.allBadges);
+      context.pushReplacement(AppRoutes.allBadges);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        provider.consumeNewlyUnlockedStamps();
+      });
     } else {
-      provider.resetQuiz();
-      context.go(AppRoutes.main);
+      context.pop();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        provider.consumeNewlyUnlockedStamps();
+        provider.resetQuiz();
+      });
     }
   }
 

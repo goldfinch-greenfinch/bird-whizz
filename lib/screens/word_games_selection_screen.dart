@@ -434,39 +434,67 @@ class _CrossbirdLevelsScreen extends StatelessWidget {
       builder: (context, provider, _) {
         final levelKey = 'crossbird_puzzle_$index';
         final stars = provider.levelStars(levelKey);
-        return _GameCard(
-          title: 'Puzzle ${index + 1}: ${_puzzleTitles[index]}',
-          subtitle: _puzzleSubtitles[index],
-          icon: Icons.grid_on_rounded,
-          color: Colors.teal,
-          trailing: stars > 0
-              ? Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: List.generate(
-                    3,
-                    (i) => Icon(
-                      i < stars
-                          ? Icons.star_rounded
-                          : Icons.star_outline_rounded,
-                      color: Colors.amber,
-                      size: 18,
-                    ),
-                  ),
-                )
-              : null,
-          onTap: () {
-            context.read<AudioService>().playTransition();
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => CrossbirdScreen(puzzleIndex: index),
+        final isUnlocked = provider.isCrossbirdPuzzleUnlocked(index);
+
+        Widget trailing;
+        if (!isUnlocked) {
+          trailing = Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.grey.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.lock_rounded, color: Colors.grey, size: 20),
+          );
+        } else if (stars > 0) {
+          trailing = Row(
+            mainAxisSize: MainAxisSize.min,
+            children: List.generate(
+              3,
+              (i) => Icon(
+                i < stars ? Icons.star_rounded : Icons.star_outline_rounded,
+                color: Colors.amber,
+                size: 20,
               ),
-            ).then((_) {
-              if (context.mounted) {
-                context.read<AudioService>().playMenuMusic();
+            ),
+          );
+        } else {
+          trailing = Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey[300]);
+        }
+
+        return Opacity(
+          opacity: isUnlocked ? 1.0 : 0.5,
+          child: _GameCard(
+            title: 'Puzzle ${index + 1}: ${_puzzleTitles[index]}',
+            subtitle: isUnlocked
+                ? _puzzleSubtitles[index]
+                : 'Complete Puzzle $index to unlock',
+            icon: isUnlocked ? Icons.grid_on_rounded : Icons.lock_rounded,
+            color: isUnlocked ? Colors.teal : Colors.grey,
+            trailing: trailing,
+            onTap: () {
+              if (!isUnlocked) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Complete the previous puzzle to unlock!'),
+                    duration: Duration(milliseconds: 1500),
+                  ),
+                );
+                return;
               }
-            });
-          },
+              context.read<AudioService>().playTransition();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => CrossbirdScreen(puzzleIndex: index),
+                ),
+              ).then((_) {
+                if (context.mounted) {
+                  context.read<AudioService>().playMenuMusic();
+                }
+              });
+            },
+          ),
         );
       },
     );
@@ -512,45 +540,15 @@ class _UnscrambleLevelsScreen extends StatelessWidget {
                 ),
                 child: ListView(
                   children: [
-                    _buildLevelCard(
-                      context,
-                      'Level 1: Short Words',
-                      '3-4 Letters',
-                      1,
-                      4,
-                    ),
+                    _buildLevelCard(context, 0, 'Level 1: Short Words', '3-4 Letters', 1, 4),
                     const SizedBox(height: 16),
-                    _buildLevelCard(
-                      context,
-                      'Level 2: Fledglings',
-                      '5-6 Letters',
-                      5,
-                      6,
-                    ),
+                    _buildLevelCard(context, 1, 'Level 2: Fledglings', '5-6 Letters', 5, 6),
                     const SizedBox(height: 16),
-                    _buildLevelCard(
-                      context,
-                      'Level 3: Winging It',
-                      '7-8 Letters',
-                      7,
-                      8,
-                    ),
+                    _buildLevelCard(context, 2, 'Level 3: Winging It', '7-8 Letters', 7, 8),
                     const SizedBox(height: 16),
-                    _buildLevelCard(
-                      context,
-                      'Level 4: High Flyer',
-                      '9-10 Letters',
-                      9,
-                      10,
-                    ),
+                    _buildLevelCard(context, 3, 'Level 4: High Flyer', '9-10 Letters', 9, 10),
                     const SizedBox(height: 16),
-                    _buildLevelCard(
-                      context,
-                      'Level 5: Master',
-                      '11+ Letters',
-                      11,
-                      100,
-                    ),
+                    _buildLevelCard(context, 4, 'Level 5: Master', '11+ Letters', 11, 100),
                   ],
                 ),
               ),
@@ -652,32 +650,79 @@ class _UnscrambleLevelsScreen extends StatelessWidget {
 
   Widget _buildLevelCard(
     BuildContext context,
+    int levelIndex,
     String title,
     String subtitle,
     int minLength,
     int maxLength,
   ) {
-    return _GameCard(
-      title: title,
-      subtitle: subtitle,
-      icon: Icons.spellcheck_rounded,
-      color: Colors.deepPurpleAccent,
-      onTap: () {
-        context.read<AudioService>().playTransition();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => UnscrambleGameScreen(
-              title: title,
-              minLength: minLength,
-              maxLength: maxLength,
+    return Consumer<QuizProvider>(
+      builder: (context, provider, _) {
+        final isUnlocked = provider.isUnscrambleLevelUnlocked(levelIndex);
+        final stars = provider.unscrambleLevelStars(levelIndex);
+
+        Widget trailing;
+        if (!isUnlocked) {
+          trailing = Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.grey.withValues(alpha: 0.1),
+              shape: BoxShape.circle,
             ),
+            child: const Icon(Icons.lock_rounded, color: Colors.grey, size: 20),
+          );
+        } else if (stars > 0) {
+          trailing = Row(
+            mainAxisSize: MainAxisSize.min,
+            children: List.generate(
+              3,
+              (i) => Icon(
+                i < stars ? Icons.star_rounded : Icons.star_outline_rounded,
+                color: Colors.amber,
+                size: 20,
+              ),
+            ),
+          );
+        } else {
+          trailing = Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey[300]);
+        }
+
+        return Opacity(
+          opacity: isUnlocked ? 1.0 : 0.5,
+          child: _GameCard(
+            title: title,
+            subtitle: isUnlocked ? subtitle : 'Complete Level $levelIndex to unlock',
+            icon: isUnlocked ? Icons.spellcheck_rounded : Icons.lock_rounded,
+            color: isUnlocked ? Colors.deepPurpleAccent : Colors.grey,
+            trailing: trailing,
+            onTap: () {
+              if (!isUnlocked) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Complete the previous level to unlock!'),
+                    duration: Duration(milliseconds: 1500),
+                  ),
+                );
+                return;
+              }
+              context.read<AudioService>().playTransition();
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => UnscrambleGameScreen(
+                    title: title,
+                    minLength: minLength,
+                    maxLength: maxLength,
+                  ),
+                ),
+              ).then((_) {
+                if (context.mounted) {
+                  context.read<AudioService>().playMenuMusic();
+                }
+              });
+            },
           ),
-        ).then((_) {
-          if (context.mounted) {
-            context.read<AudioService>().playMenuMusic();
-          }
-        });
+        );
       },
     );
   }

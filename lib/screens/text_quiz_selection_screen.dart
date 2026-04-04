@@ -96,7 +96,11 @@ class TextQuizSelectionScreen extends StatelessWidget {
                       },
                     ];
 
-                    return ListView.separated(
+                    return Align(
+                  alignment: Alignment.topCenter,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 720),
+                    child: ListView.separated(
                       itemCount: categories.length,
                       separatorBuilder: (_, _) => const SizedBox(height: 14),
                       itemBuilder: (context, index) {
@@ -118,29 +122,29 @@ class TextQuizSelectionScreen extends StatelessWidget {
                             provider.selectCategory(cat['id'] as String);
                             context.push(AppRoutes.textQuizLevels);
                           },
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(18),
                           child: Container(
-                            padding: const EdgeInsets.all(18),
+                            padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(18),
                               boxShadow: [
                                 BoxShadow(
-                                  color: color.withValues(alpha: 0.2),
-                                  blurRadius: 10,
-                                  offset: const Offset(0, 5),
+                                  color: color.withValues(alpha: 0.25),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 4),
                                 ),
                               ],
                               border: Border.all(
-                                color: color.withValues(alpha: 0.3),
+                                color: color.withValues(alpha: 0.4),
                                 width: 1,
                               ),
                             ),
                             child: Row(
                               children: [
                                 Container(
-                                  width: 54,
-                                  height: 54,
+                                  width: 52,
+                                  height: 52,
                                   decoration: BoxDecoration(
                                     color: color.withValues(alpha: 0.12),
                                     shape: BoxShape.circle,
@@ -148,7 +152,7 @@ class TextQuizSelectionScreen extends StatelessWidget {
                                   child: Icon(
                                     cat['icon'] as IconData,
                                     color: color,
-                                    size: 28,
+                                    size: 26,
                                   ),
                                 ),
                                 const SizedBox(width: 16),
@@ -160,34 +164,24 @@ class TextQuizSelectionScreen extends StatelessWidget {
                                       Text(
                                         cat['title'] as String,
                                         style: const TextStyle(
-                                          fontSize: 17,
+                                          fontSize: 16,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black87,
                                         ),
                                       ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        cat['description'] as String,
-                                        style: TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.grey[600],
-                                        ),
-                                      ),
-                                      if (stars > 0) ...[
-                                        const SizedBox(height: 6),
-                                        Row(
-                                          children: List.generate(
-                                            3,
-                                            (i) => Icon(
-                                              i < stars
-                                                  ? Icons.star_rounded
-                                                  : Icons.star_outline_rounded,
-                                              color: Colors.amber,
-                                              size: 18,
-                                            ),
+                                      const SizedBox(height: 6),
+                                      Row(
+                                        children: List.generate(
+                                          3,
+                                          (i) => Icon(
+                                            i < stars
+                                                ? Icons.star_rounded
+                                                : Icons.star_outline_rounded,
+                                            color: Colors.amber,
+                                            size: 18,
                                           ),
                                         ),
-                                      ],
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -201,9 +195,12 @@ class TextQuizSelectionScreen extends StatelessWidget {
                           ),
                         );
                       },
-                    );
-                  },
-                ),
+                    ),
+                  ),
+                );
+                },
+              ),
+
               ),
             ),
           ],

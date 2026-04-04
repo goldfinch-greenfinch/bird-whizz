@@ -1,3 +1,22 @@
+const _kBirdPrefixes = {
+  // gender / age
+  'female', 'male', 'juvenile', 'adult',
+  // geographic / taxonomic qualifiers
+  'eurasian', 'european', 'common', 'northern', 'american', 'indian',
+};
+
+/// Strips leading qualifier words (e.g. "Female", "Eurasian") from a bird
+/// name, keeping at least one word so the result is never empty.
+String stripBirdPrefixes(String name) {
+  final words = name.trim().split(RegExp(r'\s+'));
+  int i = 0;
+  while (i < words.length - 1 &&
+      _kBirdPrefixes.contains(words[i].toLowerCase())) {
+    i++;
+  }
+  return words.sublist(i).join(' ');
+}
+
 class GuessBirdQuestion {
   final String birdName;
   final String description;
@@ -34,14 +53,14 @@ const List<GuessBirdLevel> guessBirdLevels = [
     emoji: '🌳',
     questions: [
       GuessBirdQuestion(
-        birdName: 'European Robin',
+        birdName: 'Robin',
         description:
             'A small, round garden bird with a bright orange-red breast. Males and females look alike. It often follows gardeners digging up worms and has a sweet, melodic song.',
         imagePath: 'assets/bird_photos/european_robin.webp',
         aliases: ['robin', 'english robin', 'robin redbreast'],
       ),
       GuessBirdQuestion(
-        birdName: 'Eurasian Blue Tit',
+        birdName: 'Blue Tit',
         description:
             'A tiny, acrobatic bird with a vibrant blue cap, yellow belly and greenish wings. A common and clever garden visitor, once famous for opening foil milk bottle tops to drink the cream.',
         imagePath: 'assets/bird_photos/eurasian_blue_tit.webp',
@@ -76,21 +95,21 @@ const List<GuessBirdLevel> guessBirdLevels = [
         aliases: ['spotted woodpecker'],
       ),
       GuessBirdQuestion(
-        birdName: 'Eurasian Nuthatch',
+        birdName: 'Nuthatch',
         description:
             'Blue-grey above and rusty-orange below, with a bold black eye stripe. The only British bird that routinely walks headfirst down vertical tree trunks. Wedges nuts into bark to crack them open.',
         imagePath: 'assets/bird_photos/eurasian_nuthatch.webp',
         aliases: ['nuthatch'],
       ),
       GuessBirdQuestion(
-        birdName: 'Female Common Chaffinch',
+        birdName: 'Chaffinch',
         description:
             'A small finch with warm brownish-olive tones and two distinct white wing bars. The subtly coloured female counterpart of the bright pink-and-blue male. One of Britain\'s most abundant birds.',
         imagePath: 'assets/bird_photos/female_common_chaffinch.webp',
         aliases: ['chaffinch', 'common chaffinch', 'female chaffinch'],
       ),
       GuessBirdQuestion(
-        birdName: 'Female Reed Bunting',
+        birdName: 'Reed Bunting',
         description:
             'A small, streaky brown bird found in reedbeds, marshes and rough farmland. Heavily streaked above with pale buff underparts and a faint moustache stripe. Often flicks its tail nervously.',
         imagePath: 'assets/bird_photos/female_reed_bunting.webp',
@@ -141,28 +160,28 @@ const List<GuessBirdLevel> guessBirdLevels = [
         aliases: ["bewick's swan"],
       ),
       GuessBirdQuestion(
-        birdName: 'Female Mute Swan',
+        birdName: 'Mute Swan',
         description:
             'An enormous, graceful all-white bird with an orange bill and a large black knob at its base. One of the heaviest flying birds in Britain, it can be aggressive near its nest. Glides silently on still water.',
         imagePath: 'assets/bird_photos/female_mute_swan.webp',
         aliases: ['mute swan', 'swan'],
       ),
       GuessBirdQuestion(
-        birdName: 'Common Goldeneyes',
+        birdName: 'Goldeneyes',
         description:
             'A medium-sized diving duck. The male has an iridescent dark green head with a round white spot near the base of the bill and a striking bright golden eye that gives the species its name.',
         imagePath: 'assets/bird_photos/common_goldeneyes.webp',
         aliases: ['goldeneye', 'common goldeneye'],
       ),
       GuessBirdQuestion(
-        birdName: 'Northern Pintail',
+        birdName: 'Pintail',
         description:
             'A slender, elegant duck with a graceful elongated silhouette. The male has a rich chocolate-brown head, a white chest and very long pointed central tail feathers. Often seen on estuaries and flooded fields.',
         imagePath: 'assets/bird_photos/northern_pintail.webp',
         aliases: ['pintail'],
       ),
       GuessBirdQuestion(
-        birdName: 'Female Eurasian Teal',
+        birdName: 'Teal',
         description:
             'Britain\'s smallest dabbling duck. The female is mottled brown and buff with a green and black wing patch visible in flight. Found on shallow, vegetated wetlands. Rises steeply and swiftly when alarmed.',
         imagePath: 'assets/bird_photos/female_eurasian_teal.webp',
@@ -192,7 +211,7 @@ const List<GuessBirdLevel> guessBirdLevels = [
     emoji: '🦅',
     questions: [
       GuessBirdQuestion(
-        birdName: 'Common Kestrel',
+        birdName: 'Kestrel',
         description:
             'A small reddish-brown falcon instantly recognisable from its habit of hovering motionless in the wind, head angled down, scanning for small mammals and insects below.',
         imagePath: 'assets/bird_photos/common_kestrel.webp',
@@ -255,7 +274,7 @@ const List<GuessBirdLevel> guessBirdLevels = [
         aliases: [],
       ),
       GuessBirdQuestion(
-        birdName: 'Common Redshanks',
+        birdName: 'Redshanks',
         description:
             'A medium-sized wading bird with brown streaked plumage and long, bright orange-red legs that give it its name. It has a red-based bill and a distinctive alarm call — a loud "tew-tew-tew".',
         imagePath: 'assets/bird_photos/common_redshanks.webp',
@@ -271,14 +290,14 @@ const List<GuessBirdLevel> guessBirdLevels = [
     emoji: '🦜',
     questions: [
       GuessBirdQuestion(
-        birdName: 'American Flamingo',
+        birdName: 'Flamingo',
         description:
             'A tall wading bird with vivid bright pink plumage, very long thin legs and a uniquely downward-curved pink-and-black bill. Famous for habitually standing on one leg while resting.',
         imagePath: 'assets/bird_photos/american_flamingo.webp',
         aliases: ['flamingo'],
       ),
       GuessBirdQuestion(
-        birdName: 'Indian Peacock',
+        birdName: 'Peacock',
         description:
             'The spectacular male peafowl, with an iridescent blue-green body and an enormous fan-shaped tail train covered in shimmering "eye" spots. It can be extremely noisy, especially at dawn.',
         imagePath: 'assets/bird_photos/indian_peacock.webp',
@@ -313,7 +332,7 @@ const List<GuessBirdLevel> guessBirdLevels = [
         aliases: [],
       ),
       GuessBirdQuestion(
-        birdName: 'Northern Cardinal',
+        birdName: 'Cardinal',
         description:
             'A striking North American songbird. The male is vivid all-over crimson red with a distinctive crested head and a black mask surrounding its thick orange-red bill. A favourite garden visitor.',
         imagePath: 'assets/bird_photos/northern_cardinal.webp',
@@ -390,7 +409,7 @@ const List<GuessBirdLevel> guessBirdLevels = [
         aliases: ['egret'],
       ),
       GuessBirdQuestion(
-        birdName: 'Juvenile Grey Heron',
+        birdName: 'Grey Heron',
         description:
             'A tall, stately wading bird with grey and white plumage. Stands motionless for long periods waiting to spear fish with its dagger-like bill. Folds its long neck into an S-shape in flight.',
         imagePath: 'assets/bird_photos/juvenile_grey_heron.webp',

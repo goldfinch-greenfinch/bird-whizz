@@ -288,20 +288,13 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     if (levels.isEmpty) return 0;
 
     int totalStars = 0;
-    bool allLevelsStarted = true;
-    bool allLevelsPerfect = true;
-
     for (var level in levels) {
-      final stars = _levelStars[level.id] ?? 0;
-      totalStars += stars;
-      if (stars < 1) allLevelsStarted = false;
-      if (stars < 3) allLevelsPerfect = false;
+      totalStars += _levelStars[level.id] ?? 0;
     }
 
-    if (allLevelsPerfect) return 3;
-    if (totalStars > (levels.length * 2)) return 2;
-    if (allLevelsStarted) return 1;
-
+    if (totalStars >= 30) return 3;
+    if (totalStars >= 20) return 2;
+    if (totalStars >= 10) return 1;
     return 0;
   }
 
@@ -1688,6 +1681,18 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
   final List<int> _debugEvolveQueue = [];
   bool get hasDebugEvolveQueued => _debugEvolveQueue.isNotEmpty;
 
+  /// Instantly completes the current quiz/bird-ID session with a perfect score.
+  void debugForceCompleteQuiz() {
+    assert(kDebugMode, 'debug only');
+    if (_currentLevel == null || _activeQuestions.isEmpty) return;
+    _score = _activeQuestions.length;
+    _currentQuestionIndex = _activeQuestions.length;
+    _selectedAnswerIndex = null;
+    _isAnswerProcessing = false;
+    _handleLevelCompletion();
+    notifyListeners();
+  }
+
   void debugForceLevelUp({bool includeEvolve = false}) {
     assert(kDebugMode, 'debugForceLevelUp must only be called in debug mode');
     final currentTitle = _getStatusTitleForStars(progressStars);
@@ -1797,6 +1802,59 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     }
 
     return false;
+  }
+
+  // Bird ID: level_1 always unlocked; level_N requires completing level_(N-1)
+  bool isBirdIdLevelUnlocked(String theme, String difficulty) {
+    final levelNum = int.tryParse(difficulty.replaceAll('level_', '')) ?? 1;
+    if (levelNum <= 1) return true;
+    final prevKey = 'bird_id_session_${theme}_level_${levelNum - 1}';
+    return (_levelStars[prevKey] ?? 0) > 0;
+  }
+
+  int birdIdLevelStars(String theme, String difficulty) {
+    return _levelStars['bird_id_session_${theme}_$difficulty'] ?? 0;
+  }
+
+  // Unscramble: level index 0 always unlocked; index N requires index N-1 completed
+  static const List<String> _unscrambleLevelTitles = [
+    'Level 1: Short Words',
+    'Level 2: Fledglings',
+    'Level 3: Winging It',
+    'Level 4: High Flyer',
+    'Level 5: Master',
+  ];
+
+  bool isUnscrambleLevelUnlocked(int levelIndex) {
+    if (levelIndex <= 0) return true;
+    final prevKey = 'unscramble_${_unscrambleLevelTitles[levelIndex - 1]}';
+    return (_levelStars[prevKey] ?? 0) > 0;
+  }
+
+  int unscrambleLevelStars(int levelIndex) {
+    if (levelIndex < 0 || levelIndex >= _unscrambleLevelTitles.length) return 0;
+    return _levelStars['unscramble_${_unscrambleLevelTitles[levelIndex]}'] ?? 0;
+  }
+
+  // Crossbird: puzzle 0 always unlocked; puzzle N requires puzzle N-1 completed
+  bool isCrossbirdPuzzleUnlocked(int puzzleIndex) {
+    if (puzzleIndex <= 0) return true;
+    final prevKey = 'crossbird_puzzle_${puzzleIndex - 1}';
+    return (_levelStars[prevKey] ?? 0) > 0;
+  }
+
+  // Guess the Bird: level 0 always unlocked; level N requires level N-1 completed
+  bool isGuessBirdLevelUnlocked(int levelIndex) {
+    if (levelIndex <= 0) return true;
+    final prevKey = 'guess_bird_level_${levelIndex - 1}';
+    return (_levelStars[prevKey] ?? 0) > 0;
+  }
+
+  // Speed Challenge: level 0 always unlocked; level N requires level N-1 completed
+  bool isSpeedChallengeLevelUnlocked(int levelIndex) {
+    if (levelIndex <= 0) return true;
+    final prevKey = 'speed_challenge_level_${levelIndex - 1}';
+    return (_levelStars[prevKey] ?? 0) > 0;
   }
 
   bool get isQuizFinished {

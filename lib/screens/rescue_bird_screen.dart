@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:confetti/confetti.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -176,6 +177,14 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
     context.read<QuizProvider>().incrementRescuedBirds();
   }
 
+  void _debugAutoComplete() {
+    context.read<QuizProvider>().saveRescueBirdStars(
+      _puzzlesPerSession,
+      totalPuzzles: _puzzlesPerSession,
+    );
+    context.pushReplacement(AppRoutes.result);
+  }
+
   void _onNextPressed() {
     if (_currentPuzzleIndex >= _puzzlesPerSession) {
       context.read<QuizProvider>().saveRescueBirdStars(
@@ -199,6 +208,16 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
 
     return Scaffold(
       backgroundColor: const Color(0xFF1B5E20),
+      floatingActionButton: kDebugMode
+          ? FloatingActionButton.small(
+              heroTag: 'debug_rescue',
+              backgroundColor: Colors.orange,
+              onPressed: _debugAutoComplete,
+              tooltip: 'Debug: Auto-complete 3★',
+              child: const Icon(Icons.bolt_rounded, color: Colors.white),
+            )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniStartFloat,
       body: Stack(
         children: [
           SafeArea(

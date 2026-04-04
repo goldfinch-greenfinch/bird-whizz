@@ -1,4 +1,5 @@
 import 'package:confetti/confetti.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -229,6 +230,13 @@ class _CrossbirdScreenState extends State<CrossbirdScreen>
     setState(() => _draftLetters = {});
   }
 
+  void _debugAutoComplete() {
+    final total = _puzzle.words.length;
+    context.read<QuizProvider>().saveCrossbirdsStars(widget.puzzleIndex, total, total);
+    context.read<AudioService>().playMenuMusic();
+    context.pushReplacement(AppRoutes.result);
+  }
+
   void _onAllSolved() {
     setState(() => _allDone = true);
     _confetti.play();
@@ -283,6 +291,16 @@ class _CrossbirdScreenState extends State<CrossbirdScreen>
 
     return Scaffold(
       backgroundColor: const Color(0xFFF0F8F0),
+      floatingActionButton: kDebugMode
+          ? FloatingActionButton.small(
+              heroTag: 'debug_crossbird',
+              backgroundColor: Colors.orange,
+              onPressed: _debugAutoComplete,
+              tooltip: 'Debug: Auto-complete 3★',
+              child: const Icon(Icons.bolt_rounded, color: Colors.white),
+            )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniStartFloat,
       body: Stack(
         children: [
           SafeArea(

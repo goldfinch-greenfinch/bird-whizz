@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -44,8 +45,8 @@ class _GuessBirdScreenState extends State<GuessBirdScreen>
   bool get _showRevealButton => !_isAnswered && _wrongAttempts >= 2;
 
   String get _hint {
-    // Show first letter of each word, rest as underscores
-    return _currentQuestion.birdName
+    // Show first letter of each word, rest as underscores (prefix-stripped)
+    return stripBirdPrefixes(_currentQuestion.birdName)
         .split(' ')
         .map((word) {
           if (word.isEmpty) return '';
@@ -110,12 +111,21 @@ class _GuessBirdScreenState extends State<GuessBirdScreen>
         .replaceAll('-', ' ')
         .replaceAll(RegExp(r'\s+'), ' ');
 
-    final normalizedInput = normalize(input);
-    final normalizedCorrect = normalize(_currentQuestion.birdName);
+    String stripped(String s) =>
+        normalize(stripBirdPrefixes(normalize(s)));
 
-    if (normalizedInput == normalizedCorrect) return true;
+    final normInput = normalize(input);
+    final normCorrect = normalize(_currentQuestion.birdName);
+    final strippedCorrect = stripped(normCorrect);
+
+    // Accept exact match, prefix-stripped match, or alias match
+    if (normInput == normCorrect) return true;
+    if (normInput == strippedCorrect) return true;
+    if (stripped(normInput) == strippedCorrect) return true;
     for (final alias in _currentQuestion.aliases) {
-      if (normalizedInput == normalize(alias)) return true;
+      final normAlias = normalize(alias);
+      if (normInput == normAlias) return true;
+      if (stripped(normInput) == stripped(normAlias)) return true;
     }
     return false;
   }
@@ -178,6 +188,13 @@ class _GuessBirdScreenState extends State<GuessBirdScreen>
     context.pushReplacement(AppRoutes.result);
   }
 
+  void _debugAutoComplete() {
+    final total = _level.questions.length;
+    context.read<QuizProvider>().finishGuessBirdLevel(widget.levelIndex, total, total);
+    context.read<AudioService>().playMenuMusic();
+    context.pushReplacement(AppRoutes.result);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ConfettiOverlay(
@@ -185,6 +202,16 @@ class _GuessBirdScreenState extends State<GuessBirdScreen>
       child: Scaffold(
         backgroundColor: Colors.indigo[50],
         resizeToAvoidBottomInset: true,
+        floatingActionButton: kDebugMode
+            ? FloatingActionButton.small(
+                heroTag: 'debug_guess_bird',
+                backgroundColor: Colors.orange,
+                onPressed: _debugAutoComplete,
+                tooltip: 'Debug: Auto-complete 3★',
+                child: const Icon(Icons.bolt_rounded, color: Colors.white),
+              )
+            : null,
+        floatingActionButtonLocation: FloatingActionButtonLocation.miniStartFloat,
         body: SafeArea(
           child: Column(
             children: [
@@ -520,7 +547,7 @@ class _GuessBirdScreenState extends State<GuessBirdScreen>
     final icon = _isCorrect ? Icons.check_circle_rounded : Icons.cancel_rounded;
     final label = _isCorrect
         ? '✓  Correct! Well done!'
-        : 'The answer was: ${_currentQuestion.birdName}';
+        : 'The answer was: ${stripBirdPrefixes(_currentQuestion.birdName)}';
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),

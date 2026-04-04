@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -38,6 +39,12 @@ class _QuizScreenState extends State<QuizScreen> {
   Widget build(BuildContext context) {
     return Consumer<QuizProvider>(
       builder: (context, provider, child) {
+        // After celebration flows call resetQuiz(), clear the guard so we never
+        // stick on the completion spinner if we return to this route.
+        if (!provider.isQuizFinished) {
+          _navigatingToResult = false;
+        }
+
         // Handle Quiz Completion
         if (provider.isQuizFinished) {
           if (!_navigatingToResult) {
@@ -89,6 +96,18 @@ class _QuizScreenState extends State<QuizScreen> {
             ),
             child: Scaffold(
               backgroundColor: Colors.transparent,
+              floatingActionButton: kDebugMode
+                  ? FloatingActionButton.small(
+                      heroTag: 'debug_quiz',
+                      backgroundColor: Colors.orange,
+                      onPressed: () =>
+                          context.read<QuizProvider>().debugForceCompleteQuiz(),
+                      tooltip: 'Debug: Auto-complete 3★',
+                      child: const Icon(Icons.bolt_rounded, color: Colors.white),
+                    )
+                  : null,
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.miniStartFloat,
               appBar: AppBar(
                 backgroundColor: Colors.transparent,
                 elevation: 0,

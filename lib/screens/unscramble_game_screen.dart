@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -106,6 +107,15 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
     context.pushReplacement(AppRoutes.result);
   }
 
+  void _debugAutoComplete() {
+    context.read<QuizProvider>().saveWordGameStars(
+      widget.title,
+      _totalQuestions,
+      totalQuestions: _totalQuestions,
+    );
+    context.pushReplacement(AppRoutes.result);
+  }
+
   void _onLetterTapped(String letter) {
     if (_isSuccess) return;
     context.read<AudioService>().playLetterTap();
@@ -170,6 +180,16 @@ class _UnscrambleGameScreenState extends State<UnscrambleGameScreen> {
 
     return Scaffold(
       backgroundColor: Colors.teal[50],
+      floatingActionButton: kDebugMode
+          ? FloatingActionButton.small(
+              heroTag: 'debug_unscramble',
+              backgroundColor: Colors.orange,
+              onPressed: _debugAutoComplete,
+              tooltip: 'Debug: Auto-complete 3★',
+              child: const Icon(Icons.bolt_rounded, color: Colors.white),
+            )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniStartFloat,
       body: Stack(
         children: [
           SafeArea(

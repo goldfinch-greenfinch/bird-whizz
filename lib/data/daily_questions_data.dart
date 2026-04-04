@@ -3,20 +3,31 @@ import '../models/daily_question.dart';
 final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_0',
-    text: "A diet consisting primarily of insects and plants is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of insects and plants is characteristic of which bird?",
     options: ["Osprey", "Peafowl", "Common Swift", "Andean Condor"],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_1',
     text: "Which bird is well known for having pink plumage?",
-    options: ["Great Blue Heron", "Roseate Spoonbill", "Northern Cardinal", "Northern Gannet"],
+    options: [
+      "Great Blue Heron",
+      "Roseate Spoonbill",
+      "Northern Cardinal",
+      "Northern Gannet",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_2',
     text: "The Common Raven stands out among other birds for:",
-    options: ["its incredibly striking, clown-like color combinations", "both sexes singing year-round", "having reversible outer toes to grip slippery fish", "its high intelligence and complex problem-solving skills"],
+    options: [
+      "its incredibly striking, clown-like color combinations",
+      "both sexes singing year-round",
+      "having reversible outer toes to grip slippery fish",
+      "its high intelligence and complex problem-solving skills",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
@@ -28,13 +39,23 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_4',
     text: "Which bird is well known for having black plumage with red pouch?",
-    options: ["Magnificent Frigatebird", "Gouldian Finch", "Shoebill", "Brown Pelican"],
+    options: [
+      "Magnificent Frigatebird",
+      "Gouldian Finch",
+      "Shoebill",
+      "Brown Pelican",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_5',
     text: "Which of these birds is native to North America?",
-    options: ["Northern Mockingbird", "Kingfisher", "Superb Lyrebird", "Bowerbird"],
+    options: [
+      "Northern Mockingbird",
+      "Kingfisher",
+      "Superb Lyrebird",
+      "Bowerbird",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
@@ -46,25 +67,38 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_7',
     text: "The Brown Pelican stands out among other birds for:",
-    options: ["plunge-diving dramatically to catch prey", "stomping its prey to death with long legs", "its elaborate leaping courtship dance", "its spectacular erectile crown of feathers"],
+    options: [
+      "plunge-diving dramatically to catch prey",
+      "stomping its prey to death with long legs",
+      "its elaborate leaping courtship dance",
+      "its spectacular erectile crown of feathers",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_8',
-    text: "A diet consisting primarily of seeds and insects is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of seeds and insects is characteristic of which bird?",
     options: ["Guinea Fowl", "Cormorant", "Sanderling", "Resplendent Quetzal"],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_9',
-    text: "Which bird is famous for carrying multiple fish crosswise in its beak?",
+    text:
+        "Which bird is famous for carrying multiple fish crosswise in its beak?",
     options: ["Atlantic Puffin", "Osprey", "Laysan Albatross", "Anhinga"],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_10',
-    text: "A diet consisting primarily of flower nectar is characteristic of which bird?",
-    options: ["Peafowl", "Ruby-throated Hummingbird", "Cassowary", "Great Blue Heron"],
+    text:
+        "A diet consisting primarily of flower nectar is characteristic of which bird?",
+    options: [
+      "Peafowl",
+      "Ruby-throated Hummingbird",
+      "Cassowary",
+      "Great Blue Heron",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
@@ -75,20 +109,32 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_12',
-    text: "A diet consisting primarily of schooling fish is characteristic of which bird?",
-    options: ["American Coot", "Emperor Penguin", "Wild Turkey", "Brown Pelican"],
+    text:
+        "A diet consisting primarily of schooling fish is characteristic of which bird?",
+    options: [
+      "American Coot",
+      "Emperor Penguin",
+      "Wild Turkey",
+      "Brown Pelican",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_13',
-    text: "A diet consisting primarily of seeds and scraps is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of seeds and scraps is characteristic of which bird?",
     options: ["Pigeon", "Bowerbird", "Peafowl", "Guinea Fowl"],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_14',
-    text: "Which bird is well known for having mottled gray-brown plumage?",
-    options: ["Laysan Albatross", "Northern Gannet", "Golden Pheasant", "Common Poorwill"],
+    text: "Which bird is well known for having mottled grey-brown plumage?",
+    options: [
+      "Laysan Albatross",
+      "Northern Gannet",
+      "Golden Pheasant",
+      "Common Poorwill",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
@@ -111,31 +157,50 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_18',
-    text: "Which bird is well known for having gray and white plumage?",
-    options: ["Magnificent Frigatebird", "Northern Mockingbird", "Shoebill", "California Condor"],
+    text: "Which bird is well known for having grey and white plumage?",
+    options: [
+      "Magnificent Frigatebird",
+      "Northern Mockingbird",
+      "Shoebill",
+      "California Condor",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_19',
-    text: "A diet consisting primarily of seeds and insects is characteristic of which bird?",
-    options: ["Shoebill", "Whippoorwill", "Pileated Woodpecker", "Red-winged Blackbird"],
+    text:
+        "A diet consisting primarily of seeds and insects is characteristic of which bird?",
+    options: [
+      "Shoebill",
+      "Whippoorwill",
+      "Pileated Woodpecker",
+      "Red-winged Blackbird",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_20',
-    text: "A diet consisting primarily of squid and schooling fish is characteristic of which bird?",
-    options: ["Wandering Albatross", "Pileated Woodpecker", "Wild Turkey", "Vampire Ground Finch"],
+    text:
+        "A diet consisting primarily of squid and schooling fish is characteristic of which bird?",
+    options: [
+      "Wandering Albatross",
+      "Pileated Woodpecker",
+      "Wild Turkey",
+      "Vampire Ground Finch",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_21',
-    text: "A diet consisting primarily of native plants and seeds is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of native plants and seeds is characteristic of which bird?",
     options: ["Kiwi", "Northern Gannet", "Atlantic Puffin", "Kakapo"],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_22',
-    text: "A diet consisting primarily of grass seeds is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of grass seeds is characteristic of which bird?",
     options: ["Anhinga", "Shoebill", "Gouldian Finch", "Bowerbird"],
     correctOptionIndex: 2,
   ),
@@ -148,13 +213,23 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_24',
     text: "The Guinea Fowl stands out among other birds for:",
-    options: ["its loud, harsh, and repetitive calls", "holding its wings out to dry after diving", "having nostrils at the tip of its long beak", "the male's massive, eye-spotted tail covert feathers"],
+    options: [
+      "its loud, harsh, and repetitive calls",
+      "holding its wings out to dry after diving",
+      "having nostrils at the tip of its long beak",
+      "the male's massive, eye-spotted tail covert feathers",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_25',
     text: "The Great Blue Heron stands out among other birds for:",
-    options: ["its haunting, yodeling calls", "chiseling large rectangular holes in trees", "laying the largest eggs of any living bird", "standing perfectly still to ambush prey"],
+    options: [
+      "its haunting, yodeling calls",
+      "chiseling large rectangular holes in trees",
+      "laying the largest eggs of any living bird",
+      "standing perfectly still to ambush prey",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
@@ -165,8 +240,13 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_27',
-    text: "Which bird is well known for having slaty gray plumage?",
-    options: ["Atlantic Puffin", "American Dipper", "Whippoorwill", "Sanderling"],
+    text: "Which bird is well known for having slaty grey plumage?",
+    options: [
+      "Atlantic Puffin",
+      "American Dipper",
+      "Whippoorwill",
+      "Sanderling",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
@@ -177,14 +257,19 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_29',
-    text: "Which bird is well known for having gray with iridescent neck?",
+    text: "Which bird is well known for having grey with iridescent neck?",
     options: ["Pigeon", "Rhinoceros Hornbill", "Osprey", "Flamingo"],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_30',
     text: "The Mute Swan stands out among other birds for:",
-    options: ["its graceful S-shaped neck curve", "having the largest wingspan of any living bird", "laying bright blue eggs", "its loud, harsh, and repetitive calls"],
+    options: [
+      "its graceful S-shaped neck curve",
+      "having the largest wingspan of any living bird",
+      "laying bright blue eggs",
+      "its loud, harsh, and repetitive calls",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
@@ -195,50 +280,89 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_32',
-    text: "A diet consisting primarily of lungfish is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of lungfish is characteristic of which bird?",
     options: ["Emu", "Shoebill", "Vampire Ground Finch", "Whippoorwill"],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_33',
-    text: "A diet consisting primarily of flying insects is characteristic of which bird?",
-    options: ["Magnificent Frigatebird", "Common Swift", "Common Loon", "Common Poorwill"],
+    text:
+        "A diet consisting primarily of flying insects is characteristic of which bird?",
+    options: [
+      "Magnificent Frigatebird",
+      "Common Swift",
+      "Common Loon",
+      "Common Poorwill",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_34',
     text: "The Macaw stands out among other birds for:",
-    options: ["its ability to crack extremely hard nuts with its beak", "being the only bird known to undergo true hibernation", "plunge-diving dramatically to catch prey", "its massive, shoe-shaped bill"],
+    options: [
+      "its ability to crack extremely hard nuts with its beak",
+      "being the only bird known to undergo true hibernation",
+      "plunge-diving dramatically to catch prey",
+      "its massive, shoe-shaped bill",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_35',
     text: "The Golden Pheasant stands out among other birds for:",
-    options: ["its incredibly vibrant and colorful plumage", "plunge-diving from great heights in large flocks", "having talons larger than a grizzly bear's claws", "walking underwater along river bottoms to feed"],
+    options: [
+      "its incredibly vibrant and colorful plumage",
+      "plunge-diving from great heights in large flocks",
+      "having talons larger than a grizzly bear's claws",
+      "walking underwater along river bottoms to feed",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_36',
-    text: "A diet consisting primarily of fish and crustaceans is characteristic of which bird?",
-    options: ["Peregrine Falcon", "Sanderling", "Pileated Woodpecker", "Common Loon"],
+    text:
+        "A diet consisting primarily of fish and crustaceans is characteristic of which bird?",
+    options: [
+      "Peregrine Falcon",
+      "Sanderling",
+      "Pileated Woodpecker",
+      "Common Loon",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_37',
-    text: "Which bird is well known for having cryptic gray-brown plumage?",
-    options: ["Kea", "Ruby-throated Hummingbird", "Red-crowned Crane", "Common Potoo"],
+    text: "Which bird is well known for having cryptic grey-brown plumage?",
+    options: [
+      "Kea",
+      "Ruby-throated Hummingbird",
+      "Red-crowned Crane",
+      "Common Potoo",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_38',
-    text: "A diet consisting primarily of aquatic insects is characteristic of which bird?",
-    options: ["Peregrine Falcon", "American Dipper", "Golden Eagle", "Laysan Albatross"],
+    text:
+        "A diet consisting primarily of aquatic insects is characteristic of which bird?",
+    options: [
+      "Peregrine Falcon",
+      "American Dipper",
+      "Golden Eagle",
+      "Laysan Albatross",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_39',
     text: "Which bird is well known for having black-ish back and white belly?",
-    options: ["Snowy Owl", "Pileated Woodpecker", "Galapagos Penguin", "Cassowary"],
+    options: [
+      "Snowy Owl",
+      "Pileated Woodpecker",
+      "Galapagos Penguin",
+      "Cassowary",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
@@ -249,50 +373,92 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_41',
-    text: "A diet consisting primarily of seeds and blood is characteristic of which bird?",
-    options: ["Atlantic Puffin", "Ruby-throated Hummingbird", "Vampire Ground Finch", "American Dipper"],
+    text:
+        "A diet consisting primarily of seeds and blood is characteristic of which bird?",
+    options: [
+      "Atlantic Puffin",
+      "Ruby-throated Hummingbird",
+      "Vampire Ground Finch",
+      "American Dipper",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_42',
     text: "The Common Loon stands out among other birds for:",
-    options: ["its exceptional navigational abilities", "plunge-diving from great heights in large flocks", "its haunting, yodeling calls", "building elaborate decorated structures to attract mates"],
+    options: [
+      "its exceptional navigational abilities",
+      "plunge-diving from great heights in large flocks",
+      "its haunting, yodeling calls",
+      "building elaborate decorated structures to attract mates",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_43',
     text: "Which of these birds is native to South America?",
-    options: ["Emperor Penguin", "Common Swift", "Common Potoo", "Ruby-throated Hummingbird"],
+    options: [
+      "Emperor Penguin",
+      "Common Swift",
+      "Common Potoo",
+      "Ruby-throated Hummingbird",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_44',
-    text: "Which bird is famous for being a symbol of luck and longevity in Asian cultures?",
-    options: ["American Coot", "Blue Jay", "Red-crowned Crane", "Brown Pelican"],
+    text:
+        "Which bird is famous for being a symbol of luck and longevity in Asian cultures?",
+    options: [
+      "American Coot",
+      "Blue Jay",
+      "Red-crowned Crane",
+      "Brown Pelican",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_45',
     text: "The Galapagos Penguin stands out among other birds for:",
-    options: ["being the only penguin found north of the equator", "plunge-diving from great heights in large flocks", "having claws on its wings when young", "its graceful S-shaped neck curve"],
+    options: [
+      "being the only penguin found north of the equator",
+      "plunge-diving from great heights in large flocks",
+      "having claws on its wings when young",
+      "its graceful S-shaped neck curve",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_46',
     text: "The Common Swift stands out among other birds for:",
-    options: ["its large, prominent orange-red casque", "running back and forth with the waves on beaches", "staying strictly airborne for up to 10 months at a time", "plunge-diving dramatically to catch prey"],
+    options: [
+      "its large, prominent orange-red casque",
+      "running back and forth with the waves on beaches",
+      "staying strictly airborne for up to 10 months at a time",
+      "plunge-diving dramatically to catch prey",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_47',
     text: "Which bird is well known for having white with black wingtips?",
-    options: ["Northern Gannet", "Common Loon", "Shoebill", "Ruby-throated Hummingbird"],
+    options: [
+      "Northern Gannet",
+      "Common Loon",
+      "Shoebill",
+      "Ruby-throated Hummingbird",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_48',
     text: "Which bird is well known for having black body and white throat?",
-    options: ["Osprey", "Red-winged Blackbird", "Peregrine Falcon", "Toco Toucan"],
+    options: [
+      "Osprey",
+      "Red-winged Blackbird",
+      "Peregrine Falcon",
+      "Toco Toucan",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
@@ -303,92 +469,154 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_50',
-    text: "Which bird is famous for having the largest wingspan of any living bird?",
-    options: ["Common Swift", "Northern Mockingbird", "Wandering Albatross", "Emu"],
+    text:
+        "Which bird is famous for having the largest wingspan of any living bird?",
+    options: [
+      "Common Swift",
+      "Northern Mockingbird",
+      "Wandering Albatross",
+      "Emu",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_51',
     text: "Which of these birds is native to Africa?",
-    options: ["Secretarybird", "Peafowl", "American Robin", "Resplendent Quetzal"],
+    options: [
+      "Secretarybird",
+      "Peafowl",
+      "American Robin",
+      "Resplendent Quetzal",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_52',
-    text: "A diet consisting primarily of fish is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of fish is characteristic of which bird?",
     options: ["Blue Jay", "Barn Owl", "American Robin", "Cormorant"],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_53',
     text: "Which of these birds is native to North America?",
-    options: ["Wild Turkey", "Wandering Albatross", "Red-winged Blackbird", "California Condor"],
+    options: [
+      "Wild Turkey",
+      "Wandering Albatross",
+      "Red-winged Blackbird",
+      "California Condor",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_54',
-    text: "A diet consisting primarily of small schooling fish is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of small schooling fish is characteristic of which bird?",
     options: ["Galapagos Penguin", "Guinea Fowl", "Pigeon", "Sanderling"],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_55',
     text: "Which of these birds is native to North America?",
-    options: ["Magnificent Frigatebird", "Cassowary", "Pileated Woodpecker", "Bald Eagle"],
+    options: [
+      "Magnificent Frigatebird",
+      "Cassowary",
+      "Pileated Woodpecker",
+      "Bald Eagle",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_56',
-    text: "A diet consisting primarily of small fish is characteristic of which bird?",
-    options: ["Superb Lyrebird", "Resplendent Quetzal", "Blue Jay", "Kingfisher"],
+    text:
+        "A diet consisting primarily of small fish is characteristic of which bird?",
+    options: [
+      "Superb Lyrebird",
+      "Resplendent Quetzal",
+      "Blue Jay",
+      "Kingfisher",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_57',
     text: "Which bird is well known for having iridescent blue and green?",
-    options: ["Common Potoo", "Cassowary", "Peafowl", "Ruby-throated Hummingbird"],
+    options: [
+      "Common Potoo",
+      "Cassowary",
+      "Peafowl",
+      "Ruby-throated Hummingbird",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_58',
     text: "The Pigeon stands out among other birds for:",
-    options: ["diving headfirst into water to catch prey", "its exceptional navigational abilities", "its massive, shoe-shaped bill", "requiring old-growth forests to survive"],
+    options: [
+      "diving headfirst into water to catch prey",
+      "its exceptional navigational abilities",
+      "its massive, shoe-shaped bill",
+      "requiring old-growth forests to survive",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_59',
-    text: "Which bird is famous for laying the largest eggs of any living bird?",
+    text:
+        "Which bird is famous for laying the largest eggs of any living bird?",
     options: ["Hoatzin", "Ostrich", "Flamingo", "Mute Swan"],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_60',
     text: "Which bird is famous for its massive, shoe-shaped bill?",
-    options: ["Blue Jay", "Vampire Ground Finch", "Shoebill", "Red-crowned Crane"],
+    options: [
+      "Blue Jay",
+      "Vampire Ground Finch",
+      "Shoebill",
+      "Red-crowned Crane",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_61',
-    text: "A diet consisting primarily of plants and insects is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of plants and insects is characteristic of which bird?",
     options: ["Sandhill Crane", "Emu", "Peregrine Falcon", "Sanderling"],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_62',
-    text: "Which bird is well known for having black with red shoulder epaulets?",
-    options: ["Harpy Eagle", "White-breasted Nuthatch", "Magnificent Frigatebird", "Red-winged Blackbird"],
+    text:
+        "Which bird is well known for having black with red shoulder epaulets?",
+    options: [
+      "Harpy Eagle",
+      "White-breasted Nuthatch",
+      "Magnificent Frigatebird",
+      "Red-winged Blackbird",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_63',
     text: "Which bird is famous for standing perfectly still to ambush prey?",
-    options: ["Secretarybird", "Great Blue Heron", "Crowned Eagle", "Sanderling"],
+    options: [
+      "Secretarybird",
+      "Great Blue Heron",
+      "Crowned Eagle",
+      "Sanderling",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_64',
     text: "Which bird is well known for having moss-green plumage?",
-    options: ["Rhinoceros Hornbill", "Northern Gannet", "Common Poorwill", "Kakapo"],
+    options: [
+      "Rhinoceros Hornbill",
+      "Northern Gannet",
+      "Common Poorwill",
+      "Kakapo",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
@@ -405,67 +633,103 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_67',
-    text: "Which bird is famous for having the longest migration of any animal?",
+    text:
+        "Which bird is famous for having the longest migration of any animal?",
     options: ["Snowy Owl", "Arctic Tern", "Belted Kingfisher", "Hoatzin"],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_68',
     text: "Which of these birds is native to North America?",
-    options: ["Belted Kingfisher", "Crowned Eagle", "Mute Swan", "Common Poorwill"],
+    options: [
+      "Belted Kingfisher",
+      "Crowned Eagle",
+      "Mute Swan",
+      "Common Poorwill",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_69',
-    text: "A diet consisting primarily of seeds and fruit is characteristic of which bird?",
-    options: ["Barn Owl", "Resplendent Quetzal", "Northern Cardinal", "Arctic Tern"],
+    text:
+        "A diet consisting primarily of seeds and fruit is characteristic of which bird?",
+    options: [
+      "Barn Owl",
+      "Resplendent Quetzal",
+      "Northern Cardinal",
+      "Arctic Tern",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_70',
     text: "Which of these birds is native to New Zealand?",
-    options: ["Ruby-throated Hummingbird", "Macaw", "Great Blue Heron", "Kakapo"],
+    options: [
+      "Ruby-throated Hummingbird",
+      "Macaw",
+      "Great Blue Heron",
+      "Kakapo",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_71',
-    text: "A diet consisting primarily of fallen fruit and fungi is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of fallen fruit and fungi is characteristic of which bird?",
     options: ["Cassowary", "American Dipper", "Arctic Tern", "Barn Owl"],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_72',
-    text: "A diet consisting primarily of snakes and large insects is characteristic of which bird?",
-    options: ["Eurasian Magpie", "Secretarybird", "Common Raven", "Gouldian Finch"],
+    text:
+        "A diet consisting primarily of snakes and large insects is characteristic of which bird?",
+    options: [
+      "Eurasian Magpie",
+      "Secretarybird",
+      "Common Raven",
+      "Gouldian Finch",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_73',
     text: "The Roseate Spoonbill stands out among other birds for:",
-    options: ["being the world's only alpine parrot", "stomping its prey to death with long legs", "laying the largest eggs of any living bird", "its distinctive spoon-shaped bill"],
+    options: [
+      "being the world's only alpine parrot",
+      "stomping its prey to death with long legs",
+      "laying the largest eggs of any living bird",
+      "its distinctive spoon-shaped bill",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_74',
-    text: "A diet consisting primarily of aquatic vegetation is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of aquatic vegetation is characteristic of which bird?",
     options: ["Mute Swan", "Vampire Ground Finch", "American Coot", "Emu"],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_75',
-    text: "A diet consisting primarily of rabbits and marmots is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of rabbits and marmots is characteristic of which bird?",
     options: ["Barn Owl", "Secretarybird", "Common Poorwill", "Golden Eagle"],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_76',
     text: "Which bird is famous for holding its wings out to dry after diving?",
-    options: ["White-breasted Nuthatch", "Peregrine Falcon", "Common Loon", "Cormorant"],
+    options: [
+      "White-breasted Nuthatch",
+      "Peregrine Falcon",
+      "Common Loon",
+      "Cormorant",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_77',
-    text: "Which bird is well known for having black or gray-brown body?",
+    text: "Which bird is well known for having black or grey-brown body?",
     options: ["Ostrich", "Cormorant", "White-breasted Nuthatch", "Macaw"],
     correctOptionIndex: 0,
   ),
@@ -484,7 +748,12 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_80',
     text: "The California Condor stands out among other birds for:",
-    options: ["its incredibly long, flowing tail feathers", "stealing food from other birds in mid-air", "camouflaging itself perfectly as a broken tree branch", "being the largest North American land bird"],
+    options: [
+      "its incredibly long, flowing tail feathers",
+      "stealing food from other birds in mid-air",
+      "camouflaging itself perfectly as a broken tree branch",
+      "being the largest North American land bird",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
@@ -496,19 +765,34 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_82',
     text: "The Peregrine Falcon stands out among other birds for:",
-    options: ["its incredibly striking, clown-like color combinations", "diving at speeds over 240 mph", "its large, prominent orange-red casque", "hunting during the daytime"],
+    options: [
+      "its incredibly striking, clown-like color combinations",
+      "diving at speeds over 240 mph",
+      "its large, prominent orange-red casque",
+      "hunting during the daytime",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_83',
     text: "Which of these birds is native to North America?",
-    options: ["Vampire Ground Finch", "Ruby-throated Hummingbird", "American Robin", "Hoatzin"],
+    options: [
+      "Vampire Ground Finch",
+      "Ruby-throated Hummingbird",
+      "American Robin",
+      "Hoatzin",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_84',
     text: "The Secretarybird stands out among other birds for:",
-    options: ["diving headfirst into water to catch prey", "stomping its prey to death with long legs", "stealing food from other birds in mid-air", "its elaborate, mechanical-looking courtship dances"],
+    options: [
+      "diving headfirst into water to catch prey",
+      "stomping its prey to death with long legs",
+      "stealing food from other birds in mid-air",
+      "its elaborate, mechanical-looking courtship dances",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
@@ -532,49 +816,94 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_88',
     text: "Which bird is well known for having perfectly camouflaged brown?",
-    options: ["Magnificent Frigatebird", "Northern Gannet", "Whippoorwill", "Emu"],
+    options: [
+      "Magnificent Frigatebird",
+      "Northern Gannet",
+      "Whippoorwill",
+      "Emu",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_89',
-    text: "A diet consisting primarily of insects and spiders is characteristic of which bird?",
-    options: ["Northern Cardinal", "Roseate Spoonbill", "Superb Lyrebird", "Harpy Eagle"],
+    text:
+        "A diet consisting primarily of insects and spiders is characteristic of which bird?",
+    options: [
+      "Northern Cardinal",
+      "Roseate Spoonbill",
+      "Superb Lyrebird",
+      "Harpy Eagle",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_90',
-    text: "A diet consisting primarily of grains and insects is characteristic of which bird?",
-    options: ["Northern Mockingbird", "Sandhill Crane", "Sanderling", "Red-crowned Crane"],
+    text:
+        "A diet consisting primarily of grains and insects is characteristic of which bird?",
+    options: [
+      "Northern Mockingbird",
+      "Sandhill Crane",
+      "Sanderling",
+      "Red-crowned Crane",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_91',
-    text: "A diet consisting primarily of brine shrimp and algae is characteristic of which bird?",
-    options: ["Flamingo", "Red-winged Blackbird", "Atlantic Puffin", "Common Poorwill"],
+    text:
+        "A diet consisting primarily of brine shrimp and algae is characteristic of which bird?",
+    options: [
+      "Flamingo",
+      "Red-winged Blackbird",
+      "Atlantic Puffin",
+      "Common Poorwill",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_92',
     text: "The Resplendent Quetzal stands out among other birds for:",
-    options: ["being a symbol of luck and longevity in Asian cultures", "fiercely defending its marshland territory", "its elaborate, mechanical-looking courtship dances", "its incredibly long, flowing tail feathers"],
+    options: [
+      "being a symbol of luck and longevity in Asian cultures",
+      "fiercely defending its marshland territory",
+      "its elaborate, mechanical-looking courtship dances",
+      "its incredibly long, flowing tail feathers",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_93',
-    text: "Which bird is famous for fiercely defending its marshland territory?",
-    options: ["Belted Kingfisher", "White-breasted Nuthatch", "Red-winged Blackbird", "Hoopoe"],
+    text:
+        "Which bird is famous for fiercely defending its marshland territory?",
+    options: [
+      "Belted Kingfisher",
+      "White-breasted Nuthatch",
+      "Red-winged Blackbird",
+      "Hoopoe",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_94',
-    text: "Which bird is famous for chiseling large rectangular holes in trees?",
-    options: ["Red-crowned Crane", "Pileated Woodpecker", "Wandering Albatross", "Pigeon"],
+    text:
+        "Which bird is famous for chiseling large rectangular holes in trees?",
+    options: [
+      "Red-crowned Crane",
+      "Pileated Woodpecker",
+      "Wandering Albatross",
+      "Pigeon",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_95',
     text: "The Bald Eagle stands out among other birds for:",
-    options: ["its distinctive heart-shaped facial disk", "being one of the few non-mammals to pass the mirror test", "perfectly mimicking almost any sound", "building massive nests called eyries"],
+    options: [
+      "its distinctive heart-shaped facial disk",
+      "being one of the few non-mammals to pass the mirror test",
+      "perfectly mimicking almost any sound",
+      "building massive nests called eyries",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
@@ -585,20 +914,27 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_97',
-    text: "Which bird is famous for camouflaging itself perfectly as a broken tree branch?",
+    text:
+        "Which bird is famous for camouflaging itself perfectly as a broken tree branch?",
     options: ["Common Potoo", "Pigeon", "Galapagos Penguin", "Arctic Tern"],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_98',
-    text: "Which bird is famous for the male's distinctive fleshy wattle and snood?",
+    text:
+        "Which bird is famous for the male's distinctive fleshy wattle and snood?",
     options: ["Wild Turkey", "Superb Lyrebird", "Sandhill Crane", "Cormorant"],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_99',
     text: "The Hoatzin stands out among other birds for:",
-    options: ["flying low and dragging its lower jaw through water", "building elaborate decorated structures to attract mates", "being the largest flying bird in the world by weight and wingspan", "having claws on its wings when young"],
+    options: [
+      "flying low and dragging its lower jaw through water",
+      "building elaborate decorated structures to attract mates",
+      "being the largest flying bird in the world by weight and wingspan",
+      "having claws on its wings when young",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
@@ -616,43 +952,71 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_102',
     text: "The Red-winged Blackbird stands out among other birds for:",
-    options: ["being a heavy, flightless, nocturnal parrot", "its endlessly repeated, namesake nocturnal call", "fiercely defending its marshland territory", "being Africa's most powerful raptor"],
+    options: [
+      "being a heavy, flightless, nocturnal parrot",
+      "its endlessly repeated, namesake nocturnal call",
+      "fiercely defending its marshland territory",
+      "being Africa's most powerful raptor",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_103',
-    text: "A diet consisting primarily of acorns and seeds is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of acorns and seeds is characteristic of which bird?",
     options: ["Common Loon", "Ostrich", "Superb Lyrebird", "Wood Duck"],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_104',
     text: "Which bird is famous for its distinctive spoon-shaped bill?",
-    options: ["Red-crowned Crane", "Mute Swan", "Roseate Spoonbill", "Magnificent Frigatebird"],
+    options: [
+      "Red-crowned Crane",
+      "Mute Swan",
+      "Roseate Spoonbill",
+      "Magnificent Frigatebird",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_105',
-    text: "A diet consisting primarily of sloths and monkeys is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of sloths and monkeys is characteristic of which bird?",
     options: ["Black Skimmer", "Barn Owl", "Hoopoe", "Harpy Eagle"],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_106',
-    text: "A diet consisting primarily of wild avocados is characteristic of which bird?",
-    options: ["Cormorant", "Pileated Woodpecker", "Resplendent Quetzal", "California Condor"],
+    text:
+        "A diet consisting primarily of wild avocados is characteristic of which bird?",
+    options: [
+      "Cormorant",
+      "Pileated Woodpecker",
+      "Resplendent Quetzal",
+      "California Condor",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_107',
     text: "The Sandhill Crane stands out among other birds for:",
-    options: ["having talons larger than a grizzly bear's claws", "its elaborate, mechanical-looking courtship dances", "its elaborate leaping courtship dance", "being the world's only alpine parrot"],
+    options: [
+      "having talons larger than a grizzly bear's claws",
+      "its elaborate, mechanical-looking courtship dances",
+      "its elaborate leaping courtship dance",
+      "being the world's only alpine parrot",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_108',
     text: "Which bird is famous for mimicking the calls of hawks?",
-    options: ["Pileated Woodpecker", "Northern Cardinal", "Blue Jay", "White-breasted Nuthatch"],
+    options: [
+      "Pileated Woodpecker",
+      "Northern Cardinal",
+      "Blue Jay",
+      "White-breasted Nuthatch",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
@@ -663,56 +1027,80 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_110',
-    text: "Which bird is famous for being the only penguin found north of the equator?",
-    options: ["Emu", "Galapagos Penguin", "Belted Kingfisher", "Northern Mockingbird"],
+    text:
+        "Which bird is famous for being the only penguin found north of the equator?",
+    options: [
+      "Emu",
+      "Galapagos Penguin",
+      "Belted Kingfisher",
+      "Northern Mockingbird",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_111',
     text: "Which bird is well known for having dark, glossy plumage?",
-    options: ["American Dipper", "Belted Kingfisher", "Common Raven", "Cormorant"],
+    options: [
+      "American Dipper",
+      "Belted Kingfisher",
+      "Common Raven",
+      "Cormorant",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_112',
-    text: "Which bird is well known for having gray and white plumage?",
+    text: "Which bird is well known for having grey and white plumage?",
     options: ["Secretarybird", "Barn Owl", "Arctic Tern", "Red-crowned Crane"],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_113',
-    text: "A diet consisting primarily of small fish is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of small fish is characteristic of which bird?",
     options: ["Emu", "Black Skimmer", "Harpy Eagle", "Wandering Albatross"],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_114',
-    text: "A diet consisting primarily of insects is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of insects is characteristic of which bird?",
     options: ["Kookaburra", "Hoopoe", "Emu", "Ruby-throated Hummingbird"],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_115',
     text: "The Wandering Albatross stands out among other birds for:",
-    options: ["its loud, harsh, and repetitive calls", "having the largest wingspan of any living bird", "its incredibly vibrant and colorful plumage", "stomping its prey to death with long legs"],
+    options: [
+      "its loud, harsh, and repetitive calls",
+      "having the largest wingspan of any living bird",
+      "its incredibly vibrant and colorful plumage",
+      "stomping its prey to death with long legs",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_116',
-    text: "Which bird is well known for having blue-gray plumage?",
+    text: "Which bird is well known for having blue-grey plumage?",
     options: ["Shoebill", "American Coot", "Common Raven", "Mute Swan"],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_117',
-    text: "A diet consisting primarily of fruit and insects is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of fruit and insects is characteristic of which bird?",
     options: ["Bowerbird", "Common Poorwill", "Cassowary", "Northern Gannet"],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_118',
     text: "The Common Potoo stands out among other birds for:",
-    options: ["camouflaging itself perfectly as a broken tree branch", "mimicking the calls of hawks", "its endlessly repeated, namesake nocturnal call", "building elaborate decorated structures to attract mates"],
+    options: [
+      "camouflaging itself perfectly as a broken tree branch",
+      "mimicking the calls of hawks",
+      "its endlessly repeated, namesake nocturnal call",
+      "building elaborate decorated structures to attract mates",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
@@ -723,14 +1111,26 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_120',
-    text: "A diet consisting primarily of insects and spiders is characteristic of which bird?",
-    options: ["Common Potoo", "Snowy Owl", "Galapagos Penguin", "Brown Creeper"],
+    text:
+        "A diet consisting primarily of insects and spiders is characteristic of which bird?",
+    options: [
+      "Common Potoo",
+      "Snowy Owl",
+      "Galapagos Penguin",
+      "Brown Creeper",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_121',
-    text: "Which bird is famous for its ability to crack extremely hard nuts with its beak?",
-    options: ["Shoebill", "Crowned Eagle", "Ruby-throated Hummingbird", "Macaw"],
+    text:
+        "Which bird is famous for its ability to crack extremely hard nuts with its beak?",
+    options: [
+      "Shoebill",
+      "Crowned Eagle",
+      "Ruby-throated Hummingbird",
+      "Macaw",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
@@ -742,37 +1142,64 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_123',
     text: "Which of these birds is native to North America?",
-    options: ["Common Raven", "Belted Kingfisher", "Great Blue Heron", "Shoebill"],
+    options: [
+      "Common Raven",
+      "Belted Kingfisher",
+      "Great Blue Heron",
+      "Shoebill",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_124',
     text: "Which of these birds is native to Tropical oceans?",
-    options: ["Hoatzin", "Rhinoceros Hornbill", "Arctic Tern", "Magnificent Frigatebird"],
+    options: [
+      "Hoatzin",
+      "Rhinoceros Hornbill",
+      "Arctic Tern",
+      "Magnificent Frigatebird",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_125',
-    text: "A diet consisting primarily of leaves and swamp plants is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of leaves and swamp plants is characteristic of which bird?",
     options: ["Laysan Albatross", "Pigeon", "Hoatzin", "Black Skimmer"],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_126',
     text: "The Magnificent Frigatebird stands out among other birds for:",
-    options: ["perfectly mimicking almost any sound", "diving at speeds over 240 mph", "stealing food from other birds in mid-air", "both sexes singing year-round"],
+    options: [
+      "perfectly mimicking almost any sound",
+      "diving at speeds over 240 mph",
+      "stealing food from other birds in mid-air",
+      "both sexes singing year-round",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_127',
-    text: "A diet consisting primarily of carpenter ants is characteristic of which bird?",
-    options: ["Spotted Owl", "Eurasian Magpie", "Common Swift", "Pileated Woodpecker"],
+    text:
+        "A diet consisting primarily of carpenter ants is characteristic of which bird?",
+    options: [
+      "Spotted Owl",
+      "Eurasian Magpie",
+      "Common Swift",
+      "Pileated Woodpecker",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_128',
     text: "The Crowned Eagle stands out among other birds for:",
-    options: ["having nostrils at the tip of its long beak", "being Africa's most powerful raptor", "diving at speeds over 240 mph", "building massive nests called eyries"],
+    options: [
+      "having nostrils at the tip of its long beak",
+      "being Africa's most powerful raptor",
+      "diving at speeds over 240 mph",
+      "building massive nests called eyries",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
@@ -784,61 +1211,114 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_130',
     text: "Which of these birds is native to North Atlantic?",
-    options: ["Golden Pheasant", "Common Loon", "Red-winged Blackbird", "Atlantic Puffin"],
+    options: [
+      "Golden Pheasant",
+      "Common Loon",
+      "Red-winged Blackbird",
+      "Atlantic Puffin",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_131',
     text: "Which bird is famous for breeding during the dark Antarctic winter?",
-    options: ["Emperor Penguin", "Atlantic Puffin", "Common Loon", "Secretarybird"],
+    options: [
+      "Emperor Penguin",
+      "Atlantic Puffin",
+      "Common Loon",
+      "Secretarybird",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_132',
-    text: "Which bird is famous for having talons larger than a grizzly bear's claws?",
-    options: ["Harpy Eagle", "Sandhill Crane", "Golden Eagle", "American Robin"],
+    text:
+        "Which bird is famous for having talons larger than a grizzly bear's claws?",
+    options: [
+      "Harpy Eagle",
+      "Sandhill Crane",
+      "Golden Eagle",
+      "American Robin",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_133',
-    text: "Which bird is famous for its incredibly striking, clown-like color combinations?",
-    options: ["Red-crowned Crane", "Gouldian Finch", "Mute Swan", "Atlantic Puffin"],
+    text:
+        "Which bird is famous for its incredibly striking, clown-like color combinations?",
+    options: [
+      "Red-crowned Crane",
+      "Gouldian Finch",
+      "Mute Swan",
+      "Atlantic Puffin",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_134',
     text: "The Brown Creeper stands out among other birds for:",
-    options: ["its massive, brightly colored orange bill", "being considered one of the most dangerous birds", "having talons larger than a grizzly bear's claws", "spiraling up tree trunks searching for food"],
+    options: [
+      "its massive, brightly colored orange bill",
+      "being considered one of the most dangerous birds",
+      "having talons larger than a grizzly bear's claws",
+      "spiraling up tree trunks searching for food",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_135',
     text: "The White-breasted Nuthatch stands out among other birds for:",
-    options: ["its exceptional navigational abilities", "walking headfirst down tree trunks", "swimming with only its snake-like neck above water", "its graceful S-shaped neck curve"],
+    options: [
+      "its exceptional navigational abilities",
+      "walking headfirst down tree trunks",
+      "swimming with only its snake-like neck above water",
+      "its graceful S-shaped neck curve",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_136',
-    text: "Which bird is famous for being the largest flying bird in the world by weight and wingspan?",
-    options: ["Spotted Owl", "Andean Condor", "Red-winged Blackbird", "Pileated Woodpecker"],
+    text:
+        "Which bird is famous for being the largest flying bird in the world by weight and wingspan?",
+    options: [
+      "Spotted Owl",
+      "Andean Condor",
+      "Red-winged Blackbird",
+      "Pileated Woodpecker",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_137',
     text: "The Belted Kingfisher stands out among other birds for:",
-    options: ["feeding while holding its bill upside down", "hovering before diving for fish", "swimming with only its snake-like neck above water", "chiseling large rectangular holes in trees"],
+    options: [
+      "feeding while holding its bill upside down",
+      "hovering before diving for fish",
+      "swimming with only its snake-like neck above water",
+      "chiseling large rectangular holes in trees",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_138',
     text: "The Andean Condor stands out among other birds for:",
-    options: ["holding its wings out to dry after diving", "diving headfirst into water to catch prey", "breeding during the dark Antarctic winter", "being the largest flying bird in the world by weight and wingspan"],
+    options: [
+      "holding its wings out to dry after diving",
+      "diving headfirst into water to catch prey",
+      "breeding during the dark Antarctic winter",
+      "being the largest flying bird in the world by weight and wingspan",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_139',
     text: "The American Dipper stands out among other birds for:",
-    options: ["walking underwater along river bottoms to feed", "laying the largest eggs of any living bird", "plunge-diving from great heights in large flocks", "its haunting, yodeling calls"],
+    options: [
+      "walking underwater along river bottoms to feed",
+      "laying the largest eggs of any living bird",
+      "plunge-diving from great heights in large flocks",
+      "its haunting, yodeling calls",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
@@ -850,25 +1330,41 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_141',
     text: "The American Coot stands out among other birds for:",
-    options: ["its lobed, rather than webbed, feet", "being the only penguin found north of the equator", "its graceful S-shaped neck curve", "nesting in tree cavities over water"],
+    options: [
+      "its lobed, rather than webbed, feet",
+      "being the only penguin found north of the equator",
+      "its graceful S-shaped neck curve",
+      "nesting in tree cavities over water",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_142',
-    text: "Which bird is well known for having blue-gray back, white face?",
+    text: "Which bird is well known for having blue-grey back, white face?",
     options: ["Cassowary", "Macaw", "White-breasted Nuthatch", "Kookaburra"],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_143',
-    text: "A diet consisting primarily of insects, carrion, and eggs is characteristic of which bird?",
-    options: ["Peregrine Falcon", "Eurasian Magpie", "Secretarybird", "Hoatzin"],
+    text:
+        "A diet consisting primarily of insects, carrion, and eggs is characteristic of which bird?",
+    options: [
+      "Peregrine Falcon",
+      "Eurasian Magpie",
+      "Secretarybird",
+      "Hoatzin",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_144',
-    text: "Which bird is well known for having blue-gray back?",
-    options: ["White-breasted Nuthatch", "Peregrine Falcon", "American Coot", "Toco Toucan"],
+    text: "Which bird is well known for having blue-grey back?",
+    options: [
+      "White-breasted Nuthatch",
+      "Peregrine Falcon",
+      "American Coot",
+      "Toco Toucan",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
@@ -892,55 +1388,98 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_148',
     text: "The Osprey stands out among other birds for:",
-    options: ["its lobed, rather than webbed, feet", "being one of the few non-mammals to pass the mirror test", "plunge-diving from great heights in large flocks", "having reversible outer toes to grip slippery fish"],
+    options: [
+      "its lobed, rather than webbed, feet",
+      "being one of the few non-mammals to pass the mirror test",
+      "plunge-diving from great heights in large flocks",
+      "having reversible outer toes to grip slippery fish",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_149',
     text: "Which of these birds is native to Arctic and Antarctic?",
-    options: ["Resplendent Quetzal", "Wild Turkey", "Common Swift", "Arctic Tern"],
+    options: [
+      "Resplendent Quetzal",
+      "Wild Turkey",
+      "Common Swift",
+      "Arctic Tern",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_150',
-    text: "A diet consisting primarily of nocturnal insects is characteristic of which bird?",
-    options: ["Wood Duck", "Pileated Woodpecker", "Common Poorwill", "Bowerbird"],
+    text:
+        "A diet consisting primarily of nocturnal insects is characteristic of which bird?",
+    options: [
+      "Wood Duck",
+      "Pileated Woodpecker",
+      "Common Poorwill",
+      "Bowerbird",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_151',
     text: "The Barn Owl stands out among other birds for:",
-    options: ["its distinctive heart-shaped facial disk", "its ability to crack extremely hard nuts with its beak", "its incredible hunting prowess and speed", "its elaborate leaping courtship dance"],
+    options: [
+      "its distinctive heart-shaped facial disk",
+      "its ability to crack extremely hard nuts with its beak",
+      "its incredible hunting prowess and speed",
+      "its elaborate leaping courtship dance",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_152',
-    text: "Which bird is famous for being the largest North American land bird?",
-    options: ["Ruby-throated Hummingbird", "California Condor", "Superb Lyrebird", "Harpy Eagle"],
+    text:
+        "Which bird is famous for being the largest North American land bird?",
+    options: [
+      "Ruby-throated Hummingbird",
+      "California Condor",
+      "Superb Lyrebird",
+      "Harpy Eagle",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_153',
-    text: "A diet consisting primarily of carrion is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of carrion is characteristic of which bird?",
     options: ["Osprey", "Pileated Woodpecker", "Ostrich", "California Condor"],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_154',
     text: "Which bird is well known for having yellow patches on its neck?",
-    options: ["Northern Cardinal", "Brown Pelican", "Emperor Penguin", "Resplendent Quetzal"],
+    options: [
+      "Northern Cardinal",
+      "Brown Pelican",
+      "Emperor Penguin",
+      "Resplendent Quetzal",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_155',
     text: "The Kakapo stands out among other birds for:",
-    options: ["being a heavy, flightless, nocturnal parrot", "holding its wings out to dry after diving", "feeding while holding its bill upside down", "its massive, brightly colored orange bill"],
+    options: [
+      "being a heavy, flightless, nocturnal parrot",
+      "holding its wings out to dry after diving",
+      "feeding while holding its bill upside down",
+      "its massive, brightly colored orange bill",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_156',
     text: "Which bird is well known for having black plumage with white tail?",
-    options: ["Hoatzin", "Rhinoceros Hornbill", "Common Swift", "Sandhill Crane"],
+    options: [
+      "Hoatzin",
+      "Rhinoceros Hornbill",
+      "Common Swift",
+      "Sandhill Crane",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
@@ -952,7 +1491,12 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_158',
     text: "The Northern Cardinal stands out among other birds for:",
-    options: ["camouflaging itself perfectly as a broken tree branch", "having nostrils at the tip of its long beak", "both sexes singing year-round", "beating its wings up to 53 times a second"],
+    options: [
+      "camouflaging itself perfectly as a broken tree branch",
+      "having nostrils at the tip of its long beak",
+      "both sexes singing year-round",
+      "beating its wings up to 53 times a second",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
@@ -964,103 +1508,180 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_160',
     text: "Which of these birds is native to Antarctica?",
-    options: ["Mute Swan", "Emperor Penguin", "Belted Kingfisher", "Crowned Eagle"],
+    options: [
+      "Mute Swan",
+      "Emperor Penguin",
+      "Belted Kingfisher",
+      "Crowned Eagle",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_161',
     text: "The Gouldian Finch stands out among other birds for:",
-    options: ["staying strictly airborne for up to 10 months at a time", "its incredibly striking, clown-like color combinations", "having nostrils at the tip of its long beak", "its incredibly vibrant and colorful plumage"],
+    options: [
+      "staying strictly airborne for up to 10 months at a time",
+      "its incredibly striking, clown-like color combinations",
+      "having nostrils at the tip of its long beak",
+      "its incredibly vibrant and colorful plumage",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_162',
-    text: "A diet consisting primarily of almost exclusively fish is characteristic of which bird?",
-    options: ["Magnificent Frigatebird", "Osprey", "Belted Kingfisher", "Laysan Albatross"],
+    text:
+        "A diet consisting primarily of almost exclusively fish is characteristic of which bird?",
+    options: [
+      "Magnificent Frigatebird",
+      "Osprey",
+      "Belted Kingfisher",
+      "Laysan Albatross",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_163',
-    text: "A diet consisting primarily of fish and invertebrates is characteristic of which bird?",
-    options: ["Sandhill Crane", "Arctic Tern", "Eurasian Magpie", "Peregrine Falcon"],
+    text:
+        "A diet consisting primarily of fish and invertebrates is characteristic of which bird?",
+    options: [
+      "Sandhill Crane",
+      "Arctic Tern",
+      "Eurasian Magpie",
+      "Peregrine Falcon",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_164',
     text: "The Shoebill stands out among other birds for:",
-    options: ["its ability to crack extremely hard nuts with its beak", "diving headfirst into water to catch prey", "walking underwater along river bottoms to feed", "its massive, shoe-shaped bill"],
+    options: [
+      "its ability to crack extremely hard nuts with its beak",
+      "diving headfirst into water to catch prey",
+      "walking underwater along river bottoms to feed",
+      "its massive, shoe-shaped bill",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_165',
     text: "The Golden Eagle stands out among other birds for:",
-    options: ["having the largest wingspan of any living bird", "its incredible hunting prowess and speed", "being the second-tallest living bird after the ostrich", "fiercely defending its marshland territory"],
+    options: [
+      "having the largest wingspan of any living bird",
+      "its incredible hunting prowess and speed",
+      "being the second-tallest living bird after the ostrich",
+      "fiercely defending its marshland territory",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_166',
-    text: "A diet consisting primarily of fruit and insects is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of fruit and insects is characteristic of which bird?",
     options: ["Flamingo", "Northern Cardinal", "Toco Toucan", "Macaw"],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_167',
     text: "Which bird is well known for having iridescent green plumage?",
-    options: ["Belted Kingfisher", "Northern Gannet", "Mute Swan", "Ruby-throated Hummingbird"],
+    options: [
+      "Belted Kingfisher",
+      "Northern Gannet",
+      "Mute Swan",
+      "Ruby-throated Hummingbird",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_168',
     text: "Which bird is famous for its haunting, yodeling calls?",
-    options: ["Golden Eagle", "Wandering Albatross", "Common Loon", "Peregrine Falcon"],
+    options: [
+      "Golden Eagle",
+      "Wandering Albatross",
+      "Common Loon",
+      "Peregrine Falcon",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_169',
     text: "Which of these birds is native to Americas?",
-    options: ["Guinea Fowl", "Sandhill Crane", "American Coot", "Brown Pelican"],
+    options: [
+      "Guinea Fowl",
+      "Sandhill Crane",
+      "American Coot",
+      "Brown Pelican",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_170',
-    text: "Which bird is famous for being the only bird known to undergo true hibernation?",
+    text:
+        "Which bird is famous for being the only bird known to undergo true hibernation?",
     options: ["Kookaburra", "Common Poorwill", "Brown Creeper", "Guinea Fowl"],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_171',
     text: "The Emperor Penguin stands out among other birds for:",
-    options: ["spiraling up tree trunks searching for food", "plunge-diving from great heights in large flocks", "breeding during the dark Antarctic winter", "laying bright blue eggs"],
+    options: [
+      "spiraling up tree trunks searching for food",
+      "plunge-diving from great heights in large flocks",
+      "breeding during the dark Antarctic winter",
+      "laying bright blue eggs",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_172',
     text: "Which bird is well known for having brown and white plumage?",
-    options: ["Northern Mockingbird", "Red-crowned Crane", "Kookaburra", "Golden Eagle"],
+    options: [
+      "Northern Mockingbird",
+      "Red-crowned Crane",
+      "Kookaburra",
+      "Golden Eagle",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_173',
     text: "The Bowerbird stands out among other birds for:",
-    options: ["having reversible outer toes to grip slippery fish", "mimicking the calls of hawks", "building elaborate decorated structures to attract mates", "camouflaging itself perfectly as a broken tree branch"],
+    options: [
+      "having reversible outer toes to grip slippery fish",
+      "mimicking the calls of hawks",
+      "building elaborate decorated structures to attract mates",
+      "camouflaging itself perfectly as a broken tree branch",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_174',
-    text: "A diet consisting primarily of acorns and nuts is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of acorns and nuts is characteristic of which bird?",
     options: ["Wild Turkey", "Shoebill", "Hoatzin", "Kea"],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_175',
-    text: "A diet consisting primarily of insects and berries is characteristic of which bird?",
-    options: ["Belted Kingfisher", "Secretarybird", "Osprey", "Northern Mockingbird"],
+    text:
+        "A diet consisting primarily of insects and berries is characteristic of which bird?",
+    options: [
+      "Belted Kingfisher",
+      "Secretarybird",
+      "Osprey",
+      "Northern Mockingbird",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_176',
-    text: "Which bird is famous for plunge-diving from great heights in large flocks?",
-    options: ["American Coot", "Red-crowned Crane", "Crowned Eagle", "Northern Gannet"],
+    text:
+        "Which bird is famous for plunge-diving from great heights in large flocks?",
+    options: [
+      "American Coot",
+      "Red-crowned Crane",
+      "Crowned Eagle",
+      "Northern Gannet",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
@@ -1072,7 +1693,12 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_178',
     text: "Which of these birds is native to North America?",
-    options: ["Anhinga", "Red-winged Blackbird", "Crowned Eagle", "Red-crowned Crane"],
+    options: [
+      "Anhinga",
+      "Red-winged Blackbird",
+      "Crowned Eagle",
+      "Red-crowned Crane",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
@@ -1083,14 +1709,25 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_180',
-    text: "A diet consisting primarily of earthworms is characteristic of which bird?",
-    options: ["Kiwi", "Roseate Spoonbill", "Common Poorwill", "American Dipper"],
+    text:
+        "A diet consisting primarily of earthworms is characteristic of which bird?",
+    options: [
+      "Kiwi",
+      "Roseate Spoonbill",
+      "Common Poorwill",
+      "American Dipper",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_181',
-    text: "Which bird is well known for having pale gray and white plumage?",
-    options: ["American Robin", "Resplendent Quetzal", "Sanderling", "Superb Lyrebird"],
+    text: "Which bird is well known for having pale grey and white plumage?",
+    options: [
+      "American Robin",
+      "Resplendent Quetzal",
+      "Sanderling",
+      "Superb Lyrebird",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
@@ -1102,55 +1739,89 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_183',
     text: "The Eurasian Magpie stands out among other birds for:",
-    options: ["its distinctive heart-shaped facial disk", "its elaborate, mechanical-looking courtship dances", "being one of the few non-mammals to pass the mirror test", "being the second-tallest living bird after the ostrich"],
+    options: [
+      "its distinctive heart-shaped facial disk",
+      "its elaborate, mechanical-looking courtship dances",
+      "being one of the few non-mammals to pass the mirror test",
+      "being the second-tallest living bird after the ostrich",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_184',
-    text: "A diet consisting primarily of lemmings and voles is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of lemmings and voles is characteristic of which bird?",
     options: ["Atlantic Puffin", "Snowy Owl", "Northern Gannet", "Harpy Eagle"],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_185',
-    text: "A diet consisting primarily of fruit and insects is characteristic of which bird?",
-    options: ["Vampire Ground Finch", "Sandhill Crane", "American Dipper", "Rhinoceros Hornbill"],
+    text:
+        "A diet consisting primarily of fruit and insects is characteristic of which bird?",
+    options: [
+      "Vampire Ground Finch",
+      "Sandhill Crane",
+      "American Dipper",
+      "Rhinoceros Hornbill",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_186',
-    text: "A diet consisting primarily of roots, berries, and insects is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of roots, berries, and insects is characteristic of which bird?",
     options: ["Osprey", "Common Poorwill", "Kea", "Belted Kingfisher"],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_187',
     text: "Which bird is famous for hovering before diving for fish?",
-    options: ["Belted Kingfisher", "Resplendent Quetzal", "Common Raven", "Toco Toucan"],
+    options: [
+      "Belted Kingfisher",
+      "Resplendent Quetzal",
+      "Common Raven",
+      "Toco Toucan",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_188',
     text: "Which of these birds is native to Eurasia and Africa?",
-    options: ["Arctic Tern", "Ruby-throated Hummingbird", "Hoopoe", "Belted Kingfisher"],
+    options: [
+      "Arctic Tern",
+      "Ruby-throated Hummingbird",
+      "Hoopoe",
+      "Belted Kingfisher",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_189',
-    text: "Which bird is famous for feeding while holding its bill upside down?",
+    text:
+        "Which bird is famous for feeding while holding its bill upside down?",
     options: ["Magnificent Frigatebird", "Peafowl", "Common Loon", "Flamingo"],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_190',
-    text: "Which bird is well known for having gray plumage with red crown?",
-    options: ["Rhinoceros Hornbill", "Sandhill Crane", "Osprey", "Red-winged Blackbird"],
+    text: "Which bird is well known for having grey plumage with red crown?",
+    options: [
+      "Rhinoceros Hornbill",
+      "Sandhill Crane",
+      "Osprey",
+      "Red-winged Blackbird",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_191',
     text: "The Wild Turkey stands out among other birds for:",
-    options: ["the male's distinctive fleshy wattle and snood", "having talons larger than a grizzly bear's claws", "beating its wings up to 53 times a second", "feeding while holding its bill upside down"],
+    options: [
+      "the male's distinctive fleshy wattle and snood",
+      "having talons larger than a grizzly bear's claws",
+      "beating its wings up to 53 times a second",
+      "feeding while holding its bill upside down",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
@@ -1161,7 +1832,8 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_193',
-    text: "A diet consisting primarily of moths and insects is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of moths and insects is characteristic of which bird?",
     options: ["White-breasted Nuthatch", "Cormorant", "Whippoorwill", "Macaw"],
     correctOptionIndex: 2,
   ),
@@ -1174,7 +1846,12 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_195',
     text: "The Kea stands out among other birds for:",
-    options: ["the male's distinctive fleshy wattle and snood", "hunting during the daytime", "being the world's only alpine parrot", "having claws on its wings when young"],
+    options: [
+      "the male's distinctive fleshy wattle and snood",
+      "hunting during the daytime",
+      "being the world's only alpine parrot",
+      "having claws on its wings when young",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
@@ -1186,42 +1863,73 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_197',
     text: "The Common Poorwill stands out among other birds for:",
-    options: ["building elaborate decorated structures to attract mates", "being the second-tallest living bird after the ostrich", "being the only bird known to undergo true hibernation", "its incredible hunting prowess and speed"],
+    options: [
+      "building elaborate decorated structures to attract mates",
+      "being the second-tallest living bird after the ostrich",
+      "being the only bird known to undergo true hibernation",
+      "its incredible hunting prowess and speed",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_198',
     text: "The Blue Jay stands out among other birds for:",
-    options: ["its elaborate, mechanical-looking courtship dances", "plunge-diving from great heights in large flocks", "mimicking the calls of hawks", "building elaborate decorated structures to attract mates"],
+    options: [
+      "its elaborate, mechanical-looking courtship dances",
+      "plunge-diving from great heights in large flocks",
+      "mimicking the calls of hawks",
+      "building elaborate decorated structures to attract mates",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_199',
     text: "Which bird is well known for having olive-green plumage?",
-    options: ["Cassowary", "Gouldian Finch", "Kea", "Ruby-throated Hummingbird"],
+    options: [
+      "Cassowary",
+      "Gouldian Finch",
+      "Kea",
+      "Ruby-throated Hummingbird",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_200',
     text: "Which bird is well known for having mottled black and white?",
-    options: ["Northern Mockingbird", "Peafowl", "Crowned Eagle", "Rhinoceros Hornbill"],
+    options: [
+      "Northern Mockingbird",
+      "Peafowl",
+      "Crowned Eagle",
+      "Rhinoceros Hornbill",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_201',
     text: "The Red-crowned Crane stands out among other birds for:",
-    options: ["its spectacular erectile crown of feathers", "being a symbol of luck and longevity in Asian cultures", "the male's distinctive fleshy wattle and snood", "plunge-diving from great heights in large flocks"],
+    options: [
+      "its spectacular erectile crown of feathers",
+      "being a symbol of luck and longevity in Asian cultures",
+      "the male's distinctive fleshy wattle and snood",
+      "plunge-diving from great heights in large flocks",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_202',
     text: "The Cormorant stands out among other birds for:",
-    options: ["holding its wings out to dry after diving", "its exceptional navigational abilities", "diving at speeds over 240 mph", "perfectly mimicking almost any sound"],
+    options: [
+      "holding its wings out to dry after diving",
+      "its exceptional navigational abilities",
+      "diving at speeds over 240 mph",
+      "perfectly mimicking almost any sound",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_203',
-    text: "A diet consisting primarily of small fish like herring is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of small fish like herring is characteristic of which bird?",
     options: ["Common Raven", "Brown Pelican", "Atlantic Puffin", "Macaw"],
     correctOptionIndex: 2,
   ),
@@ -1240,19 +1948,35 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_206',
     text: "Which bird is well known for having sooty brown plumage?",
-    options: ["Atlantic Puffin", "Common Swift", "Crowned Eagle", "Gouldian Finch"],
+    options: [
+      "Atlantic Puffin",
+      "Common Swift",
+      "Crowned Eagle",
+      "Gouldian Finch",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_207',
-    text: "Which bird is famous for its incredibly long, flowing tail feathers?",
-    options: ["White-breasted Nuthatch", "Kiwi", "Bald Eagle", "Resplendent Quetzal"],
+    text:
+        "Which bird is famous for its incredibly long, flowing tail feathers?",
+    options: [
+      "White-breasted Nuthatch",
+      "Kiwi",
+      "Bald Eagle",
+      "Resplendent Quetzal",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_208',
     text: "Which bird is famous for its large, prominent orange-red casque?",
-    options: ["Pileated Woodpecker", "Golden Eagle", "Andean Condor", "Rhinoceros Hornbill"],
+    options: [
+      "Pileated Woodpecker",
+      "Golden Eagle",
+      "Andean Condor",
+      "Rhinoceros Hornbill",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
@@ -1263,14 +1987,25 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_210',
-    text: "Which bird is famous for its elaborate, mechanical-looking courtship dances?",
-    options: ["Laysan Albatross", "Common Potoo", "Secretarybird", "Guinea Fowl"],
+    text:
+        "Which bird is famous for its elaborate, mechanical-looking courtship dances?",
+    options: [
+      "Laysan Albatross",
+      "Common Potoo",
+      "Secretarybird",
+      "Guinea Fowl",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_211',
     text: "Which of these birds is native to North America?",
-    options: ["Eurasian Magpie", "American Coot", "White-breasted Nuthatch", "Whippoorwill"],
+    options: [
+      "Eurasian Magpie",
+      "American Coot",
+      "White-breasted Nuthatch",
+      "Whippoorwill",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
@@ -1287,7 +2022,7 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_214',
-    text: "Which bird is well known for having dark gray to black plumage?",
+    text: "Which bird is well known for having dark grey to black plumage?",
     options: ["Pigeon", "Secretarybird", "Harpy Eagle", "American Coot"],
     correctOptionIndex: 3,
   ),
@@ -1299,26 +2034,43 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_216',
-    text: "A diet consisting primarily of fish and squid is characteristic of which bird?",
-    options: ["California Condor", "Blue Jay", "Magnificent Frigatebird", "Atlantic Puffin"],
+    text:
+        "A diet consisting primarily of fish and squid is characteristic of which bird?",
+    options: [
+      "California Condor",
+      "Blue Jay",
+      "Magnificent Frigatebird",
+      "Atlantic Puffin",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_217',
     text: "Which bird is famous for laying bright blue eggs?",
-    options: ["American Robin", "Eurasian Magpie", "Hoopoe", "Galapagos Penguin"],
+    options: [
+      "American Robin",
+      "Eurasian Magpie",
+      "Hoopoe",
+      "Galapagos Penguin",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_218',
-    text: "Which bird is famous for swimming with only its snake-like neck above water?",
+    text:
+        "Which bird is famous for swimming with only its snake-like neck above water?",
     options: ["Brown Creeper", "Wood Duck", "Shoebill", "Anhinga"],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_219',
     text: "Which bird is well known for having black body and red crest?",
-    options: ["Kiwi", "Wood Duck", "Rhinoceros Hornbill", "Pileated Woodpecker"],
+    options: [
+      "Kiwi",
+      "Wood Duck",
+      "Rhinoceros Hornbill",
+      "Pileated Woodpecker",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
@@ -1330,37 +2082,68 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_221',
     text: "The Anhinga stands out among other birds for:",
-    options: ["hovering before diving for fish", "swimming with only its snake-like neck above water", "having claws on its wings when young", "fiercely defending its marshland territory"],
+    options: [
+      "hovering before diving for fish",
+      "swimming with only its snake-like neck above water",
+      "having claws on its wings when young",
+      "fiercely defending its marshland territory",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_222',
     text: "The American Robin stands out among other birds for:",
-    options: ["stomping its prey to death with long legs", "laying bright blue eggs", "camouflaging itself perfectly as a broken tree branch", "its loud call that sounds like human laughter"],
+    options: [
+      "stomping its prey to death with long legs",
+      "laying bright blue eggs",
+      "camouflaging itself perfectly as a broken tree branch",
+      "its loud call that sounds like human laughter",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_223',
     text: "The Spotted Owl stands out among other birds for:",
-    options: ["requiring old-growth forests to survive", "breeding during the dark Antarctic winter", "plunge-diving from great heights in large flocks", "staying strictly airborne for up to 10 months at a time"],
+    options: [
+      "requiring old-growth forests to survive",
+      "breeding during the dark Antarctic winter",
+      "plunge-diving from great heights in large flocks",
+      "staying strictly airborne for up to 10 months at a time",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_224',
-    text: "Which bird is famous for its endlessly repeated, namesake nocturnal call?",
-    options: ["Wandering Albatross", "Whippoorwill", "Golden Pheasant", "Secretarybird"],
+    text:
+        "Which bird is famous for its endlessly repeated, namesake nocturnal call?",
+    options: [
+      "Wandering Albatross",
+      "Whippoorwill",
+      "Golden Pheasant",
+      "Secretarybird",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_225',
     text: "Which bird is famous for walking headfirst down tree trunks?",
-    options: ["Hoopoe", "Brown Pelican", "White-breasted Nuthatch", "California Condor"],
+    options: [
+      "Hoopoe",
+      "Brown Pelican",
+      "White-breasted Nuthatch",
+      "California Condor",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_226',
     text: "Which bird is famous for its lobed, rather than webbed, feet?",
-    options: ["Golden Eagle", "American Coot", "Black Skimmer", "Brown Creeper"],
+    options: [
+      "Golden Eagle",
+      "American Coot",
+      "Black Skimmer",
+      "Brown Creeper",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
@@ -1372,37 +2155,68 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_228',
     text: "The Whippoorwill stands out among other birds for:",
-    options: ["its endlessly repeated, namesake nocturnal call", "being the largest flying bird in the world by weight and wingspan", "diving at speeds over 240 mph", "swimming with only its snake-like neck above water"],
+    options: [
+      "its endlessly repeated, namesake nocturnal call",
+      "being the largest flying bird in the world by weight and wingspan",
+      "diving at speeds over 240 mph",
+      "swimming with only its snake-like neck above water",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_229',
-    text: "Which bird is famous for its incredibly vibrant and colorful plumage?",
-    options: ["Golden Pheasant", "Northern Cardinal", "California Condor", "Bowerbird"],
+    text:
+        "Which bird is famous for its incredibly vibrant and colorful plumage?",
+    options: [
+      "Golden Pheasant",
+      "Northern Cardinal",
+      "California Condor",
+      "Bowerbird",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_230',
     text: "Which of these birds is native to Africa?",
-    options: ["California Condor", "Andean Condor", "Ostrich", "Belted Kingfisher"],
+    options: [
+      "California Condor",
+      "Andean Condor",
+      "Ostrich",
+      "Belted Kingfisher",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_231',
     text: "Which of these birds is native to South America?",
-    options: ["Emperor Penguin", "Eurasian Magpie", "Northern Mockingbird", "Andean Condor"],
+    options: [
+      "Emperor Penguin",
+      "Eurasian Magpie",
+      "Northern Mockingbird",
+      "Andean Condor",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_232',
-    text: "Which bird is well known for having blue-gray plumage?",
-    options: ["White-breasted Nuthatch", "Hoatzin", "Great Blue Heron", "Rhinoceros Hornbill"],
+    text: "Which bird is well known for having blue-grey plumage?",
+    options: [
+      "White-breasted Nuthatch",
+      "Hoatzin",
+      "Great Blue Heron",
+      "Rhinoceros Hornbill",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_233',
     text: "The Toco Toucan stands out among other birds for:",
-    options: ["its massive, brightly colored orange bill", "perfectly mimicking almost any sound", "its distinctive heart-shaped facial disk", "having talons larger than a grizzly bear's claws"],
+    options: [
+      "its massive, brightly colored orange bill",
+      "perfectly mimicking almost any sound",
+      "its distinctive heart-shaped facial disk",
+      "having talons larger than a grizzly bear's claws",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
@@ -1413,32 +2227,54 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_235',
-    text: "A diet consisting primarily of earthworms and insects is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of earthworms and insects is characteristic of which bird?",
     options: ["Kea", "Secretarybird", "Pileated Woodpecker", "American Robin"],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_236',
     text: "Which bird is famous for diving at speeds over 240 mph?",
-    options: ["Wandering Albatross", "Eurasian Magpie", "Bald Eagle", "Peregrine Falcon"],
+    options: [
+      "Wandering Albatross",
+      "Eurasian Magpie",
+      "Bald Eagle",
+      "Peregrine Falcon",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_237',
     text: "Which bird is well known for having drab brown plumage?",
-    options: ["Common Loon", "Spotted Owl", "Vampire Ground Finch", "American Dipper"],
+    options: [
+      "Common Loon",
+      "Spotted Owl",
+      "Vampire Ground Finch",
+      "American Dipper",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_238',
-    text: "A diet consisting primarily of plants, roots, and seeds is characteristic of which bird?",
-    options: ["Crowned Eagle", "Galapagos Penguin", "Ostrich", "Superb Lyrebird"],
+    text:
+        "A diet consisting primarily of plants, roots, and seeds is characteristic of which bird?",
+    options: [
+      "Crowned Eagle",
+      "Galapagos Penguin",
+      "Ostrich",
+      "Superb Lyrebird",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_239',
     text: "The Snowy Owl stands out among other birds for:",
-    options: ["drinking the blood of larger sea birds", "hunting during the daytime", "its loud call that sounds like human laughter", "its endlessly repeated, namesake nocturnal call"],
+    options: [
+      "drinking the blood of larger sea birds",
+      "hunting during the daytime",
+      "its loud call that sounds like human laughter",
+      "its endlessly repeated, namesake nocturnal call",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
@@ -1450,7 +2286,12 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_241',
     text: "Which of these birds is native to Australia?",
-    options: ["Bowerbird", "Northern Cardinal", "Flamingo", "Wandering Albatross"],
+    options: [
+      "Bowerbird",
+      "Northern Cardinal",
+      "Flamingo",
+      "Wandering Albatross",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
@@ -1462,7 +2303,12 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_243',
     text: "Which of these birds is native to Eurasia?",
-    options: ["Mute Swan", "Northern Gannet", "Whippoorwill", "Great Blue Heron"],
+    options: [
+      "Mute Swan",
+      "Northern Gannet",
+      "Whippoorwill",
+      "Great Blue Heron",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
@@ -1479,8 +2325,14 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_246',
-    text: "A diet consisting primarily of fish and krill is characteristic of which bird?",
-    options: ["Emperor Penguin", "Cormorant", "Resplendent Quetzal", "Gouldian Finch"],
+    text:
+        "A diet consisting primarily of fish and krill is characteristic of which bird?",
+    options: [
+      "Emperor Penguin",
+      "Cormorant",
+      "Resplendent Quetzal",
+      "Gouldian Finch",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
@@ -1492,7 +2344,12 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_248',
     text: "Which of these birds is native to Northern Hemisphere?",
-    options: ["Crowned Eagle", "Common Raven", "Common Swift", "Eurasian Magpie"],
+    options: [
+      "Crowned Eagle",
+      "Common Raven",
+      "Common Swift",
+      "Eurasian Magpie",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
@@ -1504,7 +2361,12 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_250',
     text: "The Ostrich stands out among other birds for:",
-    options: ["building massive nests called eyries", "laying the largest eggs of any living bird", "running back and forth with the waves on beaches", "its incredible ability to mimic dozens of other birds"],
+    options: [
+      "building massive nests called eyries",
+      "laying the largest eggs of any living bird",
+      "running back and forth with the waves on beaches",
+      "its incredible ability to mimic dozens of other birds",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
@@ -1516,25 +2378,46 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_252',
     text: "The Wood Duck stands out among other birds for:",
-    options: ["diving headfirst into water to catch prey", "its ability to crack extremely hard nuts with its beak", "spiraling up tree trunks searching for food", "nesting in tree cavities over water"],
+    options: [
+      "diving headfirst into water to catch prey",
+      "its ability to crack extremely hard nuts with its beak",
+      "spiraling up tree trunks searching for food",
+      "nesting in tree cavities over water",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_253',
-    text: "A diet consisting primarily of crustaceans is characteristic of which bird?",
-    options: ["Roseate Spoonbill", "Arctic Tern", "Northern Cardinal", "Rhinoceros Hornbill"],
+    text:
+        "A diet consisting primarily of crustaceans is characteristic of which bird?",
+    options: [
+      "Roseate Spoonbill",
+      "Arctic Tern",
+      "Northern Cardinal",
+      "Rhinoceros Hornbill",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_254',
     text: "The Kingfisher stands out among other birds for:",
-    options: ["having the largest wingspan of any living bird", "diving headfirst into water to catch prey", "hunting during the daytime", "feeding while holding its bill upside down"],
+    options: [
+      "having the largest wingspan of any living bird",
+      "diving headfirst into water to catch prey",
+      "hunting during the daytime",
+      "feeding while holding its bill upside down",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_255',
     text: "Which of these birds is native to Southern Oceans?",
-    options: ["Common Raven", "Secretarybird", "Galapagos Penguin", "Wandering Albatross"],
+    options: [
+      "Common Raven",
+      "Secretarybird",
+      "Galapagos Penguin",
+      "Wandering Albatross",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
@@ -1546,13 +2429,23 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_257',
     text: "The Laysan Albatross stands out among other birds for:",
-    options: ["camouflaging itself perfectly as a broken tree branch", "the male's distinctive fleshy wattle and snood", "its elaborate, mechanical-looking courtship dances", "drinking the blood of larger sea birds"],
+    options: [
+      "camouflaging itself perfectly as a broken tree branch",
+      "the male's distinctive fleshy wattle and snood",
+      "its elaborate, mechanical-looking courtship dances",
+      "drinking the blood of larger sea birds",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_258',
     text: "Which bird is well known for having bright blue neck and casque?",
-    options: ["Red-winged Blackbird", "Cassowary", "Gouldian Finch", "Great Blue Heron"],
+    options: [
+      "Red-winged Blackbird",
+      "Cassowary",
+      "Gouldian Finch",
+      "Great Blue Heron",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
@@ -1564,12 +2457,17 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_260',
     text: "Which of these birds is native to Galapagos Islands?",
-    options: ["Northern Mockingbird", "Vampire Ground Finch", "Cormorant", "Ostrich"],
+    options: [
+      "Northern Mockingbird",
+      "Vampire Ground Finch",
+      "Cormorant",
+      "Ostrich",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_261',
-    text: "Which bird is well known for having gray head and black breast?",
+    text: "Which bird is well known for having grey head and black breast?",
     options: ["Bowerbird", "Harpy Eagle", "Common Swift", "Eurasian Magpie"],
     correctOptionIndex: 1,
   ),
@@ -1582,31 +2480,52 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_263',
     text: "Which bird is well known for having black above, white below?",
-    options: ["Spotted Owl", "Vampire Ground Finch", "Black Skimmer", "Anhinga"],
+    options: [
+      "Spotted Owl",
+      "Vampire Ground Finch",
+      "Black Skimmer",
+      "Anhinga",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_264',
     text: "Which of these birds is native to Americas?",
-    options: ["Black Skimmer", "American Dipper", "Kookaburra", "Northern Mockingbird"],
+    options: [
+      "Black Skimmer",
+      "American Dipper",
+      "Kookaburra",
+      "Northern Mockingbird",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_265',
     text: "Which bird is well known for having bright blue and orange plumage?",
-    options: ["Eurasian Magpie", "Kingfisher", "Cassowary", "Roseate Spoonbill"],
+    options: [
+      "Eurasian Magpie",
+      "Kingfisher",
+      "Cassowary",
+      "Roseate Spoonbill",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_266',
-    text: "A diet consisting primarily of nuts and seeds is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of nuts and seeds is characteristic of which bird?",
     options: ["Kea", "Harpy Eagle", "Emu", "Macaw"],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_267',
     text: "Which of these birds is native to North America?",
-    options: ["Magnificent Frigatebird", "American Coot", "California Condor", "Ostrich"],
+    options: [
+      "Magnificent Frigatebird",
+      "American Coot",
+      "California Condor",
+      "Ostrich",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
@@ -1617,19 +2536,32 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_269',
-    text: "A diet consisting primarily of fish is characteristic of which bird?",
-    options: ["Magnificent Frigatebird", "Rhinoceros Hornbill", "Belted Kingfisher", "Pileated Woodpecker"],
+    text:
+        "A diet consisting primarily of fish is characteristic of which bird?",
+    options: [
+      "Magnificent Frigatebird",
+      "Rhinoceros Hornbill",
+      "Belted Kingfisher",
+      "Pileated Woodpecker",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_270',
-    text: "A diet consisting primarily of fish and frogs is characteristic of which bird?",
-    options: ["Golden Eagle", "Brown Creeper", "Great Blue Heron", "Vampire Ground Finch"],
+    text:
+        "A diet consisting primarily of fish and frogs is characteristic of which bird?",
+    options: [
+      "Golden Eagle",
+      "Brown Creeper",
+      "Great Blue Heron",
+      "Vampire Ground Finch",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_271',
-    text: "Which bird is famous for having nostrils at the tip of its long beak?",
+    text:
+        "Which bird is famous for having nostrils at the tip of its long beak?",
     options: ["Black Skimmer", "Toco Toucan", "Golden Eagle", "Kiwi"],
     correctOptionIndex: 3,
   ),
@@ -1647,7 +2579,7 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_274',
-    text: "Which bird is well known for having gray body and black crest?",
+    text: "Which bird is well known for having grey body and black crest?",
     options: ["Secretarybird", "Andean Condor", "Wild Turkey", "American Coot"],
     correctOptionIndex: 0,
   ),
@@ -1659,7 +2591,8 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_276',
-    text: "A diet consisting primarily of aquatic plants is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of aquatic plants is characteristic of which bird?",
     options: ["Common Raven", "Spotted Owl", "Shoebill", "American Coot"],
     correctOptionIndex: 3,
   ),
@@ -1672,7 +2605,12 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_278',
     text: "The Cassowary stands out among other birds for:",
-    options: ["its lobed, rather than webbed, feet", "having claws on its wings when young", "being considered one of the most dangerous birds", "perfectly mimicking almost any sound"],
+    options: [
+      "its lobed, rather than webbed, feet",
+      "having claws on its wings when young",
+      "being considered one of the most dangerous birds",
+      "perfectly mimicking almost any sound",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
@@ -1690,7 +2628,12 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_281',
     text: "Which bird is well known for having mottled brown and white?",
-    options: ["Vampire Ground Finch", "Brown Creeper", "Northern Mockingbird", "Toco Toucan"],
+    options: [
+      "Vampire Ground Finch",
+      "Brown Creeper",
+      "Northern Mockingbird",
+      "Toco Toucan",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
@@ -1701,19 +2644,26 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_283',
-    text: "Which bird is famous for the male's massive, eye-spotted tail covert feathers?",
+    text:
+        "Which bird is famous for the male's massive, eye-spotted tail covert feathers?",
     options: ["Laysan Albatross", "Spotted Owl", "Pigeon", "Peafowl"],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_284',
     text: "Which bird is famous for requiring old-growth forests to survive?",
-    options: ["California Condor", "Spotted Owl", "Golden Eagle", "Golden Pheasant"],
+    options: [
+      "California Condor",
+      "Spotted Owl",
+      "Golden Eagle",
+      "Golden Pheasant",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_285',
-    text: "Which bird is famous for its high intelligence and complex problem-solving skills?",
+    text:
+        "Which bird is famous for its high intelligence and complex problem-solving skills?",
     options: ["Common Raven", "Brown Creeper", "Andean Condor", "Common Potoo"],
     correctOptionIndex: 0,
   ),
@@ -1726,96 +2676,157 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_287',
     text: "Which of these birds is native to Americas?",
-    options: ["Brown Creeper", "Eurasian Magpie", "American Dipper", "Northern Cardinal"],
+    options: [
+      "Brown Creeper",
+      "Eurasian Magpie",
+      "American Dipper",
+      "Northern Cardinal",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_288',
-    text: "Which bird is well known for having blue-gray with a white collar?",
+    text: "Which bird is well known for having blue-grey with a white collar?",
     options: ["Hoatzin", "Andean Condor", "Belted Kingfisher", "Whippoorwill"],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_289',
     text: "The Black Skimmer stands out among other birds for:",
-    options: ["staying strictly airborne for up to 10 months at a time", "feeding while holding its bill upside down", "flying low and dragging its lower jaw through water", "being the second-tallest living bird after the ostrich"],
+    options: [
+      "staying strictly airborne for up to 10 months at a time",
+      "feeding while holding its bill upside down",
+      "flying low and dragging its lower jaw through water",
+      "being the second-tallest living bird after the ostrich",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_290',
-    text: "A diet consisting primarily of squid is characteristic of which bird?",
-    options: ["Belted Kingfisher", "Laysan Albatross", "Common Loon", "Cassowary"],
+    text:
+        "A diet consisting primarily of squid is characteristic of which bird?",
+    options: [
+      "Belted Kingfisher",
+      "Laysan Albatross",
+      "Common Loon",
+      "Cassowary",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_291',
     text: "The Vampire Ground Finch stands out among other birds for:",
-    options: ["walking underwater along river bottoms to feed", "drinking the blood of larger sea birds", "its massive, shoe-shaped bill", "its endlessly repeated, namesake nocturnal call"],
+    options: [
+      "walking underwater along river bottoms to feed",
+      "drinking the blood of larger sea birds",
+      "its massive, shoe-shaped bill",
+      "its endlessly repeated, namesake nocturnal call",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_292',
     text: "Which bird is famous for diving headfirst into water to catch prey?",
-    options: ["Red-crowned Crane", "Arctic Tern", "Red-winged Blackbird", "Kingfisher"],
+    options: [
+      "Red-crowned Crane",
+      "Arctic Tern",
+      "Red-winged Blackbird",
+      "Kingfisher",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_293',
-    text: "A diet consisting primarily of seeds and leaves is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of seeds and leaves is characteristic of which bird?",
     options: ["Golden Pheasant", "Andean Condor", "Common Swift", "Blue Jay"],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_294',
     text: "Which bird is famous for drinking the blood of larger sea birds?",
-    options: ["Vampire Ground Finch", "White-breasted Nuthatch", "Secretarybird", "Harpy Eagle"],
+    options: [
+      "Vampire Ground Finch",
+      "White-breasted Nuthatch",
+      "Secretarybird",
+      "Harpy Eagle",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_295',
-    text: "Which bird is famous for its spectacular erectile crown of feathers?",
+    text:
+        "Which bird is famous for its spectacular erectile crown of feathers?",
     options: ["Hoopoe", "Hoatzin", "Wood Duck", "Macaw"],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_296',
     text: "Which bird is famous for being Africa's most powerful raptor?",
-    options: ["Crowned Eagle", "Brown Creeper", "Whippoorwill", "Red-crowned Crane"],
+    options: [
+      "Crowned Eagle",
+      "Brown Creeper",
+      "Whippoorwill",
+      "Red-crowned Crane",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_297',
     text: "The Sanderling stands out among other birds for:",
-    options: ["its haunting, yodeling calls", "standing perfectly still to ambush prey", "diving at speeds over 240 mph", "running back and forth with the waves on beaches"],
+    options: [
+      "its haunting, yodeling calls",
+      "standing perfectly still to ambush prey",
+      "diving at speeds over 240 mph",
+      "running back and forth with the waves on beaches",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_298',
     text: "The Pileated Woodpecker stands out among other birds for:",
-    options: ["having nostrils at the tip of its long beak", "its incredibly vibrant and colorful plumage", "its large, prominent orange-red casque", "chiseling large rectangular holes in trees"],
+    options: [
+      "having nostrils at the tip of its long beak",
+      "its incredibly vibrant and colorful plumage",
+      "its large, prominent orange-red casque",
+      "chiseling large rectangular holes in trees",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_299',
     text: "The Emu stands out among other birds for:",
-    options: ["being one of the few non-mammals to pass the mirror test", "being the second-tallest living bird after the ostrich", "its incredible ability to mimic dozens of other birds", "building elaborate decorated structures to attract mates"],
+    options: [
+      "being one of the few non-mammals to pass the mirror test",
+      "being the second-tallest living bird after the ostrich",
+      "its incredible ability to mimic dozens of other birds",
+      "building elaborate decorated structures to attract mates",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_300',
-    text: "A diet consisting primarily of fish is characteristic of which bird?",
-    options: ["Sandhill Crane", "Red-winged Blackbird", "Gouldian Finch", "Northern Gannet"],
+    text:
+        "A diet consisting primarily of fish is characteristic of which bird?",
+    options: [
+      "Sandhill Crane",
+      "Red-winged Blackbird",
+      "Gouldian Finch",
+      "Northern Gannet",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_301',
-    text: "A diet consisting primarily of insects and snakes is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of insects and snakes is characteristic of which bird?",
     options: ["Cassowary", "Golden Eagle", "Kiwi", "Kookaburra"],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_302',
-    text: "Which bird is famous for having reversible outer toes to grip slippery fish?",
+    text:
+        "Which bird is famous for having reversible outer toes to grip slippery fish?",
     options: ["Emu", "Rhinoceros Hornbill", "Osprey", "Roseate Spoonbill"],
     correctOptionIndex: 2,
   ),
@@ -1828,7 +2839,12 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_304',
     text: "Which of these birds is native to North America?",
-    options: ["Superb Lyrebird", "Whippoorwill", "Atlantic Puffin", "Arctic Tern"],
+    options: [
+      "Superb Lyrebird",
+      "Whippoorwill",
+      "Atlantic Puffin",
+      "Arctic Tern",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
@@ -1846,7 +2862,12 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_307',
     text: "Which of these birds is native to Asia?",
-    options: ["Wandering Albatross", "Northern Mockingbird", "Peafowl", "Mute Swan"],
+    options: [
+      "Wandering Albatross",
+      "Northern Mockingbird",
+      "Peafowl",
+      "Mute Swan",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
@@ -1857,26 +2878,47 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_309',
-    text: "A diet consisting primarily of fish is characteristic of which bird?",
-    options: ["Gouldian Finch", "White-breasted Nuthatch", "Shoebill", "Bald Eagle"],
+    text:
+        "A diet consisting primarily of fish is characteristic of which bird?",
+    options: [
+      "Gouldian Finch",
+      "White-breasted Nuthatch",
+      "Shoebill",
+      "Bald Eagle",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_310',
     text: "Which of these birds is native to Asia?",
-    options: ["Shoebill", "Pigeon", "Golden Pheasant", "Ruby-throated Hummingbird"],
+    options: [
+      "Shoebill",
+      "Pigeon",
+      "Golden Pheasant",
+      "Ruby-throated Hummingbird",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_311',
     text: "Which of these birds is native to South America?",
-    options: ["Red-winged Blackbird", "Vampire Ground Finch", "Bald Eagle", "Macaw"],
+    options: [
+      "Red-winged Blackbird",
+      "Vampire Ground Finch",
+      "Bald Eagle",
+      "Macaw",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_312',
     text: "Which bird is well known for having entirely white plumage?",
-    options: ["Spotted Owl", "Resplendent Quetzal", "Mute Swan", "Northern Gannet"],
+    options: [
+      "Spotted Owl",
+      "Resplendent Quetzal",
+      "Mute Swan",
+      "Northern Gannet",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
@@ -1887,7 +2929,7 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_314',
-    text: "Which bird is well known for having gray-brown body?",
+    text: "Which bird is well known for having grey-brown body?",
     options: ["Brown Pelican", "Cormorant", "Wild Turkey", "Common Swift"],
     correctOptionIndex: 0,
   ),
@@ -1905,74 +2947,121 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_317',
-    text: "Which bird is well known for having black plumage with white collar?",
+    text:
+        "Which bird is well known for having black plumage with white collar?",
     options: ["Ostrich", "Atlantic Puffin", "Andean Condor", "Common Loon"],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_318',
-    text: "A diet consisting primarily of medium-sized birds is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of medium-sized birds is characteristic of which bird?",
     options: ["Spotted Owl", "Emu", "Vampire Ground Finch", "Peregrine Falcon"],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_319',
     text: "Which of these birds is native to Americas?",
-    options: ["Resplendent Quetzal", "Hoatzin", "Ruby-throated Hummingbird", "White-breasted Nuthatch"],
+    options: [
+      "Resplendent Quetzal",
+      "Hoatzin",
+      "Ruby-throated Hummingbird",
+      "White-breasted Nuthatch",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_320',
-    text: "Which bird is famous for its incredible ability to mimic dozens of other birds?",
-    options: ["Kea", "Superb Lyrebird", "Golden Pheasant", "Northern Mockingbird"],
+    text:
+        "Which bird is famous for its incredible ability to mimic dozens of other birds?",
+    options: [
+      "Kea",
+      "Superb Lyrebird",
+      "Golden Pheasant",
+      "Northern Mockingbird",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_321',
     text: "The Northern Mockingbird stands out among other birds for:",
-    options: ["its incredible ability to mimic dozens of other birds", "its massive, shoe-shaped bill", "its loud call that sounds like human laughter", "building elaborate decorated structures to attract mates"],
+    options: [
+      "its incredible ability to mimic dozens of other birds",
+      "its massive, shoe-shaped bill",
+      "its loud call that sounds like human laughter",
+      "building elaborate decorated structures to attract mates",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_322',
-    text: "Which bird is famous for running back and forth with the waves on beaches?",
+    text:
+        "Which bird is famous for running back and forth with the waves on beaches?",
     options: ["Wood Duck", "Sanderling", "Emperor Penguin", "Secretarybird"],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_323',
-    text: "A diet consisting primarily of mice and shrews is characteristic of which bird?",
-    options: ["Northern Mockingbird", "Barn Owl", "Brown Pelican", "Whippoorwill"],
+    text:
+        "A diet consisting primarily of mice and shrews is characteristic of which bird?",
+    options: [
+      "Northern Mockingbird",
+      "Barn Owl",
+      "Brown Pelican",
+      "Whippoorwill",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_324',
     text: "Which bird is well known for having colorful, striped beak?",
-    options: ["Atlantic Puffin", "Harpy Eagle", "White-breasted Nuthatch", "Blue Jay"],
+    options: [
+      "Atlantic Puffin",
+      "Harpy Eagle",
+      "White-breasted Nuthatch",
+      "Blue Jay",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_325',
-    text: "A diet consisting primarily of carrion is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of carrion is characteristic of which bird?",
     options: ["Flamingo", "Andean Condor", "Golden Pheasant", "Shoebill"],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_326',
     text: "The Hoopoe stands out among other birds for:",
-    options: ["its spectacular erectile crown of feathers", "its incredible ability to mimic dozens of other birds", "its elaborate leaping courtship dance", "its incredibly vibrant and colorful plumage"],
+    options: [
+      "its spectacular erectile crown of feathers",
+      "its incredible ability to mimic dozens of other birds",
+      "its elaborate leaping courtship dance",
+      "its incredibly vibrant and colorful plumage",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_327',
-    text: "A diet consisting primarily of nuts, seeds, and insects is characteristic of which bird?",
-    options: ["Rhinoceros Hornbill", "Northern Cardinal", "Belted Kingfisher", "Blue Jay"],
+    text:
+        "A diet consisting primarily of nuts, seeds, and insects is characteristic of which bird?",
+    options: [
+      "Rhinoceros Hornbill",
+      "Northern Cardinal",
+      "Belted Kingfisher",
+      "Blue Jay",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_328',
     text: "The Arctic Tern stands out among other birds for:",
-    options: ["building elaborate decorated structures to attract mates", "having the longest migration of any animal", "its ability to crack extremely hard nuts with its beak", "being the largest flying bird in the world by weight and wingspan"],
+    options: [
+      "building elaborate decorated structures to attract mates",
+      "having the longest migration of any animal",
+      "its ability to crack extremely hard nuts with its beak",
+      "being the largest flying bird in the world by weight and wingspan",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
@@ -1984,25 +3073,40 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_330',
     text: "Which of these birds is native to North America?",
-    options: ["Common Loon", "Gouldian Finch", "Brown Pelican", "American Robin"],
+    options: [
+      "Common Loon",
+      "Gouldian Finch",
+      "Brown Pelican",
+      "American Robin",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_331',
-    text: "Which bird is well known for having dark gray with white spots?",
+    text: "Which bird is well known for having dark grey with white spots?",
     options: ["Eurasian Magpie", "Common Poorwill", "Guinea Fowl", "Kiwi"],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_332',
     text: "The Kiwi stands out among other birds for:",
-    options: ["its massive, brightly colored orange bill", "the male's massive, eye-spotted tail covert feathers", "having nostrils at the tip of its long beak", "its loud, harsh, and repetitive calls"],
+    options: [
+      "its massive, brightly colored orange bill",
+      "the male's massive, eye-spotted tail covert feathers",
+      "having nostrils at the tip of its long beak",
+      "its loud, harsh, and repetitive calls",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_333',
     text: "The Flamingo stands out among other birds for:",
-    options: ["its incredible hunting prowess and speed", "feeding while holding its bill upside down", "stomping its prey to death with long legs", "its loud, harsh, and repetitive calls"],
+    options: [
+      "its incredible hunting prowess and speed",
+      "feeding while holding its bill upside down",
+      "stomping its prey to death with long legs",
+      "its loud, harsh, and repetitive calls",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
@@ -2014,73 +3118,122 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_335',
     text: "The Kookaburra stands out among other birds for:",
-    options: ["being one of the few non-mammals to pass the mirror test", "its loud call that sounds like human laughter", "being the largest North American land bird", "holding its wings out to dry after diving"],
+    options: [
+      "being one of the few non-mammals to pass the mirror test",
+      "its loud call that sounds like human laughter",
+      "being the largest North American land bird",
+      "holding its wings out to dry after diving",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_336',
-    text: "Which bird is famous for walking underwater along river bottoms to feed?",
-    options: ["Red-crowned Crane", "Blue Jay", "Wild Turkey", "American Dipper"],
+    text:
+        "Which bird is famous for walking underwater along river bottoms to feed?",
+    options: [
+      "Red-crowned Crane",
+      "Blue Jay",
+      "Wild Turkey",
+      "American Dipper",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_337',
-    text: "Which bird is famous for being a heavy, flightless, nocturnal parrot?",
+    text:
+        "Which bird is famous for being a heavy, flightless, nocturnal parrot?",
     options: ["Kakapo", "Crowned Eagle", "Common Loon", "Northern Gannet"],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_338',
-    text: "Which bird is well known for having cinnamon color with striped wings?",
+    text:
+        "Which bird is well known for having cinnamon color with striped wings?",
     options: ["Hoopoe", "Atlantic Puffin", "Osprey", "American Dipper"],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_339',
-    text: "A diet consisting primarily of moths and beetles is characteristic of which bird?",
-    options: ["Galapagos Penguin", "Northern Gannet", "Common Potoo", "California Condor"],
+    text:
+        "A diet consisting primarily of moths and beetles is characteristic of which bird?",
+    options: [
+      "Galapagos Penguin",
+      "Northern Gannet",
+      "Common Potoo",
+      "California Condor",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_340',
-    text: "A diet consisting primarily of carrion, insects, and garbage is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of carrion, insects, and garbage is characteristic of which bird?",
     options: ["Blue Jay", "Cassowary", "Red-winged Blackbird", "Common Raven"],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_341',
     text: "Which bird is well known for having iridescent multicolor plumage?",
-    options: ["Common Poorwill", "American Robin", "Wood Duck", "Magnificent Frigatebird"],
+    options: [
+      "Common Poorwill",
+      "American Robin",
+      "Wood Duck",
+      "Magnificent Frigatebird",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_342',
-    text: "A diet consisting primarily of fish and amphibians is characteristic of which bird?",
-    options: ["Wild Turkey", "Vampire Ground Finch", "Red-crowned Crane", "Barn Owl"],
+    text:
+        "A diet consisting primarily of fish and amphibians is characteristic of which bird?",
+    options: [
+      "Wild Turkey",
+      "Vampire Ground Finch",
+      "Red-crowned Crane",
+      "Barn Owl",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_343',
     text: "The Atlantic Puffin stands out among other birds for:",
-    options: ["being the largest North American land bird", "its distinctive heart-shaped facial disk", "holding its wings out to dry after diving", "carrying multiple fish crosswise in its beak"],
+    options: [
+      "being the largest North American land bird",
+      "its distinctive heart-shaped facial disk",
+      "holding its wings out to dry after diving",
+      "carrying multiple fish crosswise in its beak",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_344',
-    text: "A diet consisting primarily of monkeys is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of monkeys is characteristic of which bird?",
     options: ["Northern Cardinal", "Bowerbird", "Crowned Eagle", "Kakapo"],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_345',
-    text: "Which bird is famous for being considered one of the most dangerous birds?",
-    options: ["Spotted Owl", "Cassowary", "Red-crowned Crane", "Pileated Woodpecker"],
+    text:
+        "Which bird is famous for being considered one of the most dangerous birds?",
+    options: [
+      "Spotted Owl",
+      "Cassowary",
+      "Red-crowned Crane",
+      "Pileated Woodpecker",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_346',
-    text: "Which bird is famous for being one of the few non-mammals to pass the mirror test?",
-    options: ["American Dipper", "California Condor", "Pigeon", "Eurasian Magpie"],
+    text:
+        "Which bird is famous for being one of the few non-mammals to pass the mirror test?",
+    options: [
+      "American Dipper",
+      "California Condor",
+      "Pigeon",
+      "Eurasian Magpie",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
@@ -2091,13 +3244,15 @@ final List<DailyQuestion> dailyQuestions = [
   ),
   const DailyQuestion(
     id: 'dq_348',
-    text: "Which bird is famous for its loud call that sounds like human laughter?",
+    text:
+        "Which bird is famous for its loud call that sounds like human laughter?",
     options: ["Common Potoo", "Wandering Albatross", "Kookaburra", "Blue Jay"],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_349',
-    text: "A diet consisting primarily of fish is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of fish is characteristic of which bird?",
     options: ["Anhinga", "California Condor", "Northern Cardinal", "Shoebill"],
     correctOptionIndex: 0,
   ),
@@ -2110,19 +3265,30 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_351',
     text: "The Superb Lyrebird stands out among other birds for:",
-    options: ["its incredible ability to mimic dozens of other birds", "perfectly mimicking almost any sound", "being Africa's most powerful raptor", "laying the largest eggs of any living bird"],
+    options: [
+      "its incredible ability to mimic dozens of other birds",
+      "perfectly mimicking almost any sound",
+      "being Africa's most powerful raptor",
+      "laying the largest eggs of any living bird",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
     id: 'dq_352',
-    text: "A diet consisting primarily of small crabs is characteristic of which bird?",
+    text:
+        "A diet consisting primarily of small crabs is characteristic of which bird?",
     options: ["Cassowary", "Ostrich", "Sanderling", "Brown Pelican"],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_353',
     text: "Which bird is famous for stomping its prey to death with long legs?",
-    options: ["Common Potoo", "Secretarybird", "Black Skimmer", "Golden Pheasant"],
+    options: [
+      "Common Potoo",
+      "Secretarybird",
+      "Black Skimmer",
+      "Golden Pheasant",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
@@ -2134,7 +3300,12 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_355',
     text: "The Rhinoceros Hornbill stands out among other birds for:",
-    options: ["laying the largest eggs of any living bird", "its large, prominent orange-red casque", "the male's massive, eye-spotted tail covert feathers", "both sexes singing year-round"],
+    options: [
+      "laying the largest eggs of any living bird",
+      "its large, prominent orange-red casque",
+      "the male's massive, eye-spotted tail covert feathers",
+      "both sexes singing year-round",
+    ],
     correctOptionIndex: 1,
   ),
   const DailyQuestion(
@@ -2146,49 +3317,82 @@ final List<DailyQuestion> dailyQuestions = [
   const DailyQuestion(
     id: 'dq_357',
     text: "Which bird is well known for having entirely black plumage?",
-    options: ["Common Raven", "Golden Pheasant", "Northern Cardinal", "Whippoorwill"],
+    options: [
+      "Common Raven",
+      "Golden Pheasant",
+      "Northern Cardinal",
+      "Whippoorwill",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_358',
-    text: "Which bird is famous for being the second-tallest living bird after the ostrich?",
+    text:
+        "Which bird is famous for being the second-tallest living bird after the ostrich?",
     options: ["Common Swift", "Brown Creeper", "Emu", "Golden Pheasant"],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_359',
-    text: "Which bird is famous for staying strictly airborne for up to 10 months at a time?",
+    text:
+        "Which bird is famous for staying strictly airborne for up to 10 months at a time?",
     options: ["Common Swift", "Wood Duck", "Atlantic Puffin", "Harpy Eagle"],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_360',
     text: "Which of these birds is native to North America?",
-    options: ["American Coot", "Crowned Eagle", "Northern Mockingbird", "American Dipper"],
+    options: [
+      "American Coot",
+      "Crowned Eagle",
+      "Northern Mockingbird",
+      "American Dipper",
+    ],
     correctOptionIndex: 3,
   ),
   const DailyQuestion(
     id: 'dq_361',
-    text: "Which bird is famous for spiraling up tree trunks searching for food?",
-    options: ["Ruby-throated Hummingbird", "Brown Pelican", "Brown Creeper", "Black Skimmer"],
+    text:
+        "Which bird is famous for spiraling up tree trunks searching for food?",
+    options: [
+      "Ruby-throated Hummingbird",
+      "Brown Pelican",
+      "Brown Creeper",
+      "Black Skimmer",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_362',
     text: "The Peafowl stands out among other birds for:",
-    options: ["the male's massive, eye-spotted tail covert feathers", "having claws on its wings when young", "its spectacular erectile crown of feathers", "having reversible outer toes to grip slippery fish"],
+    options: [
+      "the male's massive, eye-spotted tail covert feathers",
+      "having claws on its wings when young",
+      "its spectacular erectile crown of feathers",
+      "having reversible outer toes to grip slippery fish",
+    ],
     correctOptionIndex: 0,
   ),
   const DailyQuestion(
     id: 'dq_363',
     text: "Which bird is well known for having iridescent green plumage?",
-    options: ["Sanderling", "Magnificent Frigatebird", "Resplendent Quetzal", "Cassowary"],
+    options: [
+      "Sanderling",
+      "Magnificent Frigatebird",
+      "Resplendent Quetzal",
+      "Cassowary",
+    ],
     correctOptionIndex: 2,
   ),
   const DailyQuestion(
     id: 'dq_364',
     text: "The Ruby-throated Hummingbird stands out among other birds for:",
-    options: ["holding its wings out to dry after diving", "beating its wings up to 53 times a second", "its incredibly striking, clown-like color combinations", "hovering before diving for fish"],
+    options: [
+      "holding its wings out to dry after diving",
+      "beating its wings up to 53 times a second",
+      "its incredibly striking, clown-like color combinations",
+      "hovering before diving for fish",
+    ],
     correctOptionIndex: 1,
   ),
 ];

@@ -236,7 +236,7 @@ const List<GuessBirdLevel> guessBirdLevels = [
         description:
             'The world\'s largest owl by length. It has a massive circular grey facial disc with concentric dark rings, small piercing yellow eyes and no prominent ear tufts. Found in northern boreal forests.',
         imagePath: 'assets/bird_photos/great_grey_owl.webp',
-        aliases: ['great gray owl'],
+        aliases: ['great grey owl'],
       ),
       GuessBirdQuestion(
         birdName: 'Harris Hawk',
@@ -322,7 +322,11 @@ const List<GuessBirdLevel> guessBirdLevels = [
         description:
             'A large, loud parrot with brilliant blue upper parts and vivid yellow underparts. A broad bare white face patch and a powerful hooked bill. Frequently kept as a companion bird.',
         imagePath: 'assets/bird_photos/blue_and_yellow_macaw.webp',
-        aliases: ['blue and yellow macaw', 'blue-and-yellow macaw', 'blue yellow macaw'],
+        aliases: [
+          'blue and yellow macaw',
+          'blue-and-yellow macaw',
+          'blue yellow macaw',
+        ],
       ),
       GuessBirdQuestion(
         birdName: 'Blue Macaw',
@@ -413,7 +417,7 @@ const List<GuessBirdLevel> guessBirdLevels = [
         description:
             'A tall, stately wading bird with grey and white plumage. Stands motionless for long periods waiting to spear fish with its dagger-like bill. Folds its long neck into an S-shape in flight.',
         imagePath: 'assets/bird_photos/juvenile_grey_heron.webp',
-        aliases: ['grey heron', 'gray heron', 'heron'],
+        aliases: ['grey heron', 'grey heron', 'heron'],
       ),
       GuessBirdQuestion(
         birdName: 'Red Crowned Crane',

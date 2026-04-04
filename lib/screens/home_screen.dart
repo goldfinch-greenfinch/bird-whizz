@@ -8,6 +8,7 @@ import '../router/app_router.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common_profile_header.dart';
 import '../widgets/stat_item_widget.dart';
+import '../widgets/medal_helper.dart';
 import '../models/stamp.dart';
 import '../screens/achievements_book_screen.dart';
 
@@ -114,7 +115,6 @@ class _HomeHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<QuizProvider>(
       builder: (context, provider, child) {
-        final isExpanded = provider.isBannerExpanded;
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
@@ -138,60 +138,48 @@ class _HomeHeader extends StatelessWidget {
             ),
             child: Column(
               children: [
-                const CommonProfileHeader(),
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  child: isExpanded
-                      ? Column(
-                          children: [
-                            const SizedBox(height: 24),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                StatItemWidget(
-                                  icon: Icons.star_rounded,
-                                  value:
-                                      '${provider.categoryStars}/${provider.categoryMaxStars}',
-                                  label: 'Stars',
-                                  color: Colors.amber,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.emoji_events_rounded,
-                                  value:
-                                      '${provider.categoryCompletedLevels}/${provider.allLevels.length}',
-                                  label: 'Levels',
-                                  color: Colors.orangeAccent,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.check_circle_rounded,
-                                  value:
-                                      '${provider.categoryTotalCorrectAnswers}',
-                                  label: 'Total Correct',
-                                  color: Colors.greenAccent,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.menu_book,
-                                  value:
-                                      '${provider.unlockedStamps.length}/${gameStamps.length}',
-                                  label: 'Badges',
-                                  color: Colors.pinkAccent,
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          const AchievementsBookScreen(),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      : const SizedBox.shrink(),
+                CommonProfileHeader(
+                  expandedStats: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      StatItemWidget(
+                        icon: Icons.star_rounded,
+                        value:
+                            '${provider.categoryStars}/${provider.categoryMaxStars}',
+                        label: 'Stars',
+                        color: Colors.amber,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.emoji_events_rounded,
+                        value:
+                            '${provider.categoryCompletedLevels}/${provider.allLevels.length}',
+                        label: 'Levels',
+                        color: Colors.orangeAccent,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.check_circle_rounded,
+                        value: '${provider.categoryTotalCorrectAnswers}',
+                        label: 'Total Correct',
+                        color: Colors.greenAccent,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.menu_book,
+                        value:
+                            '${provider.unlockedStamps.length}/${gameStamps.length}',
+                        label: 'Badges',
+                        color: Colors.pinkAccent,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const AchievementsBookScreen(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -220,6 +208,7 @@ class _LevelCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cardColor = isUnlocked ? color : Colors.grey.shade300;
+    final mc = medalColor(stars);
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(18),
@@ -235,7 +224,10 @@ class _LevelCard extends StatelessWidget {
               offset: const Offset(0, 4),
             ),
           ],
-          border: Border.all(color: cardColor.withValues(alpha: 0.4), width: 1),
+          border: Border.all(
+            color: mc ?? cardColor.withValues(alpha: 0.4),
+            width: mc != null ? 2 : 1,
+          ),
         ),
         child: Row(
           children: [
@@ -290,11 +282,13 @@ class _LevelCard extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(
-              isUnlocked ? Icons.arrow_forward_ios_rounded : Icons.lock_rounded,
-              color: isUnlocked ? Colors.grey[300] : Colors.grey.shade400,
-              size: 16,
-            ),
+            mc != null
+                ? Icon(Icons.emoji_events_rounded, color: mc, size: 24)
+                : Icon(
+                    isUnlocked ? Icons.arrow_forward_ios_rounded : Icons.lock_rounded,
+                    color: isUnlocked ? Colors.grey[300] : Colors.grey.shade400,
+                    size: 16,
+                  ),
           ],
         ),
       ),

@@ -2,6 +2,7 @@
 assets/bird_photos_raw/
 assets/nuthatch_birds_raw/
 assets/bird_icons_raw/
+.claude/worktrees/
 
 # Miscellaneous
 *.class

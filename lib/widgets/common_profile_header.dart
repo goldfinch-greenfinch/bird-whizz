@@ -9,10 +9,12 @@ import '../screens/stats_screen.dart';
 class CommonProfileHeader extends StatelessWidget {
   final VoidCallback? onBackButtonPressed;
   final bool isStatsScreen;
+  final Widget? expandedStats;
   const CommonProfileHeader({
     super.key,
     this.onBackButtonPressed,
     this.isStatsScreen = false,
+    this.expandedStats,
   });
 
   @override
@@ -146,98 +148,51 @@ class CommonProfileHeader extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [const Expanded(child: UserLevelBadge())],
                         ),
-                        AnimatedSize(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                          child: isExpanded
-                              ? Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 8),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'level ${provider.isMaxCompletion ? '100' : (provider.nextLevelProgress * 100).toStringAsFixed(0)}% complete',
-                                          style: TextStyle(
-                                            color: Colors.white.withValues(
-                                              alpha: 0.8,
-                                            ),
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        if (!provider.isMaxCompletion)
-                                          Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text(
-                                                '${provider.currentStarsInLevel}/${provider.neededStarsForNextLevel}',
-                                                style: TextStyle(
-                                                  color: Colors.white
-                                                      .withValues(alpha: 0.8),
-                                                  fontSize: 11,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                              const SizedBox(width: 2),
-                                              Icon(
-                                                Icons.star_rounded,
-                                                color: Colors.white.withValues(
-                                                  alpha: 0.8,
-                                                ),
-                                                size: 12,
-                                              ),
-                                            ],
-                                          ),
-                                      ],
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'level ${provider.isMaxCompletion ? '100' : (provider.nextLevelProgress * 100).toStringAsFixed(0)}% complete',
+                              style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.8),
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            if (!provider.isMaxCompletion)
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    '${provider.currentStarsInLevel}/${provider.neededStarsForNextLevel}',
+                                    style: TextStyle(
+                                      color: Colors.white.withValues(alpha: 0.8),
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w500,
                                     ),
-                                    const SizedBox(height: 3),
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(4),
-                                      child: LinearProgressIndicator(
-                                        value: provider.isMaxCompletion
-                                            ? 1.0
-                                            : provider.nextLevelProgress.clamp(
-                                                0.0,
-                                                1.0,
-                                              ),
-                                        backgroundColor: Colors.white
-                                            .withValues(alpha: 0.2),
-                                        color: Colors.yellowAccent,
-                                        minHeight: 6,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 6),
-                                    Text(
-                                      'game ${provider.maxStars > 0 ? (provider.progressStars / provider.maxStars * 100).toStringAsFixed(0) : 0}% complete',
-                                      style: TextStyle(
-                                        color: Colors.white.withValues(
-                                          alpha: 0.8,
-                                        ),
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 3),
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(4),
-                                      child: LinearProgressIndicator(
-                                        value: provider.maxStars > 0
-                                            ? (provider.progressStars /
-                                                      provider.maxStars)
-                                                  .clamp(0.0, 1.0)
-                                            : 0.0,
-                                        backgroundColor: Colors.white
-                                            .withValues(alpha: 0.2),
-                                        color: Colors.greenAccent,
-                                        minHeight: 6,
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              : const SizedBox.shrink(),
+                                  ),
+                                  const SizedBox(width: 2),
+                                  Icon(
+                                    Icons.star_rounded,
+                                    color: Colors.white.withValues(alpha: 0.8),
+                                    size: 12,
+                                  ),
+                                ],
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: 3),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: LinearProgressIndicator(
+                            value: provider.isMaxCompletion
+                                ? 1.0
+                                : provider.nextLevelProgress.clamp(0.0, 1.0),
+                            backgroundColor: Colors.white.withValues(alpha: 0.2),
+                            color: Colors.yellowAccent,
+                            minHeight: 6,
+                          ),
                         ),
                       ],
                     ),
@@ -255,6 +210,44 @@ class CommonProfileHeader extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+              AnimatedSize(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                child: isExpanded
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (expandedStats != null) ...[
+                            const SizedBox(height: 20),
+                            expandedStats!,
+                          ],
+                          const SizedBox(height: 6),
+                          Text(
+                            'game ${provider.maxStars > 0 ? (provider.progressStars / provider.maxStars * 100).toStringAsFixed(0) : 0}% complete',
+                            style: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.8),
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 3),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(4),
+                            child: LinearProgressIndicator(
+                              value: provider.maxStars > 0
+                                  ? (provider.progressStars / provider.maxStars)
+                                        .clamp(0.0, 1.0)
+                                  : 0.0,
+                              backgroundColor: Colors.white.withValues(alpha: 0.2),
+                              color: Colors.greenAccent,
+                              minHeight: 6,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                        ],
+                      )
+                    : const SizedBox.shrink(),
               ),
             ],
           ),

@@ -6,6 +6,7 @@ import '../services/audio_service.dart';
 import '../router/app_router.dart';
 import '../widgets/common_profile_header.dart';
 import '../widgets/stat_item_widget.dart';
+import '../widgets/medal_helper.dart';
 import '../models/stamp.dart';
 import '../screens/achievements_book_screen.dart';
 
@@ -115,6 +116,7 @@ class TextQuizSelectionScreen extends StatelessWidget {
                         final stars = provider.getSectionStarRating(
                           cat['id'] as String,
                         );
+                        final mc = medalColor(stars);
 
                         return InkWell(
                           onTap: () {
@@ -136,8 +138,8 @@ class TextQuizSelectionScreen extends StatelessWidget {
                                 ),
                               ],
                               border: Border.all(
-                                color: color.withValues(alpha: 0.4),
-                                width: 1,
+                                color: mc ?? color.withValues(alpha: 0.4),
+                                width: mc != null ? 2 : 1,
                               ),
                             ),
                             child: Row(
@@ -185,11 +187,13 @@ class TextQuizSelectionScreen extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  color: Colors.grey[300],
-                                  size: 16,
-                                ),
+                                mc != null
+                                    ? Icon(Icons.emoji_events_rounded, color: mc, size: 24)
+                                    : Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        color: Colors.grey[300],
+                                        size: 16,
+                                      ),
                               ],
                             ),
                           ),
@@ -217,7 +221,6 @@ class _CategoryHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<QuizProvider>(
       builder: (context, provider, child) {
-        final isExpanded = provider.isBannerExpanded;
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
@@ -241,59 +244,48 @@ class _CategoryHeader extends StatelessWidget {
             ),
             child: Column(
               children: [
-                const CommonProfileHeader(),
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  child: isExpanded
-                      ? Column(
-                          children: [
-                            const SizedBox(height: 24),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                StatItemWidget(
-                                  icon: Icons.star_rounded,
-                                  value:
-                                      '${provider.textQuizTotalStars}/${provider.textQuizMaxStars}',
-                                  label: 'Stars',
-                                  color: Colors.amber,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.emoji_events_rounded,
-                                  value:
-                                      '${provider.completedCategoriesCount}/${provider.allLevels.isNotEmpty ? 8 : 0}',
-                                  label: 'Sections Done',
-                                  color: Colors.orangeAccent,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.check_circle_rounded,
-                                  value: '${provider.totalCorrectAnswers}',
-                                  label: 'Total Correct',
-                                  color: Colors.greenAccent,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.menu_book,
-                                  value:
-                                      '${provider.unlockedStamps.length}/${gameStamps.length}',
-                                  label: 'Badges',
-                                  color: Colors.pinkAccent,
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          const AchievementsBookScreen(),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      : const SizedBox.shrink(),
+                CommonProfileHeader(
+                  expandedStats: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      StatItemWidget(
+                        icon: Icons.star_rounded,
+                        value:
+                            '${provider.textQuizTotalStars}/${provider.textQuizMaxStars}',
+                        label: 'Stars',
+                        color: Colors.amber,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.emoji_events_rounded,
+                        value:
+                            '${provider.completedCategoriesCount}/${provider.allLevels.isNotEmpty ? 8 : 0}',
+                        label: 'Sections Done',
+                        color: Colors.orangeAccent,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.check_circle_rounded,
+                        value: '${provider.totalCorrectAnswers}',
+                        label: 'Total Correct',
+                        color: Colors.greenAccent,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.menu_book,
+                        value:
+                            '${provider.unlockedStamps.length}/${gameStamps.length}',
+                        label: 'Badges',
+                        color: Colors.pinkAccent,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const AchievementsBookScreen(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

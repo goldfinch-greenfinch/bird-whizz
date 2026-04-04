@@ -467,7 +467,6 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<QuizProvider>(
       builder: (context, provider, child) {
-        final isExpanded = provider.isBannerExpanded;
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
@@ -495,70 +494,58 @@ class _Header extends StatelessWidget {
                   onBackButtonPressed: () {
                     context.go(AppRoutes.profiles);
                   },
-                ),
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  child: isExpanded
-                      ? Column(
-                          children: [
-                            const SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                StatItemWidget(
-                                  icon: Icons.quiz_rounded,
-                                  value:
-                                      '${provider.textQuizTotalStars}/${provider.textQuizMaxStars}',
-                                  label: 'Stars',
-                                  color: Colors.amber,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.visibility_rounded,
-                                  value:
-                                      '${provider.birdIdTotalStars}/${provider.birdIdMaxStars}',
-                                  label: 'Bird ID',
-                                  color: Colors.orangeAccent,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.spellcheck_rounded,
-                                  value:
-                                      '${provider.wordGamesTotalStars}/${provider.wordGamesMaxStars}',
-                                  label: 'Words',
-                                  color: Colors.tealAccent,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.auto_awesome_rounded,
-                                  value:
-                                      '${provider.speedChallengeTotalStars + provider.guessBirdTotalStars}/${provider.speedChallengeMaxStars + provider.guessBirdMaxStars}',
-                                  label: 'Special',
-                                  color: Colors.lightBlueAccent,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.menu_book,
-                                  value:
-                                      '${provider.unlockedStamps.length}/${gameStamps.length}',
-                                  label: 'Badges',
-                                  color: Colors.pinkAccent,
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) =>
-                                            const AchievementsBookScreen(),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ],
+                  expandedStats: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      StatItemWidget(
+                        icon: Icons.quiz_rounded,
+                        value:
+                            '${provider.textQuizTotalStars}/${provider.textQuizMaxStars}',
+                        label: 'Stars',
+                        color: Colors.amber,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.visibility_rounded,
+                        value:
+                            '${provider.birdIdTotalStars}/${provider.birdIdMaxStars}',
+                        label: 'Bird ID',
+                        color: Colors.orangeAccent,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.spellcheck_rounded,
+                        value:
+                            '${provider.wordGamesTotalStars}/${provider.wordGamesMaxStars}',
+                        label: 'Words',
+                        color: Colors.tealAccent,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.auto_awesome_rounded,
+                        value:
+                            '${provider.speedChallengeTotalStars + provider.guessBirdTotalStars}/${provider.speedChallengeMaxStars + provider.guessBirdMaxStars}',
+                        label: 'Special',
+                        color: Colors.lightBlueAccent,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.menu_book,
+                        value:
+                            '${provider.unlockedStamps.length}/${gameStamps.length}',
+                        label: 'Badges',
+                        color: Colors.pinkAccent,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const AchievementsBookScreen(),
                             ),
-                          ],
-                        )
-                      : const SizedBox.shrink(),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

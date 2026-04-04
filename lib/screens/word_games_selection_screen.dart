@@ -8,6 +8,7 @@ import 'unscramble_game_screen.dart';
 import 'crossbird_screen.dart';
 import '../widgets/common_profile_header.dart';
 import '../widgets/stat_item_widget.dart';
+import '../widgets/medal_helper.dart';
 import '../models/stamp.dart';
 import '../screens/achievements_book_screen.dart';
 
@@ -48,46 +49,77 @@ class WordGamesSelectionScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 24),
-                        _GameCard(
-                          title: 'Unscramble',
-                          subtitle: 'Rearrange the letters to find the bird.',
-                          icon: Icons.spellcheck_rounded,
-                          color: Colors.deepPurpleAccent,
-                          onTap: () {
-                            context.read<AudioService>().playUiTap();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const _UnscrambleLevelsScreen(),
-                              ),
+                        Consumer<QuizProvider>(
+                          builder: (context, provider, _) {
+                            final unscrambleMedal = medalColor(
+                              provider.unscrambleTotalStars,
+                              provider.unscrambleMaxStars,
                             );
-                          },
-                        ),
-                        const SizedBox(height: 20),
-                        _GameCard(
-                          title: 'Rescue the Bird',
-                          subtitle:
-                              'Guess letters to crack the egg and free the bird.',
-                          icon: Icons.egg_rounded,
-                          color: Colors.orangeAccent,
-                          onTap: () {
-                            context.read<AudioService>().playTransition();
-                            context.push('${AppRoutes.wordGames}/rescue');
-                          },
-                        ),
-                        const SizedBox(height: 20),
-                        _GameCard(
-                          title: 'Crossbird',
-                          subtitle: 'Mini crosswords with bird facts as clues.',
-                          icon: Icons.grid_on_rounded,
-                          color: Colors.teal,
-                          onTap: () {
-                            context.read<AudioService>().playUiTap();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const _CrossbirdLevelsScreen(),
-                              ),
+                            final rescueMedal = medalColor(
+                              provider.rescueTotalStars,
+                              provider.rescueMaxStars,
+                            );
+                            final crossbirdMedal = medalColor(
+                              provider.crossbirdTotalStars,
+                              provider.crossbirdMaxStars,
+                            );
+                            return Column(
+                              children: [
+                                _GameCard(
+                                  title: 'Unscramble',
+                                  subtitle: 'Rearrange the letters to find the bird.',
+                                  icon: Icons.spellcheck_rounded,
+                                  color: Colors.deepPurpleAccent,
+                                  backgroundColor: unscrambleMedal,
+                                  trailing: unscrambleMedal != null
+                                      ? Icon(Icons.emoji_events_rounded, color: unscrambleMedal, size: 28)
+                                      : null,
+                                  onTap: () {
+                                    context.read<AudioService>().playUiTap();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => const _UnscrambleLevelsScreen(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                const SizedBox(height: 20),
+                                _GameCard(
+                                  title: 'Rescue the Bird',
+                                  subtitle: 'Guess letters to crack the egg and free the bird.',
+                                  icon: Icons.egg_rounded,
+                                  color: Colors.orangeAccent,
+                                  backgroundColor: rescueMedal,
+                                  trailing: rescueMedal != null
+                                      ? Icon(Icons.emoji_events_rounded, color: rescueMedal, size: 28)
+                                      : null,
+                                  onTap: () {
+                                    context.read<AudioService>().playTransition();
+                                    context.push('${AppRoutes.wordGames}/rescue');
+                                  },
+                                ),
+                                const SizedBox(height: 20),
+                                _GameCard(
+                                  title: 'Crossbird',
+                                  subtitle: 'Mini crosswords with bird facts as clues.',
+                                  icon: Icons.grid_on_rounded,
+                                  color: Colors.teal,
+                                  backgroundColor: crossbirdMedal,
+                                  trailing: crossbirdMedal != null
+                                      ? Icon(Icons.emoji_events_rounded, color: crossbirdMedal, size: 28)
+                                      : null,
+                                  onTap: () {
+                                    context.read<AudioService>().playUiTap();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => const _CrossbirdLevelsScreen(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
                             );
                           },
                         ),
@@ -111,6 +143,7 @@ class _GameCard extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
   final Widget? trailing;
+  final Color? backgroundColor;
 
   const _GameCard({
     required this.title,
@@ -119,6 +152,7 @@ class _GameCard extends StatelessWidget {
     required this.color,
     required this.onTap,
     this.trailing,
+    this.backgroundColor,
   });
 
   @override
@@ -138,7 +172,10 @@ class _GameCard extends StatelessWidget {
               offset: const Offset(0, 5),
             ),
           ],
-          border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
+          border: Border.all(
+            color: backgroundColor ?? color.withValues(alpha: 0.3),
+            width: backgroundColor != null ? 2 : 1,
+          ),
         ),
         child: Row(
           children: [
@@ -187,7 +224,6 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<QuizProvider>(
       builder: (context, provider, child) {
-        final isExpanded = provider.isBannerExpanded;
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
@@ -211,60 +247,49 @@ class _Header extends StatelessWidget {
             ),
             child: Column(
               children: [
-                const CommonProfileHeader(),
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  child: isExpanded
-                      ? Column(
-                          children: [
-                            const SizedBox(height: 24),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                StatItemWidget(
-                                  icon: Icons.star_rounded,
-                                  value:
-                                      '${provider.wordGamesTotalStars}/${provider.wordGamesMaxStars}',
-                                  label: 'Word Stars',
-                                  color: Colors.amber,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.emoji_events_rounded,
-                                  value:
-                                      '${provider.unscrambleCompletedLevels + provider.rescueCompletedLevels + provider.crossbirdCompletedPuzzles}',
-                                  label: 'Levels Done',
-                                  color: Colors.orangeAccent,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.grid_on_rounded,
-                                  value:
-                                      '${provider.crossbirdTotalStars}/${provider.crossbirdMaxStars}',
-                                  label: 'Cross Stars',
-                                  color: Colors.tealAccent,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.menu_book,
-                                  value:
-                                      '${provider.unlockedStamps.length}/${gameStamps.length}',
-                                  label: 'Badges',
-                                  color: Colors.pinkAccent,
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          const AchievementsBookScreen(),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      : const SizedBox.shrink(),
+                CommonProfileHeader(
+                  expandedStats: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      StatItemWidget(
+                        icon: Icons.star_rounded,
+                        value:
+                            '${provider.wordGamesTotalStars}/${provider.wordGamesMaxStars}',
+                        label: 'Word Stars',
+                        color: Colors.amber,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.emoji_events_rounded,
+                        value:
+                            '${provider.unscrambleCompletedLevels + provider.rescueCompletedLevels + provider.crossbirdCompletedPuzzles}',
+                        label: 'Levels Done',
+                        color: Colors.orangeAccent,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.grid_on_rounded,
+                        value:
+                            '${provider.crossbirdTotalStars}/${provider.crossbirdMaxStars}',
+                        label: 'Cross Stars',
+                        color: Colors.tealAccent,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.menu_book,
+                        value:
+                            '${provider.unlockedStamps.length}/${gameStamps.length}',
+                        label: 'Badges',
+                        color: Colors.pinkAccent,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const AchievementsBookScreen(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -343,7 +368,6 @@ class _CrossbirdLevelsScreen extends StatelessWidget {
   Widget _buildHeader(BuildContext context) {
     return Consumer<QuizProvider>(
       builder: (context, provider, _) {
-        final isExpanded = provider.isBannerExpanded;
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
@@ -367,59 +391,48 @@ class _CrossbirdLevelsScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
-                const CommonProfileHeader(),
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  child: isExpanded
-                      ? Column(
-                          children: [
-                            const SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                StatItemWidget(
-                                  icon: Icons.star_rounded,
-                                  value:
-                                      '${provider.crossbirdTotalStars}/${provider.crossbirdMaxStars}',
-                                  label: 'Stars',
-                                  color: Colors.amber,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.grid_on_rounded,
-                                  value:
-                                      '${provider.crossbirdCompletedPuzzles}/4',
-                                  label: 'Puzzles Done',
-                                  color: Colors.tealAccent,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.check_circle_rounded,
-                                  value: '${provider.totalCrosswordsSolved}',
-                                  label: 'Words Solved',
-                                  color: Colors.greenAccent,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.menu_book,
-                                  value:
-                                      '${provider.unlockedStamps.length}/${gameStamps.length}',
-                                  label: 'Badges',
-                                  color: Colors.pinkAccent,
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          const AchievementsBookScreen(),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      : const SizedBox.shrink(),
+                CommonProfileHeader(
+                  expandedStats: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      StatItemWidget(
+                        icon: Icons.star_rounded,
+                        value:
+                            '${provider.crossbirdTotalStars}/${provider.crossbirdMaxStars}',
+                        label: 'Stars',
+                        color: Colors.amber,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.grid_on_rounded,
+                        value:
+                            '${provider.crossbirdCompletedPuzzles}/4',
+                        label: 'Puzzles Done',
+                        color: Colors.tealAccent,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.check_circle_rounded,
+                        value: '${provider.totalCrosswordsSolved}',
+                        label: 'Words Solved',
+                        color: Colors.greenAccent,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.menu_book,
+                        value:
+                            '${provider.unlockedStamps.length}/${gameStamps.length}',
+                        label: 'Badges',
+                        color: Colors.pinkAccent,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const AchievementsBookScreen(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -435,6 +448,7 @@ class _CrossbirdLevelsScreen extends StatelessWidget {
         final levelKey = 'crossbird_puzzle_$index';
         final stars = provider.levelStars(levelKey);
         final isUnlocked = provider.isCrossbirdPuzzleUnlocked(index);
+        final mc = medalColor(stars);
 
         Widget trailing;
         if (!isUnlocked) {
@@ -446,20 +460,28 @@ class _CrossbirdLevelsScreen extends StatelessWidget {
             ),
             child: const Icon(Icons.lock_rounded, color: Colors.grey, size: 20),
           );
-        } else if (stars > 0) {
-          trailing = Row(
-            mainAxisSize: MainAxisSize.min,
-            children: List.generate(
-              3,
-              (i) => Icon(
-                i < stars ? Icons.star_rounded : Icons.star_outline_rounded,
-                color: Colors.amber,
-                size: 20,
-              ),
-            ),
-          );
         } else {
-          trailing = Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey[300]);
+          trailing = Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: List.generate(
+                  3,
+                  (i) => Icon(
+                    i < stars ? Icons.star_rounded : Icons.star_outline_rounded,
+                    color: Colors.amber,
+                    size: 18,
+                  ),
+                ),
+              ),
+              if (mc != null) ...[
+                const SizedBox(height: 2),
+                Icon(Icons.emoji_events_rounded, color: mc, size: 20),
+              ],
+            ],
+          );
         }
 
         return Opacity(
@@ -471,6 +493,7 @@ class _CrossbirdLevelsScreen extends StatelessWidget {
                 : 'Complete Puzzle $index to unlock',
             icon: isUnlocked ? Icons.grid_on_rounded : Icons.lock_rounded,
             color: isUnlocked ? Colors.teal : Colors.grey,
+            backgroundColor: mc,
             trailing: trailing,
             onTap: () {
               if (!isUnlocked) {
@@ -562,7 +585,6 @@ class _UnscrambleLevelsScreen extends StatelessWidget {
   Widget _buildHeader(BuildContext context) {
     return Consumer<QuizProvider>(
       builder: (context, provider, _) {
-        final isExpanded = provider.isBannerExpanded;
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
@@ -586,59 +608,47 @@ class _UnscrambleLevelsScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
-                const CommonProfileHeader(),
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  child: isExpanded
-                      ? Column(
-                          children: [
-                            const SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                StatItemWidget(
-                                  icon: Icons.star_rounded,
-                                  value:
-                                      '${provider.unscrambleTotalStars}/${provider.unscrambleMaxStars}',
-                                  label: 'Stars',
-                                  color: Colors.amber,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.emoji_events_rounded,
-                                  value:
-                                      '${provider.unscrambleCompletedLevels}',
-                                  label: 'Levels Done',
-                                  color: Colors.orangeAccent,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.spellcheck_rounded,
-                                  value: '${provider.totalUnscrambledWords}',
-                                  label: 'Words Solved',
-                                  color: Colors.greenAccent,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.menu_book,
-                                  value:
-                                      '${provider.unlockedStamps.length}/${gameStamps.length}',
-                                  label: 'Badges',
-                                  color: Colors.pinkAccent,
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          const AchievementsBookScreen(),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      : const SizedBox.shrink(),
+                CommonProfileHeader(
+                  expandedStats: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      StatItemWidget(
+                        icon: Icons.star_rounded,
+                        value:
+                            '${provider.unscrambleTotalStars}/${provider.unscrambleMaxStars}',
+                        label: 'Stars',
+                        color: Colors.amber,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.emoji_events_rounded,
+                        value: '${provider.unscrambleCompletedLevels}',
+                        label: 'Levels Done',
+                        color: Colors.orangeAccent,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.spellcheck_rounded,
+                        value: '${provider.totalUnscrambledWords}',
+                        label: 'Words Solved',
+                        color: Colors.greenAccent,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.menu_book,
+                        value:
+                            '${provider.unlockedStamps.length}/${gameStamps.length}',
+                        label: 'Badges',
+                        color: Colors.pinkAccent,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const AchievementsBookScreen(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -660,6 +670,7 @@ class _UnscrambleLevelsScreen extends StatelessWidget {
       builder: (context, provider, _) {
         final isUnlocked = provider.isUnscrambleLevelUnlocked(levelIndex);
         final stars = provider.unscrambleLevelStars(levelIndex);
+        final mc = medalColor(stars);
 
         Widget trailing;
         if (!isUnlocked) {
@@ -671,20 +682,28 @@ class _UnscrambleLevelsScreen extends StatelessWidget {
             ),
             child: const Icon(Icons.lock_rounded, color: Colors.grey, size: 20),
           );
-        } else if (stars > 0) {
-          trailing = Row(
-            mainAxisSize: MainAxisSize.min,
-            children: List.generate(
-              3,
-              (i) => Icon(
-                i < stars ? Icons.star_rounded : Icons.star_outline_rounded,
-                color: Colors.amber,
-                size: 20,
-              ),
-            ),
-          );
         } else {
-          trailing = Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey[300]);
+          trailing = Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: List.generate(
+                  3,
+                  (i) => Icon(
+                    i < stars ? Icons.star_rounded : Icons.star_outline_rounded,
+                    color: Colors.amber,
+                    size: 18,
+                  ),
+                ),
+              ),
+              if (mc != null) ...[
+                const SizedBox(height: 2),
+                Icon(Icons.emoji_events_rounded, color: mc, size: 20),
+              ],
+            ],
+          );
         }
 
         return Opacity(
@@ -694,6 +713,7 @@ class _UnscrambleLevelsScreen extends StatelessWidget {
             subtitle: isUnlocked ? subtitle : 'Complete Level $levelIndex to unlock',
             icon: isUnlocked ? Icons.spellcheck_rounded : Icons.lock_rounded,
             color: isUnlocked ? Colors.deepPurpleAccent : Colors.grey,
+            backgroundColor: mc,
             trailing: trailing,
             onTap: () {
               if (!isUnlocked) {

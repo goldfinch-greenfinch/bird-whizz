@@ -219,7 +219,7 @@ class _QuizScreenState extends State<QuizScreen> {
                                         borderRadius: BorderRadius.circular(15),
                                         child: Image.asset(
                                           question.imagePath!,
-                                          height: 180,
+                                          height: MediaQuery.of(context).size.shortestSide > 600 ? 300.0 : 180.0,
                                           fit: BoxFit.cover,
                                           errorBuilder:
                                               (ctx, error, stackTrace) =>

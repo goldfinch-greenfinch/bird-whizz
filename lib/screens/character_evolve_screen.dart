@@ -419,7 +419,7 @@ class _CharacterEvolveScreenState extends State<CharacterEvolveScreen>
 
         // ── Bird animation area ──────────────────────────────────────────────
         SizedBox(
-          height: 260,
+          height: MediaQuery.of(context).size.shortestSide > 600 ? 380.0 : 260.0,
           width: double.infinity,
           child: Stack(
             alignment: Alignment.center,
@@ -588,7 +588,10 @@ class _OldBird extends StatelessWidget {
         offset: Offset(dx, dy + slideOffset),
         child: Transform.scale(
           scale: 0.85 + slideProgress * 0.15,
-          child: Image.asset(imagePath, width: 210, height: 210, fit: BoxFit.contain),
+          child: Builder(builder: (context) {
+            final size = MediaQuery.of(context).size.shortestSide > 600 ? 310.0 : 210.0;
+            return Image.asset(imagePath, width: size, height: size, fit: BoxFit.contain);
+          }),
         ),
       ),
     );
@@ -608,7 +611,10 @@ class _NewBird extends StatelessWidget {
       scale: popProgress,
       child: Opacity(
         opacity: popProgress.clamp(0.0, 1.0),
-        child: Image.asset(imagePath, width: 230, height: 230, fit: BoxFit.contain),
+        child: Builder(builder: (context) {
+          final size = MediaQuery.of(context).size.shortestSide > 600 ? 330.0 : 230.0;
+          return Image.asset(imagePath, width: size, height: size, fit: BoxFit.contain);
+        }),
       ),
     );
   }
@@ -697,20 +703,23 @@ class _BirdThumb extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
-          width: 70,
-          height: 70,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: accent.withAlpha(180), width: 2),
-            color: accent.withAlpha(20),
-          ),
-          padding: const EdgeInsets.all(8),
-          child: Opacity(
-            opacity: dimmed ? 0.5 : 1.0,
-            child: Image.asset(imagePath, fit: BoxFit.contain),
-          ),
-        ),
+        Builder(builder: (context) {
+          final thumbSize = MediaQuery.of(context).size.shortestSide > 600 ? 100.0 : 70.0;
+          return Container(
+            width: thumbSize,
+            height: thumbSize,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: accent.withAlpha(180), width: 2),
+              color: accent.withAlpha(20),
+            ),
+            padding: const EdgeInsets.all(8),
+            child: Opacity(
+              opacity: dimmed ? 0.5 : 1.0,
+              child: Image.asset(imagePath, fit: BoxFit.contain),
+            ),
+          );
+        }),
         const SizedBox(height: 5),
         Text(
           label,

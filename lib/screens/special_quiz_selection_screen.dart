@@ -9,6 +9,7 @@ import '../router/app_router.dart';
 import '../services/audio_service.dart';
 import '../widgets/common_profile_header.dart';
 import '../widgets/stat_item_widget.dart';
+import '../widgets/medal_helper.dart';
 import '../models/stamp.dart';
 import '../screens/achievements_book_screen.dart';
 
@@ -49,51 +50,67 @@ class SpecialQuizSelectionScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 24),
-                        _GameCard(
-                          title: 'Survival Mode',
-                          subtitle:
-                              'Answer as many questions as you can. Three strikes and you\'re out!',
-                          icon: Icons.local_fire_department_rounded,
-                          color: Colors.redAccent,
-                          onTap: () {
-                            final provider = context.read<QuizProvider>();
-                            provider.startEndlessMode();
-                            context.read<AudioService>().playTransition();
-                            context.push(AppRoutes.endless);
-                          },
-                        ),
-                        const SizedBox(height: 20),
-                        _GameCard(
-                          title: 'Guess the Bird',
-                          subtitle:
-                              'Read a description and type the bird\'s name. Then see its photo!',
-                          icon: Icons.psychology_rounded,
-                          color: Colors.indigo,
-                          onTap: () {
-                            context.read<AudioService>().playUiTap();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const _GuessBirdLevelsScreen(),
-                              ),
+                        Consumer<QuizProvider>(
+                          builder: (context, provider, _) {
+                            final guessMedal = medalColor(
+                              provider.guessBirdTotalStars,
+                              provider.guessBirdMaxStars,
                             );
-                          },
-                        ),
-                        const SizedBox(height: 20),
-                        _GameCard(
-                          title: 'Speed Challenge',
-                          subtitle:
-                              'Race the clock! Mix of trivia and bird ID — 5 levels, each faster than the last.',
-                          icon: Icons.speed_rounded,
-                          color: const Color(0xFFE65100),
-                          onTap: () {
-                            context.read<AudioService>().playUiTap();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    const _SpeedChallengeLevelsScreen(),
-                              ),
+                            final speedMedal = medalColor(
+                              provider.speedChallengeTotalStars,
+                              provider.speedChallengeMaxStars,
+                            );
+                            return Column(
+                              children: [
+                                _GameCard(
+                                  title: 'Survival Mode',
+                                  subtitle:
+                                      'Answer as many questions as you can. Three strikes and you\'re out!',
+                                  icon: Icons.local_fire_department_rounded,
+                                  color: Colors.redAccent,
+                                  onTap: () {
+                                    provider.startEndlessMode();
+                                    context.read<AudioService>().playTransition();
+                                    context.push(AppRoutes.endless);
+                                  },
+                                ),
+                                const SizedBox(height: 20),
+                                _GameCard(
+                                  title: 'Guess the Bird',
+                                  subtitle:
+                                      'Read a description and type the bird\'s name. Then see its photo!',
+                                  icon: Icons.psychology_rounded,
+                                  color: Colors.indigo,
+                                  medal: guessMedal,
+                                  onTap: () {
+                                    context.read<AudioService>().playUiTap();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => const _GuessBirdLevelsScreen(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                const SizedBox(height: 20),
+                                _GameCard(
+                                  title: 'Speed Challenge',
+                                  subtitle:
+                                      'Race the clock! Mix of trivia and bird ID — 5 levels, each faster than the last.',
+                                  icon: Icons.speed_rounded,
+                                  color: const Color(0xFFE65100),
+                                  medal: speedMedal,
+                                  onTap: () {
+                                    context.read<AudioService>().playUiTap();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => const _SpeedChallengeLevelsScreen(),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
                             );
                           },
                         ),
@@ -119,7 +136,6 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<QuizProvider>(
       builder: (context, provider, _) {
-        final isExpanded = provider.isBannerExpanded;
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
@@ -143,59 +159,54 @@ class _Header extends StatelessWidget {
             ),
             child: Column(
               children: [
-                const CommonProfileHeader(),
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  child: isExpanded
-                      ? Column(
-                          children: [
-                            const SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                StatItemWidget(
-                                  icon: Icons.local_fire_department_rounded,
-                                  value: '${provider.endlessHighScore}',
-                                  label: 'Best Streak',
-                                  color: Colors.orangeAccent,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.psychology_rounded,
-                                  value:
-                                      '${provider.guessBirdCompletedLevels}/5',
-                                  label: 'Guess Lvls',
-                                  color: Colors.lightBlueAccent,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.speed_rounded,
-                                  value:
-                                      '${provider.speedChallengeCompletedLevels}/5',
-                                  label: 'Speed Lvls',
-                                  color: const Color(0xFFFF8A65),
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.menu_book,
-                                  value:
-                                      '${provider.unlockedStamps.length}/${gameStamps.length}',
-                                  label: 'Badges',
-                                  color: Colors.pinkAccent,
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          const AchievementsBookScreen(),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      : const SizedBox.shrink(),
+                CommonProfileHeader(
+                  expandedStats: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      StatItemWidget(
+                        icon: Icons.star_rounded,
+                        value:
+                            '${provider.guessBirdTotalStars + provider.speedChallengeTotalStars}/${provider.guessBirdMaxStars + provider.speedChallengeMaxStars}',
+                        label: 'Stars',
+                        color: Colors.amber,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.local_fire_department_rounded,
+                        value: '${provider.endlessHighScore}',
+                        label: 'Best Streak',
+                        color: Colors.orangeAccent,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.psychology_rounded,
+                        value: '${provider.guessBirdCompletedLevels}/5',
+                        label: 'Guess Lvls',
+                        color: Colors.lightBlueAccent,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.speed_rounded,
+                        value: '${provider.speedChallengeCompletedLevels}/5',
+                        label: 'Speed Lvls',
+                        color: const Color(0xFFFF8A65),
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.menu_book,
+                        value:
+                            '${provider.unlockedStamps.length}/${gameStamps.length}',
+                        label: 'Badges',
+                        color: Colors.pinkAccent,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const AchievementsBookScreen(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -214,6 +225,7 @@ class _GameCard extends StatelessWidget {
   final IconData icon;
   final Color color;
   final VoidCallback onTap;
+  final Color? medal;
 
   const _GameCard({
     required this.title,
@@ -221,6 +233,7 @@ class _GameCard extends StatelessWidget {
     required this.icon,
     required this.color,
     required this.onTap,
+    this.medal,
   });
 
   @override
@@ -240,7 +253,10 @@ class _GameCard extends StatelessWidget {
               offset: const Offset(0, 5),
             ),
           ],
-          border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
+          border: Border.all(
+            color: medal ?? color.withValues(alpha: 0.3),
+            width: medal != null ? 2 : 1,
+          ),
         ),
         child: Row(
           children: [
@@ -273,7 +289,9 @@ class _GameCard extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey[300]),
+            medal != null
+                ? Icon(Icons.emoji_events_rounded, color: medal, size: 28)
+                : Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey[300]),
           ],
         ),
       ),
@@ -337,7 +355,6 @@ class _GuessBirdLevelsScreen extends StatelessWidget {
   Widget _buildHeader(BuildContext context) {
     return Consumer<QuizProvider>(
       builder: (context, provider, _) {
-        final isExpanded = provider.isBannerExpanded;
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
@@ -361,59 +378,47 @@ class _GuessBirdLevelsScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
-                const CommonProfileHeader(),
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  child: isExpanded
-                      ? Column(
-                          children: [
-                            const SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                StatItemWidget(
-                                  icon: Icons.star_rounded,
-                                  value:
-                                      '${provider.guessBirdTotalStars}/${provider.guessBirdMaxStars}',
-                                  label: 'Stars',
-                                  color: Colors.amber,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.emoji_events_rounded,
-                                  value:
-                                      '${provider.guessBirdCompletedLevels}/5',
-                                  label: 'Levels Done',
-                                  color: Colors.orangeAccent,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.check_circle_rounded,
-                                  value: '${provider.guessBirdTotalGuessed}',
-                                  label: 'Birds Guessed',
-                                  color: Colors.greenAccent,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.menu_book,
-                                  value:
-                                      '${provider.unlockedStamps.length}/${gameStamps.length}',
-                                  label: 'Badges',
-                                  color: Colors.pinkAccent,
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          const AchievementsBookScreen(),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      : const SizedBox.shrink(),
+                CommonProfileHeader(
+                  expandedStats: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      StatItemWidget(
+                        icon: Icons.star_rounded,
+                        value:
+                            '${provider.guessBirdTotalStars}/${provider.guessBirdMaxStars}',
+                        label: 'Stars',
+                        color: Colors.amber,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.emoji_events_rounded,
+                        value: '${provider.guessBirdCompletedLevels}/5',
+                        label: 'Levels Done',
+                        color: Colors.orangeAccent,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.check_circle_rounded,
+                        value: '${provider.guessBirdTotalGuessed}',
+                        label: 'Birds Guessed',
+                        color: Colors.greenAccent,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.menu_book,
+                        value:
+                            '${provider.unlockedStamps.length}/${gameStamps.length}',
+                        label: 'Badges',
+                        color: Colors.pinkAccent,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const AchievementsBookScreen(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -430,6 +435,7 @@ class _GuessBirdLevelsScreen extends StatelessWidget {
         final stars = provider.levelStars(levelId);
         final level = guessBirdLevels[index];
         final isUnlocked = provider.isGuessBirdLevelUnlocked(index);
+        final mc = medalColor(stars);
 
         return InkWell(
           onTap: () {
@@ -461,8 +467,8 @@ class _GuessBirdLevelsScreen extends StatelessWidget {
                   ),
                 ],
                 border: Border.all(
-                  color: Colors.indigo.withValues(alpha: 0.3),
-                  width: 1,
+                  color: mc ?? Colors.indigo.withValues(alpha: 0.3),
+                  width: mc != null ? 2 : 1,
                 ),
               ),
               child: Row(
@@ -497,7 +503,7 @@ class _GuessBirdLevelsScreen extends StatelessWidget {
                           isUnlocked ? level.subtitle : 'Complete Level $index to unlock',
                           style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                         ),
-                        if (stars > 0) ...[
+                        if (isUnlocked) ...[
                           const SizedBox(height: 8),
                           Row(
                             children: List.generate(
@@ -515,11 +521,13 @@ class _GuessBirdLevelsScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Icon(
-                    isUnlocked ? Icons.arrow_forward_ios_rounded : Icons.lock_rounded,
-                    color: isUnlocked ? Colors.grey[300] : Colors.grey[400],
-                    size: isUnlocked ? 16 : 20,
-                  ),
+                  mc != null
+                      ? Icon(Icons.emoji_events_rounded, color: mc, size: 24)
+                      : Icon(
+                          isUnlocked ? Icons.arrow_forward_ios_rounded : Icons.lock_rounded,
+                          color: isUnlocked ? Colors.grey[300] : Colors.grey[400],
+                          size: isUnlocked ? 16 : 20,
+                        ),
                 ],
               ),
             ),
@@ -588,7 +596,6 @@ class _SpeedChallengeLevelsScreen extends StatelessWidget {
   Widget _buildHeader(BuildContext context) {
     return Consumer<QuizProvider>(
       builder: (context, provider, _) {
-        final isExpanded = provider.isBannerExpanded;
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
@@ -612,60 +619,47 @@ class _SpeedChallengeLevelsScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
-                const CommonProfileHeader(),
-                AnimatedSize(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  child: isExpanded
-                      ? Column(
-                          children: [
-                            const SizedBox(height: 20),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                StatItemWidget(
-                                  icon: Icons.star_rounded,
-                                  value:
-                                      '${provider.speedChallengeTotalStars}/${provider.speedChallengeMaxStars}',
-                                  label: 'Stars',
-                                  color: Colors.amber,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.emoji_events_rounded,
-                                  value:
-                                      '${provider.speedChallengeCompletedLevels}/5',
-                                  label: 'Levels Done',
-                                  color: Colors.orangeAccent,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.check_circle_rounded,
-                                  value:
-                                      '${provider.speedChallengeTotalCorrect}',
-                                  label: 'Correct',
-                                  color: Colors.lightGreenAccent,
-                                ),
-                                buildStatDivider(),
-                                StatItemWidget(
-                                  icon: Icons.menu_book,
-                                  value:
-                                      '${provider.unlockedStamps.length}/${gameStamps.length}',
-                                  label: 'Badges',
-                                  color: Colors.pinkAccent,
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          const AchievementsBookScreen(),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        )
-                      : const SizedBox.shrink(),
+                CommonProfileHeader(
+                  expandedStats: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      StatItemWidget(
+                        icon: Icons.star_rounded,
+                        value:
+                            '${provider.speedChallengeTotalStars}/${provider.speedChallengeMaxStars}',
+                        label: 'Stars',
+                        color: Colors.amber,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.emoji_events_rounded,
+                        value: '${provider.speedChallengeCompletedLevels}/5',
+                        label: 'Levels Done',
+                        color: Colors.orangeAccent,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.check_circle_rounded,
+                        value: '${provider.speedChallengeTotalCorrect}',
+                        label: 'Correct',
+                        color: Colors.lightGreenAccent,
+                      ),
+                      buildStatDivider(),
+                      StatItemWidget(
+                        icon: Icons.menu_book,
+                        value:
+                            '${provider.unlockedStamps.length}/${gameStamps.length}',
+                        label: 'Badges',
+                        color: Colors.pinkAccent,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const AchievementsBookScreen(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -682,6 +676,7 @@ class _SpeedChallengeLevelsScreen extends StatelessWidget {
         final stars = provider.levelStars(levelId);
         final level = speedChallengeLevels[index];
         final isUnlocked = provider.isSpeedChallengeLevelUnlocked(index);
+        final mc = medalColor(stars);
 
         return InkWell(
           onTap: () {
@@ -713,8 +708,8 @@ class _SpeedChallengeLevelsScreen extends StatelessWidget {
                   ),
                 ],
                 border: Border.all(
-                  color: _accent.withValues(alpha: 0.25),
-                  width: 1,
+                  color: mc ?? _accent.withValues(alpha: 0.25),
+                  width: mc != null ? 2 : 1,
                 ),
               ),
               child: Row(
@@ -781,7 +776,7 @@ class _SpeedChallengeLevelsScreen extends StatelessWidget {
                           isUnlocked ? level.subtitle : 'Complete Level $index to unlock',
                           style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                         ),
-                        if (stars > 0) ...[
+                        if (isUnlocked) ...[
                           const SizedBox(height: 8),
                           Row(
                             children: List.generate(
@@ -799,11 +794,13 @@ class _SpeedChallengeLevelsScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Icon(
-                    isUnlocked ? Icons.arrow_forward_ios_rounded : Icons.lock_rounded,
-                    color: isUnlocked ? Colors.grey[300] : Colors.grey[400],
-                    size: isUnlocked ? 16 : 20,
-                  ),
+                  mc != null
+                      ? Icon(Icons.emoji_events_rounded, color: mc, size: 24)
+                      : Icon(
+                          isUnlocked ? Icons.arrow_forward_ios_rounded : Icons.lock_rounded,
+                          color: isUnlocked ? Colors.grey[300] : Colors.grey[400],
+                          size: isUnlocked ? 16 : 20,
+                        ),
                 ],
               ),
             ),

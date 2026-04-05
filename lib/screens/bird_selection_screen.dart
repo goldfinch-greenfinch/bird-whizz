@@ -72,10 +72,14 @@ class _BirdSelectionScreenState extends State<BirdSelectionScreen> {
         foregroundColor: Colors.white,
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 720),
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TextField(
                 controller: _nameController,
@@ -247,7 +251,9 @@ class _BirdSelectionScreenState extends State<BirdSelectionScreen> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
-            ],
+              ],
+              ),
+            ),
           ),
         ),
       ),

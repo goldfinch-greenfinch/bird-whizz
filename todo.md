@@ -52,6 +52,3 @@ Cons: The "Stats" view in the Play Console is a bit more rigid and slower to upd
 
 
 
-On tablet mode make the bird identification photo pictures bigger to fill the screen more and also the bird evolution characters images bigger too
-
-In every level and category of levels we should add a bronze, silver of gold medal depending on how many stars the user has collected in that level or for categories 1/3*N, 2/3*N and 3/3*N of stars collects depending on the N total stars available for category. 

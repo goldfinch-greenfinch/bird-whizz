@@ -333,16 +333,22 @@ class _GuessBirdLevelsScreen extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24.0,
-                  vertical: 8.0,
-                ),
-                child: ListView.separated(
-                  itemCount: guessBirdLevels.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 16),
-                  itemBuilder: (context, index) =>
-                      _buildLevelCard(context, index),
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 720),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0,
+                      vertical: 8.0,
+                    ),
+                    child: ListView.separated(
+                      itemCount: guessBirdLevels.length,
+                      separatorBuilder: (_, _) => const SizedBox(height: 16),
+                      itemBuilder: (context, index) =>
+                          _buildLevelCard(context, index),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -574,16 +580,22 @@ class _SpeedChallengeLevelsScreen extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24.0,
-                  vertical: 8.0,
-                ),
-                child: ListView.separated(
-                  itemCount: speedChallengeLevels.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 16),
-                  itemBuilder: (context, index) =>
-                      _buildLevelCard(context, index),
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 720),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0,
+                      vertical: 8.0,
+                    ),
+                    child: ListView.separated(
+                      itemCount: speedChallengeLevels.length,
+                      separatorBuilder: (_, _) => const SizedBox(height: 16),
+                      itemBuilder: (context, index) =>
+                          _buildLevelCard(context, index),
+                    ),
+                  ),
                 ),
               ),
             ),

@@ -41,6 +41,7 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
   int _currentPuzzleIndex = 0;
   bool _isCompleted = false;
   bool _isFailed = false;
+  late List<Bird> _birdQueue; // pre-shuffled, unique birds for this session
 
   // Variation indices — randomised each puzzle
   int _birdVariation = 0; // 0-6
@@ -82,6 +83,10 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
 
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
+    // Build a shuffled queue of unique birds for the session
+    final shuffled = availableBirds.toList()..shuffle();
+    _birdQueue = shuffled.take(_puzzlesPerSession).toList();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<AudioService>().playQuizMusic();
       _startNewPuzzle();
@@ -116,7 +121,7 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
       _wrongGuesses = 0;
       _birdVariation = rng.nextInt(7);
       _foeVariation = rng.nextInt(6);
-      _currentBird = (availableBirds.toList()..shuffle()).first;
+      _currentBird = _birdQueue[_currentPuzzleIndex];
       _displayName = _currentBird!.name.toUpperCase();
       _lettersInWord = _displayName
           .split('')
@@ -412,13 +417,16 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
   }
 
   Widget _buildWordBlanks() {
-    final chars = _displayName.split('');
-    final letterCount = chars.where((c) => c.contains(RegExp(r'[A-Z]'))).length;
+    final words = _displayName.split(' ');
+    final letterCount = _displayName
+        .split('')
+        .where((c) => c.contains(RegExp(r'[A-Z]')))
+        .length;
     return LayoutBuilder(
       builder: (context, constraints) {
         // Compute tile width so all letters fill available width, capped sensibly
-        final spacing = 6.0;
-        final hPad = 12.0;
+        const spacing = 6.0;
+        const hPad = 12.0;
         final available = constraints.maxWidth - hPad * 2;
         final tileW = letterCount > 0
             ? ((available - spacing * (letterCount - 1)) / letterCount).clamp(
@@ -429,61 +437,59 @@ class _RescueBirdScreenState extends State<RescueBirdScreen>
         final tileH = tileW * 1.26;
         final fontSize = tileW * 0.55;
 
+        Widget buildTile(String ch) {
+          final isRevealed = _guessedLetters.contains(ch);
+          return AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            width: tileW,
+            height: tileH,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: isRevealed
+                  ? Colors.greenAccent.withValues(alpha: 0.25)
+                  : _isFailed
+                  ? Colors.redAccent.withValues(alpha: 0.2)
+                  : Colors.white.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: isRevealed
+                    ? Colors.greenAccent
+                    : _isFailed
+                    ? Colors.redAccent.shade100
+                    : Colors.white38,
+                width: 2,
+              ),
+            ),
+            child: Text(
+              (isRevealed || _isFailed) ? ch : '',
+              style: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.bold,
+                color: isRevealed
+                    ? Colors.greenAccent
+                    : Colors.redAccent.shade100,
+              ),
+            ),
+          );
+        }
+
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Wrap(
             alignment: WrapAlignment.center,
-            spacing: spacing,
+            spacing: tileW * 0.4, // word gap
             runSpacing: 8,
-            children: chars.map((ch) {
-              if (!ch.contains(RegExp(r'[A-Z]'))) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 3,
-                    vertical: 8,
-                  ),
-                  child: Text(
-                    ch,
-                    style: TextStyle(
-                      fontSize: fontSize,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white54,
-                    ),
-                  ),
-                );
-              }
-              final isRevealed = _guessedLetters.contains(ch);
-              return AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                width: tileW,
-                height: tileH,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: isRevealed
-                      ? Colors.greenAccent.withValues(alpha: 0.25)
-                      : _isFailed
-                      ? Colors.redAccent.withValues(alpha: 0.2)
-                      : Colors.white.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: isRevealed
-                        ? Colors.greenAccent
-                        : _isFailed
-                        ? Colors.redAccent.shade100
-                        : Colors.white38,
-                    width: 2,
-                  ),
-                ),
-                child: Text(
-                  (isRevealed || _isFailed) ? ch : '',
-                  style: TextStyle(
-                    fontSize: fontSize,
-                    fontWeight: FontWeight.bold,
-                    color: isRevealed
-                        ? Colors.greenAccent
-                        : Colors.redAccent.shade100,
-                  ),
-                ),
+            children: words.map((word) {
+              // Each word is a non-breaking Row so it never splits across lines
+              final chars = word.split('');
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (int i = 0; i < chars.length; i++) ...[
+                    if (i > 0) const SizedBox(width: spacing),
+                    buildTile(chars[i]),
+                  ],
+                ],
               );
             }).toList(),
           ),

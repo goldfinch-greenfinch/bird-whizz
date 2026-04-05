@@ -157,43 +157,48 @@ class _ThemeCard extends StatelessWidget {
                 ),
                 child: Icon(icon, color: color, size: 28),
               ),
-              title: Row(
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    child: Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
-                      ),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
                     ),
                   ),
-                  if (completedCount > 0) ...[
-                    const SizedBox(width: 8),
-                    Text(
-                      '$completedCount/$levelCount',
-                      style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: completedCount == levelCount
-                            ? Colors.green[700]
-                            : Colors.grey[600],
-                      ),
+                  if (completedCount > 0 || mc != null)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (completedCount > 0) ...[
+                          Text(
+                            '$completedCount/$levelCount',
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w600,
+                              color: completedCount == levelCount
+                                  ? Colors.green[700]
+                                  : Colors.grey[600],
+                            ),
+                          ),
+                          const SizedBox(width: 2),
+                          Icon(
+                            Icons.star_rounded,
+                            size: 14,
+                            color: completedCount == levelCount
+                                ? Colors.green[700]
+                                : Colors.amber,
+                          ),
+                        ],
+                        if (mc != null) ...[
+                          const SizedBox(width: 8),
+                          Icon(Icons.emoji_events_rounded, color: mc, size: 20),
+                        ],
+                      ],
                     ),
-                    const SizedBox(width: 2),
-                    Icon(
-                      Icons.star_rounded,
-                      size: 14,
-                      color: completedCount == levelCount
-                          ? Colors.green[700]
-                          : Colors.amber,
-                    ),
-                  ],
-                  if (mc != null) ...[
-                    const SizedBox(width: 8),
-                    Icon(Icons.emoji_events_rounded, color: mc, size: 20),
-                  ],
                 ],
               ),
               children: [

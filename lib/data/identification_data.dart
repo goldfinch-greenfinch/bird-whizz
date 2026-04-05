@@ -754,7 +754,6 @@ final Map<String, List<String>> identificationData = {
     "Scissor Tailed Flycatcher",
   ],
   "Great Egret": ["Cattle Egret", "Snowy Egret", "Little Egret"],
-  "Great Grey Owl": ["Short Eared Owl", "Great Horned Owl", "Barn Owl"],
   "Great Kiskadee": ["Great Black Backed Gull", "Great Tit", "Great Egret"],
   "Great Reed Warbler": [
     "Yellow Warbler",

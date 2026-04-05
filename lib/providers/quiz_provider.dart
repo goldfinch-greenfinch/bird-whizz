@@ -84,6 +84,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
   int _endlessQuestionCount = 0;
   Question? _endlessCurrentQuestion;
   int _lastEndlessStreak = 0;
+  final Set<String> _seenEndlessIds = {}; // tracks seen question IDs to prevent repeats
 
   QuizProvider(this._storage) {
     WidgetsBinding.instance.addObserver(this);
@@ -1923,6 +1924,7 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     _currentQuestionIndex = 0;
     _score = 0;
     _wordGameTotalQuestions = null;
+    _seenEndlessIds.clear();
 
     _endlessCurrentQuestion = _generateNextEndlessQuestion();
     notifyListeners();
@@ -1938,33 +1940,32 @@ class QuizProvider with ChangeNotifier, WidgetsBindingObserver {
     }
 
     final int totalLevels = allLevels.length;
-    final double progress = (_endlessQuestionCount / 50).clamp(
-      0.0,
-      1.0,
-    ); // 0..1 over 50 Qs
+    final double progress = (_endlessQuestionCount / 50).clamp(0.0, 1.0);
 
-    final int minIndex = (progress * totalLevels * 0.4).toInt().clamp(
-      0,
-      totalLevels - 1,
-    );
-    final int maxIndex = (progress * totalLevels).toInt().clamp(
-      minIndex,
-      totalLevels - 1,
-    );
+    final int minIndex = (progress * totalLevels * 0.4).toInt().clamp(0, totalLevels - 1);
+    final int maxIndex = (progress * totalLevels).toInt().clamp(minIndex, totalLevels - 1);
 
-    final int levelIndex =
-        minIndex + _random.nextInt((maxIndex - minIndex) + 1);
-    final Level level = allLevels[levelIndex];
+    // Build the candidate window. If every candidate has been seen, reset so
+    // questions can recur rather than blocking forever.
+    final windowQuestions = allLevels
+        .sublist(minIndex, maxIndex + 1)
+        .expand((l) => l.questions)
+        .toList();
+    final unseen = windowQuestions.where((q) => !_seenEndlessIds.contains(q.id)).toList();
 
-    if (level.questions.isEmpty) {
-      return allLevels.first.questions.first;
-    }
+    // If all questions in the window have been seen, widen to full bank and
+    // reset the seen-set so the run can continue indefinitely.
+    final candidates = unseen.isNotEmpty
+        ? unseen
+        : () {
+            _seenEndlessIds.clear();
+            return windowQuestions;
+          }();
 
-    final Question baseQuestion =
-        level.questions[_random.nextInt(level.questions.length)];
+    final Question baseQuestion = candidates[_random.nextInt(candidates.length)];
+    _seenEndlessIds.add(baseQuestion.id);
 
-    final originalCorrectOption =
-        baseQuestion.options[baseQuestion.correctOptionIndex];
+    final originalCorrectOption = baseQuestion.options[baseQuestion.correctOptionIndex];
     final scrambledOptions = List<String>.from(baseQuestion.options)..shuffle();
     final newCorrectIndex = scrambledOptions.indexOf(originalCorrectOption);
 

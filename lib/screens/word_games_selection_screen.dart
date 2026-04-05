@@ -345,17 +345,23 @@ class _CrossbirdLevelsScreen extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24.0,
-                  vertical: 8.0,
-                ),
-                child: ListView.separated(
-                  itemCount: _puzzleTitles.length,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 16),
-                  itemBuilder: (context, index) =>
-                      _buildPuzzleCard(context, index),
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 720),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0,
+                      vertical: 8.0,
+                    ),
+                    child: ListView.separated(
+                      itemCount: _puzzleTitles.length,
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: 16),
+                      itemBuilder: (context, index) =>
+                          _buildPuzzleCard(context, index),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -556,23 +562,29 @@ class _UnscrambleLevelsScreen extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24.0,
-                  vertical: 8.0,
-                ),
-                child: ListView(
-                  children: [
-                    _buildLevelCard(context, 0, 'Level 1: Short Words', '3-4 Letters', 1, 4),
-                    const SizedBox(height: 16),
-                    _buildLevelCard(context, 1, 'Level 2: Fledglings', '5-6 Letters', 5, 6),
-                    const SizedBox(height: 16),
-                    _buildLevelCard(context, 2, 'Level 3: Winging It', '7-8 Letters', 7, 8),
-                    const SizedBox(height: 16),
-                    _buildLevelCard(context, 3, 'Level 4: High Flyer', '9-10 Letters', 9, 10),
-                    const SizedBox(height: 16),
-                    _buildLevelCard(context, 4, 'Level 5: Master', '11+ Letters', 11, 100),
-                  ],
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 720),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24.0,
+                      vertical: 8.0,
+                    ),
+                    child: ListView(
+                      children: [
+                        _buildLevelCard(context, 0, 'Level 1: Short Words', '3-4 Letters', 1, 4),
+                        const SizedBox(height: 16),
+                        _buildLevelCard(context, 1, 'Level 2: Fledglings', '5-6 Letters', 5, 6),
+                        const SizedBox(height: 16),
+                        _buildLevelCard(context, 2, 'Level 3: Winging It', '7-8 Letters', 7, 8),
+                        const SizedBox(height: 16),
+                        _buildLevelCard(context, 3, 'Level 4: High Flyer', '9-10 Letters', 9, 10),
+                        const SizedBox(height: 16),
+                        _buildLevelCard(context, 4, 'Level 5: Master', '11+ Letters', 11, 100),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),

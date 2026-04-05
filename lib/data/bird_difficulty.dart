@@ -168,7 +168,6 @@ final Map<String, String> birdDifficulty = {
   'Great Crested Flycatcher': 'level_6',
   'Great Egret': 'level_4',
   'Great Grey Owl': 'level_2',
-  'Great Grey Owl': 'level_1',
   'Great Horned Owl': 'level_1',
   'Great Reed Warbler': 'level_6',
   'Great Spotted Woodpecker': 'level_1',
